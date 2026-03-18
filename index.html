@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++ CF Template — Cheatsheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0a0c10;
+    --surface:  #111318;
+    --card:     #161a22;
+    --border:   #1f2430;
+    --accent:   #00e5ff;
+    --accent2:  #ff6b35;
+    --accent3:  #a8ff3e;
+    --accent4:  #c77dff;
+    --text:     #e2e8f0;
+    --muted:    #64748b;
+    --keyword:  #ff6b35;
+    --type:     #00e5ff;
+    --fn:       #a8ff3e;
+    --str:      #ffd60a;
+    --comment:  #4a5568;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── grid noise texture ── */
+  body::before {
+    content:'';
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,229,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ── glow orbs ── */
+  .orb {
+    position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; opacity:.18;
+  }
+  .orb1 { width:500px;height:500px;background:var(--accent);  top:-100px; left:-100px; }
+  .orb2 { width:400px;height:400px;background:var(--accent4); bottom:-80px; right:-80px; }
+  .orb3 { width:300px;height:300px;background:var(--accent2); top:40%; left:60%; }
+
+  /* ── header ── */
+  header {
+    position:relative; z-index:10;
+    padding: 48px 40px 24px;
+    border-bottom: 1px solid var(--border);
+    display:flex; align-items:flex-end; gap:24px; flex-wrap:wrap;
+  }
+  .logo {
+    font-size:2.4rem; font-weight:800; line-height:1;
+    background: linear-gradient(120deg, var(--accent), var(--accent4));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    letter-spacing:-1px;
+  }
+  .logo span { -webkit-text-fill-color: var(--accent2); }
+  .subtitle {
+    font-family:'JetBrains Mono',monospace;
+    font-size:.75rem; color:var(--muted);
+    background:var(--surface); border:1px solid var(--border);
+    padding:4px 10px; border-radius:4px;
+    margin-bottom:4px;
+  }
+
+  /* ── search bar ── */
+  .search-wrap {
+    position:relative; z-index:10;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  #search {
+    width:100%; max-width:600px;
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--text);
+    font-family:'JetBrains Mono',monospace; font-size:.9rem;
+    padding: 12px 20px 12px 44px;
+    border-radius:8px; outline:none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  #search:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,229,255,.12); }
+  #search::placeholder { color:var(--muted); }
+  .search-icon {
+    position:absolute; left:55px; top:50%; transform:translateY(-50%);
+    color:var(--muted); font-size:1rem; pointer-events:none;
+  }
+  #result-count {
+    display:inline-block; margin-left:16px;
+    font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--muted);
+  }
+
+  /* ── tabs ── */
+  .tabs {
+    position:relative; z-index:10;
+    display:flex; gap:4px; flex-wrap:wrap;
+    padding: 16px 40px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    font-family:'JetBrains Mono',monospace; font-size:.75rem;
+    padding:8px 16px; border-radius:6px 6px 0 0;
+    border:1px solid transparent; border-bottom:none;
+    cursor:pointer; transition:all .15s;
+    color:var(--muted); background:transparent;
+    position:relative; bottom:-1px;
+  }
+  .tab:hover { color:var(--text); background:var(--surface); }
+  .tab.active {
+    color:var(--accent); background:var(--card);
+    border-color:var(--border); border-bottom-color:var(--card);
+  }
+  .tab-dot { display:inline-block; width:6px;height:6px; border-radius:50%; margin-right:6px; }
+
+  /* ── main grid ── */
+  main {
+    position:relative; z-index:10;
+    padding: 32px 40px 80px;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── cards ── */
+  .card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; overflow:hidden;
+    transition:border-color .2s, transform .15s, box-shadow .2s;
+    animation: fadeIn .3s ease both;
+  }
+  .card:hover {
+    border-color:rgba(0,229,255,.3);
+    transform:translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,229,255,.08);
+  }
+  .card.hidden { display:none; }
+
+  @keyframes fadeIn {
+    from { opacity:0; transform:translateY(8px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .card-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px;
+    border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,.02);
+  }
+  .card-title {
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.08em;
+  }
+  .card-tag {
+    font-family:'JetBrains Mono',monospace; font-size:.62rem;
+    padding:2px 8px; border-radius:20px;
+    background:rgba(255,255,255,.06); color:var(--muted);
+  }
+
+  /* ── rows inside card ── */
+  .row {
+    display:grid; grid-template-columns:1fr 1fr;
+    border-bottom:1px solid var(--border);
+    transition: background .15s;
+    cursor:pointer;
+  }
+  .row:last-child { border-bottom:none; }
+  .row:hover { background:rgba(255,255,255,.03); }
+  .row:hover .copy-hint { opacity:1; }
+
+  .cell {
+    padding:9px 14px;
+    font-family:'JetBrains Mono',monospace; font-size:.78rem;
+    line-height:1.5;
+  }
+  .cell:first-child {
+    color:var(--accent); border-right:1px solid var(--border);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .cell:last-child { color:var(--muted); font-size:.72rem; }
+
+  .copy-hint {
+    opacity:0; transition:opacity .15s;
+    font-size:.6rem; color:var(--accent3); margin-left:6px;
+  }
+
+  /* ── code coloring ── */
+  .kw  { color:var(--keyword); }
+  .tp  { color:var(--type); }
+  .fn  { color:var(--fn); }
+  .st  { color:var(--str); }
+  .cm  { color:var(--comment); }
+  .hl  { background:rgba(0,229,255,.08); border-radius:3px; padding:0 2px; }
+
+  /* ── copy toast ── */
+  #toast {
+    position:fixed; bottom:32px; right:32px; z-index:1000;
+    background:var(--accent3); color:#0a0c10;
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:700;
+    padding:10px 20px; border-radius:6px;
+    transform:translateY(20px); opacity:0;
+    transition:all .25s;
+    pointer-events:none;
+  }
+  #toast.show { transform:translateY(0); opacity:1; }
+
+  /* ── section divider ── */
+  .section-label {
+    grid-column:1/-1;
+    font-size:.65rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.15em; color:var(--muted);
+    padding:16px 0 4px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .section-label::after {
+    content:''; flex:1; height:1px; background:var(--border);
+  }
+
+  /* ── no results ── */
+  #no-results {
+    grid-column:1/-1; display:none;
+    text-align:center; padding:80px 20px;
+    color:var(--muted);
+    font-family:'JetBrains Mono',monospace; font-size:.85rem;
+  }
+
+  /* ── responsive ── */
+  @media(max-width:600px) {
+    header,main,.search-wrap,.tabs { padding-left:16px; padding-right:16px; }
+    main { grid-template-columns:1fr; }
+    .logo { font-size:1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<header>
+  <div>
+    <div class="logo">CF<span>++</span> Template</div>
+    <div style="color:var(--muted);font-size:.85rem;margin-top:4px;">Python-style C++ for Codeforces</div>
+  </div>
+  <div class="subtitle">Click any row to copy • Search to filter</div>
+</header>
+
+<div class="search-wrap">
+  <span class="search-icon">⌕</span>
+  <input id="search" type="text" placeholder="Search functions, macros, snippets..." autocomplete="off">
+  <span id="result-count"></span>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" data-filter="all">
+    <span class="tab-dot" style="background:var(--accent)"></span>All
+  </div>
+  <div class="tab" data-filter="io">
+    <span class="tab-dot" style="background:#ffd60a"></span>I/O
+  </div>
+  <div class="tab" data-filter="loops">
+    <span class="tab-dot" style="background:var(--accent3)"></span>Loops
+  </div>
+  <div class="tab" data-filter="list">
+    <span class="tab-dot" style="background:var(--accent)"></span>List
+  </div>
+  <div class="tab" data-filter="dict">
+    <span class="tab-dot" style="background:var(--accent2)"></span>Dict/Set
+  </div>
+  <div class="tab" data-filter="string">
+    <span class="tab-dot" style="background:#ff9f1c"></span>String
+  </div>
+  <div class="tab" data-filter="math">
+    <span class="tab-dot" style="background:var(--accent4)"></span>Math
+  </div>
+  <div class="tab" data-filter="ds">
+    <span class="tab-dot" style="background:#ff6b6b"></span>Data Structs
+  </div>
+  <div class="tab" data-filter="graph">
+    <span class="tab-dot" style="background:#4ecdc4"></span>Graph
+  </div>
+  <div class="tab" data-filter="algo">
+    <span class="tab-dot" style="background:#ffe66d"></span>Algorithms
+  </div>
+  <div class="tab" data-filter="macro">
+    <span class="tab-dot" style="background:#a29bfe"></span>Macros
+  </div>
+</div>
+
+<main id="grid">
+  <div id="no-results">No results found. Try a different search term.</div>
+</main>
+
+<div id="toast">✓ Copied!</div>
+
+<script>
+const DATA = [
+  // ── I/O ──────────────────────────────────────────────────────────────────
+  { cat:'io', title:'Input', color:'#ffd60a', rows:[
+    ['input<int>()',        'int(input())'],
+    ['input<ll>()',         'int(input())  — long long'],
+    ['input<string>()',     'str(input())'],
+    ['sinput()',            'input()  — string word'],
+    ['linput()',            'input()  — full line'],
+    ['readvi(n)',           'list(map(int, input().split()))'],
+    ['readvl(n)',           'list(map(int,…)) — ll'],
+    ['readpair<int,int>()', 'a,b = map(int, input().split())'],
+  ]},
+  { cat:'io', title:'Output', color:'#ffd60a', rows:[
+    ['print(x)',            'print(x)'],
+    ['print(a, b, c)',      'print(a, b, c)  — space sep'],
+    ['println(vec)',        'print(*a, sep="\\n")'],
+    ['printvec(vec)',       'print(*a)  — space sep'],
+    ['yes',                 'print("YES")'],
+    ['no',                  'print("NO")'],
+    ['cout << x << endl',   'print(x)  — raw'],
+  ]},
+
+  // ── LOOPS ─────────────────────────────────────────────────────────────────
+  { cat:'loops', title:'Loop Macros', color:'#a8ff3e', rows:[
+    ['rep(i, n)',            'for i in range(n)'],
+    ['repe(i, s, e)',        'for i in range(s, e)'],
+    ['repd(i, n)',           'for i in range(n-1,-1,-1)'],
+    ['repde(i, s, e)',       'reversed range(s,e)'],
+    ['repstep(i,s,e,k)',     'for i in range(s,e,k)'],
+    ['each(x, a)',           'for x in a'],
+    ['each2(k, v, d)',       'for k,v in d.items()'],
+  ]},
+  { cat:'loops', title:'Functional Loops', color:'#a8ff3e', rows:[
+    ['enumerate(a, [&](int i, auto v){ })', 'for i,v in enumerate(a)'],
+    ['zip(a, b, [&](auto x, auto y){ })',   'for x,y in zip(a,b)'],
+  ]},
+
+  // ── LIST ──────────────────────────────────────────────────────────────────
+  { cat:'list', title:'List — Create & Info', color:'#00e5ff', rows:[
+    ['vec<int> a = {1,2,3}',  'a = [1,2,3]'],
+    ['vec<int> a(n, 0)',       'a = [0]*n'],
+    ['zeros(n)',               '[0]*n  — vi'],
+    ['ones(n)',                '[1]*n  — vi'],
+    ['lzeros(n)',              '[0]*n  — vl'],
+    ['iota_vec(n)',            'list(range(n))'],
+    ['len(a)',                 'len(a)'],
+    ['sz(a)',                  'len(a)  — int cast'],
+  ]},
+  { cat:'list', title:'List — Modify', color:'#00e5ff', rows:[
+    ['append(a, x)',           'a.append(x)'],
+    ['a.push_back(x)',         'a.append(x)  — raw'],
+    ['extend(a, b)',           'a.extend(b)'],
+    ['insert(a, i, x)',        'a.insert(i, x)'],
+    ['pop(a)',                 'a.pop()'],
+    ['pop(a, i)',              'a.pop(i)'],
+    ['remove_val(a, x)',       'a.remove(x)'],
+    ['fill(a, v)',             'a = [v]*n  — in place'],
+    ['rotate_left(a, k)',      'a = a[k:]+a[:k]'],
+    ['rotate_right(a, k)',     'a = a[-k:]+a[:-k]'],
+  ]},
+  { cat:'list', title:'List — Query', color:'#00e5ff', rows:[
+    ['contains(a, x)',         'x in a'],
+    ['count(a, x)',            'a.count(x)'],
+    ['index(a, x)',            'a.index(x)'],
+    ['sum(a)',                 'sum(a)'],
+    ['product(a)',             'math.prod(a)'],
+    ['vmin(a)',                'min(a)'],
+    ['vmax(a)',                'max(a)'],
+    ['argmin(a)',              'a.index(min(a))'],
+    ['argmax(a)',              'a.index(max(a))'],
+  ]},
+  { cat:'list', title:'List — Transform', color:'#00e5ff', rows:[
+    ['sorted(a)',                         'sorted(a)  — copy'],
+    ['sorted(a, cmp)',                    'sorted(a, key=...)'],
+    ['reversed(a)',                       'list(reversed(a))'],
+    ['slice(a, s, e)',                    'a[s:e]'],
+    ['flatten(vv)',                       '[x for row in vv for x in row]'],
+    ['transform_to(a, [](auto x){...})', '[f(x) for x in a]'],
+    ['filter_to(a, [](auto x){...})',    '[x for x in a if p(x)]'],
+    ['unique_vals(a)',                    'sorted(set(a))'],
+    ['all(a, pred)',                      'all(p(x) for x in a)'],
+    ['any(a, pred)',                      'any(p(x) for x in a)'],
+    ['none(a, pred)',                     'not any(p(x) for x in a)'],
+  ]},
+
+  // ── DICT / SET ────────────────────────────────────────────────────────────
+  { cat:'dict', title:'Dict — Operations', color:'#ff6b35', rows:[
+    ['map<int,int> d',         'd = {}'],
+    ['umap<int,int> d',        'd = {}  — faster'],
+    ['d[key]++',               'd[key] = d.get(key,0)+1'],
+    ['get(d, key, def)',        'd.get(key, def)'],
+    ['keys(d)',                 'list(d.keys())'],
+    ['values(d)',               'list(d.values())'],
+    ['contains(d, key)',        'key in d'],
+    ['counter(a)',              'Counter(a)'],
+    ['ucounter(a)',             'Counter(a)  — unordered'],
+    ['most_common(a)',          'Counter(a).most_common(1)[0]'],
+  ]},
+  { cat:'dict', title:'Set — Operations', color:'#ff6b35', rows:[
+    ['set<int> s',             's = set()'],
+    ['uset<int> s',            's = set()  — faster'],
+    ['s.insert(x)',            's.add(x)'],
+    ['s.erase(x)',             's.discard(x)'],
+    ['contains(s, x)',         'x in s'],
+    ['to_set(a)',              'set(a)'],
+    ['to_vec(s)',              'list(s)'],
+    ['union_set(a, b)',        'a | b'],
+    ['intersection(a, b)',     'a & b'],
+    ['difference(a, b)',       'a - b'],
+  ]},
+
+  // ── STRING ────────────────────────────────────────────────────────────────
+  { cat:'string', title:'String — Core', color:'#ff9f1c', rows:[
+    ['split(s, delim)',        's.split(delim)'],
+    ['join(a, sep)',           'sep.join(a)'],
+    ['strip(s)',               's.strip()'],
+    ['lstrip(s)',              's.lstrip()'],
+    ['rstrip(s)',              's.rstrip()'],
+    ['upper(s)',               's.upper()'],
+    ['lower(s)',               's.lower()'],
+    ['repeat(s, n)',           's * n'],
+    ['to_string(x)',           'str(x)'],
+    ['stoi(s) / stoll(s)',     'int(s)'],
+  ]},
+  { cat:'string', title:'String — Search & Check', color:'#ff9f1c', rows:[
+    ['startswith(s, pre)',     's.startswith(pre)'],
+    ['endswith(s, suf)',       's.endswith(suf)'],
+    ['replace_all(s, f, t)',   's.replace(f, t)'],
+    ['str_count(s, sub)',      's.count(sub)'],
+    ['str_find(s, sub)',       's.find(sub)  — -1 if missing'],
+    ['is_digit(s)',            's.isdigit()'],
+    ['is_alpha(s)',            's.isalpha()'],
+    ['is_alnum(s)',            's.isalnum()'],
+    ['bin_str(n)',             'bin(n)'],
+  ]},
+
+  // ── MATH ──────────────────────────────────────────────────────────────────
+  { cat:'math', title:'Math — Basic', color:'#c77dff', rows:[
+    ['pw(a, b)',               'a**b  — integer'],
+    ['mpow(a, b, mod)',        'pow(a, b, mod)'],
+    ['modinv(a, mod)',         'modular inverse'],
+    ['gcd(a, b)',              'math.gcd(a, b)'],
+    ['lcm(a, b)',              'math.lcm(a, b)'],
+    ['divmod(a, b)',           'divmod(a, b)'],
+    ['sign(x)',                'cmp(x, 0)'],
+    ['clamp(x, lo, hi)',       'max(lo, min(hi, x))'],
+    ['chmin(a, b)',            'a = min(a, b)'],
+    ['chmax(a, b)',            'a = max(a, b)'],
+    ['absll(x)',               'abs(x)  — ll safe'],
+  ]},
+  { cat:'math', title:'Math — Number Theory', color:'#c77dff', rows:[
+    ['is_prime(n)',            'primality test'],
+    ['sieve(n)',               'primes up to n'],
+    ['prime_factors(n)',       'factorization map'],
+    ['divisors(n)',            'sorted list of divisors'],
+    ['popcount(n)',            "bin(n).count('1')"],
+    ['bit_length(n)',          'n.bit_length()'],
+    ['ctz(n)',                 'trailing zeros count'],
+    ['is_pow2(n)',             '(n & n-1) == 0'],
+    ['next_pow2(n)',           'next power of 2 >= n'],
+  ]},
+  { cat:'math', title:'Combinatorics', color:'#c77dff', rows:[
+    ['init_comb()',            '— call once in main —'],
+    ['Comb::C(n, r)',          'math.comb(n, r)  mod p'],
+    ['Comb::P(n, r)',          'nPr  mod p'],
+  ]},
+  { cat:'math', title:'Prefix Sum', color:'#c77dff', rows:[
+    ['prefix_sum(a)',          'running sum array'],
+    ['range_sum(ps, l, r)',    'sum(a[l:r+1])'],
+    ['prefix_sum2d(a)',        '2D prefix sum'],
+    ['range_sum2d(ps,r1,c1,r2,c2)', '2D range sum'],
+  ]},
+
+  // ── DATA STRUCTURES ──────────────────────────────────────────────────────
+  { cat:'ds', title:'DSU / Union-Find', color:'#ff6b6b', rows:[
+    ['DSU dsu(n)',             '— create with n nodes —'],
+    ['dsu.unite(u, v)',        'union(u, v)'],
+    ['dsu.same(u, v)',         'find(u)==find(v)'],
+    ['dsu.size(u)',            'component size of u'],
+    ['dsu.components()',       'number of components'],
+  ]},
+  { cat:'ds', title:'Fenwick Tree (BIT)', color:'#ff6b6b', rows:[
+    ['Fenwick bit(n)',         '— create with size n —'],
+    ['bit.update(i, delta)',   'point add delta at i'],
+    ['bit.prefix(i)',          'prefix sum [0,i]'],
+    ['bit.query(l, r)',        'range sum [l,r]'],
+  ]},
+  { cat:'ds', title:'Segment Tree', color:'#ff6b6b', rows:[
+    ['SegTree seg(n)',         '— empty, size n —'],
+    ['SegTree seg(a)',         '— build from vec —'],
+    ['seg.update(i, val)',     'point update'],
+    ['seg.query(l, r)',        'range sum query'],
+  ]},
+  { cat:'ds', title:'Sparse Table', color:'#ff6b6b', rows:[
+    ['SparseTable sp(a)',      '— build from vec —'],
+    ['sp.qmin(l, r)',          'range minimum O(1)'],
+    ['sp.qmax(l, r)',          'range maximum O(1)'],
+  ]},
+  { cat:'ds', title:'Priority Queues', color:'#ff6b6b', rows:[
+    ['pq<int> q',              'max-heap (default)'],
+    ['pqmin<int> q',           'min-heap'],
+    ['q.push(x)',              'heapq.heappush(q, x)'],
+    ['q.top()',                'q[0]  — peek'],
+    ['q.pop()',                'heapq.heappop(q)'],
+  ]},
+  { cat:'ds', title:'Coordinate Compress', color:'#ff6b6b', rows:[
+    ['Compress<int> c(a)',     '— build from vec —'],
+    ['c.encode(x)',            'compressed index of x'],
+    ['c.decode(i)',            'original value at i'],
+    ['c.size()',               'number of unique values'],
+  ]},
+
+  // ── GRAPH ─────────────────────────────────────────────────────────────────
+  { cat:'graph', title:'Graph Setup', color:'#4ecdc4', rows:[
+    ['auto g = new_graph(n)',           'G = [[] for _ in range(n)]'],
+    ['add_edge(g, u, v)',               'G[u].append(v); G[v].append(u)'],
+    ['add_edge(g, u, v, true)',         'directed edge u→v'],
+    ['auto wg = new_wgraph(n)',         'weighted graph'],
+    ['add_edge(wg, u, v, weight)',      'weighted undirected'],
+    ['add_edge(wg, u, v, w, true)',     'weighted directed'],
+  ]},
+  { cat:'graph', title:'Graph Algorithms', color:'#4ecdc4', rows:[
+    ['bfs(g, src)',            'BFS — dist array, -1=unreachable'],
+    ['dijkstra(wg, src)',      'Dijkstra — dist array, INF=unreachable'],
+    ['dfs_order(g, src)',      'DFS — visit order'],
+    ['topo_sort(g)',           'topological sort (Kahn)'],
+  ]},
+
+  // ── ALGORITHMS ───────────────────────────────────────────────────────────
+  { cat:'algo', title:'Binary Search', color:'#ffe66d', rows:[
+    ['bisect_left(a, x)',              'bisect.bisect_left(a, x)'],
+    ['bisect_right(a, x)',             'bisect.bisect_right(a, x)'],
+    ['insort(a, x)',                   'bisect.insort(a, x)'],
+    ['bs_first(lo,hi,[&](ll x){...})', 'first x where cond is True'],
+    ['bs_last(lo,hi,[&](ll x){...})',  'last x where cond is True'],
+  ]},
+  { cat:'algo', title:'String Algorithms', color:'#ffe66d', rows:[
+    ['kmp_search(text, pat)',   'all occurrences of pat in text'],
+    ['z_function(s)',           'Z-array of s'],
+  ]},
+  { cat:'algo', title:'STL Algorithms', color:'#ffe66d', rows:[
+    ['sort(all(a))',                   'a.sort()'],
+    ['sort(all(a), greater<int>())',   'a.sort(reverse=True)'],
+    ['reverse(all(a))',                'a.reverse()'],
+    ['next_permutation(all(a))',       'itertools.permutations'],
+    ['prev_permutation(all(a))',       'reverse permutation'],
+    ['binary_search(all(a), x)',       'x in sorted_a  (bool)'],
+    ['lower_bound(all(a), x)',         'bisect.bisect_left  (iter)'],
+    ['upper_bound(all(a), x)',         'bisect.bisect_right (iter)'],
+    ['accumulate(all(a), 0)',          'sum(a)'],
+    ['*min_element(all(a))',           'min(a)'],
+    ['*max_element(all(a))',           'max(a)'],
+    ['count(all(a), x)',               'a.count(x)  — STL'],
+    ['fill(all(a), v)',                '[v]*n  — in place'],
+    ['iota(all(a), 0)',                'list(range(n))  — in place'],
+  ]},
+
+  // ── MACROS ────────────────────────────────────────────────────────────────
+  { cat:'macro', title:'Shorthand Macros', color:'#a29bfe', rows:[
+    ['all(x)',     '(x).begin(), (x).end()'],
+    ['rall(x)',    '(x).rbegin(), (x).rend()'],
+    ['sz(x)',      '(int)(x).size()'],
+    ['fi',         '.first'],
+    ['se',         '.second'],
+    ['pb',         '.push_back'],
+    ['mp',         'make_pair'],
+    ['endl',       '"\\n"  — fast (no flush)'],
+    ['FASTIO',     'ios_base::sync_with_stdio(false); cin.tie(NULL)'],
+    ['yes',        'cout << "YES\\n"'],
+    ['no',         'cout << "NO\\n"'],
+  ]},
+  { cat:'macro', title:'Type Aliases', color:'#a29bfe', rows:[
+    ['ll',          'long long'],
+    ['ld',          'long double'],
+    ['vi',          'vector<int>'],
+    ['vl',          'vector<ll>'],
+    ['vvi',         'vector<vector<int>>'],
+    ['ii',          'pair<int,int>'],
+    ['vec<T>',      'vector<T>'],
+    ['umap<K,V>',   'unordered_map<K,V>'],
+    ['uset<T>',     'unordered_set<T>'],
+    ['pq<T>',       'priority_queue<T>  max'],
+    ['pqmin<T>',    'priority_queue min'],
+    ['que<T>',      'queue<T>'],
+    ['stk<T>',      'stack<T>'],
+    ['deq<T>',      'deque<T>'],
+  ]},
+  { cat:'macro', title:'Constants', color:'#a29bfe', rows:[
+    ['INF',         '2e18  — float("inf")'],
+    ['INF32',       '2e9'],
+    ['MOD',         '1e9+7'],
+    ['MOD2',        '998244353'],
+    ['PI',          'math.pi'],
+    ['dx4, dy4',    '4-directional grid offsets'],
+    ['dx8, dy8',    '8-directional grid offsets'],
+  ]},
+  { cat:'macro', title:'Debug (compile -DLOCAL)', color:'#a29bfe', rows:[
+    ['dbg(x)',       'print(f"{x=}")'],
+    ['dbgv(a)',      'print(a)  — vector'],
+    ['dbg2(x, y)',   'print(x, y)'],
+    ['dbg3(x,y,z)',  'print(x, y, z)'],
+    ['TIMER',        'start = time.time()'],
+    ['TIME',         'print(time.time()-start)'],
+  ]},
+];
+
+// ── Build grid ──────────────────────────────────────────────────────────────
+const grid    = document.getElementById('grid');
+const noRes   = document.getElementById('no-results');
+const allCards = [];
+
+DATA.forEach(section => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.cat = section.cat;
+  card.dataset.text = (section.title + ' ' + section.rows.map(r=>r.join(' ')).join(' ')).toLowerCase();
+
+  let rowsHTML = section.rows.map(([cpp, py]) => `
+    <div class="row" data-cpp="${escHtml(cpp)}">
+      <div class="cell">${hlCpp(cpp)}<span class="copy-hint">copy</span></div>
+      <div class="cell">${escHtml(py)}</div>
+    </div>`).join('');
+
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="card-title" style="color:${section.color}">${section.title}</div>
+      <div class="card-tag">${section.cat}</div>
+    </div>
+    ${rowsHTML}`;
+
+  grid.appendChild(card);
+  allCards.push(card);
+});
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function hlCpp(s) {
+  const e = escHtml(s);
+  return e
+    .replace(/\b(int|ll|auto|void|bool|string|char|const|struct|class|while|for|if|else|return|true|false|nullptr)\b/g,'<span class="kw">$1</span>')
+    .replace(/\b(vec|map|set|umap|uset|pq|pqmin|que|stk|deq|Graph|WGraph|DSU|Fenwick|SegTree|SparseTable|Compress|vi|vl|vvi)\b/g,'<span class="tp">$1</span>')
+    .replace(/\b([a-z_][a-z_0-9]*)\s*(?=\()/g,'<span class="fn">$1</span>')
+    .replace(/&lt;|&gt;/g, m => `<span class="kw">${m}</span>`);
+}
+
+// ── Copy on row click ───────────────────────────────────────────────────────
+const toast = document.getElementById('toast');
+let toastTimer;
+grid.addEventListener('click', e => {
+  const row = e.target.closest('.row');
+  if (!row) return;
+  const text = row.dataset.cpp;
+  navigator.clipboard.writeText(text).then(() => {
+    clearTimeout(toastTimer);
+    toast.classList.add('show');
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  });
+});
+
+// ── Search ──────────────────────────────────────────────────────────────────
+const search  = document.getElementById('search');
+const counter = document.getElementById('result-count');
+let activeFilter = 'all';
+
+function applyFilters() {
+  const q = search.value.toLowerCase().trim();
+  let visible = 0;
+  allCards.forEach(card => {
+    const matchCat = activeFilter === 'all' || card.dataset.cat === activeFilter;
+    const matchQ   = !q || card.dataset.text.includes(q);
+    const show = matchCat && matchQ;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  noRes.style.display = visible === 0 ? 'block' : 'none';
+  counter.textContent = q || activeFilter !== 'all' ? `${visible} section${visible!==1?'s':''}` : '';
+}
+
+search.addEventListener('input', applyFilters);
+
+// ── Tabs ────────────────────────────────────────────────────────────────────
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  activeFilter = tab.dataset.filter;
+  applyFilters();
+});
+
+// ── Keyboard shortcut  / to focus search ────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== search) {
+    e.preventDefault(); search.focus();
+  }
+  if (e.key === 'Escape') { search.value=''; applyFilters(); search.blur(); }
+});
+</script>
+</body>
+</html>
