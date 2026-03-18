@@ -73,7 +73,7 @@ template<class A,class B> pair<A,B> readpair(){A a;B b;cin>>a>>b;return{a,b};}
 #define repde(i,s,e)    for(ll i=(ll)(e)-1;i>=(ll)(s);i--)
 #define repstep(i,s,e,k)for(ll i=(ll)(s);i<(ll)(e);i+=(k))
 #define each(x,a)       for(auto&x:(a))
-#define each2(k,v,m)    for(auto&[k,v]:(m))
+#define each2(k,v,m)    for(auto& _kv:(m)) if(auto& k=_kv.first, &v=_kv.second; true)
 
 template<class T,class F> void enumerate(const vec<T>&a,F f){for(int i=0;i<(int)a.size();i++)f(i,a[i]);}
 template<class A,class B,class F> void zip(const vec<A>&a,const vec<B>&b,F f){int n=min(a.size(),b.size());for(int i=0;i<n;i++)f(a[i],b[i]);}
@@ -122,8 +122,8 @@ template<class T,class F> bool none(const vec<T>&a,F f){return none_of(a.begin()
 // ── Dict / Map ─────────────────────────────────────────────────
 template<class K,class V> V get(const map<K,V>&d,const K&k,V def=V()){auto it=d.find(k);return it==d.end()?def:it->second;}
 template<class K,class V> V get(const umap<K,V>&d,const K&k,V def=V()){auto it=d.find(k);return it==d.end()?def:it->second;}
-template<class K,class V> vec<K> keys(const map<K,V>&d){vec<K>r;for(auto&[k,v]:d)r.push_back(k);return r;}
-template<class K,class V> vec<V> values(const map<K,V>&d){vec<V>r;for(auto&[k,v]:d)r.push_back(v);return r;}
+template<class K,class V> vec<K> keys(const map<K,V>&d){vec<K>r;for(auto&p:d)r.push_back(p.first);return r;}
+template<class K,class V> vec<V> values(const map<K,V>&d){vec<V>r;for(auto&p:d)r.push_back(p.second);return r;}
 template<class T> map<T,int>  counter (const vec<T>&a){map<T,int>c;for(auto&x:a)c[x]++;return c;}
 template<class T> umap<T,int> ucounter(const vec<T>&a){umap<T,int>c;for(auto&x:a)c[x]++;return c;}
 template<class T> pair<T,int> most_common(const vec<T>&a){auto c=counter(a);return*max_element(c.begin(),c.end(),[](auto&x,auto&y){return x.second<y.second;});}
@@ -253,7 +253,7 @@ void add_edge(Graph&g,int u,int v,bool d=false){g[u].push_back(v);if(!d)g[v].pus
 void add_edge(WGraph&g,int u,int v,ll w,bool d=false){g[u].push_back({v,w});if(!d)g[v].push_back({u,w});}
 
 vl bfs(const Graph&g,int src){int n=g.size();vl dist(n,-1);que<int>q;dist[src]=0;q.push(src);while(!q.empty()){int u=q.front();q.pop();for(int v:g[u])if(dist[v]==-1){dist[v]=dist[u]+1;q.push(v);}}return dist;}
-vl dijkstra(const WGraph&g,int src){int n=g.size();vl dist(n,INF);pqmin<pair<ll,int>>pq;dist[src]=0;pq.push({0,src});while(!pq.empty()){auto[d,u]=pq.top();pq.pop();if(d>dist[u])continue;for(auto[v,w]:g[u])if(dist[u]+w<dist[v]){dist[v]=dist[u]+w;pq.push({dist[v],v});}}return dist;}
+vl dijkstra(const WGraph&g,int src){int n=g.size();vl dist(n,INF);pqmin<pair<ll,int>>pq;dist[src]=0;pq.push({0,src});while(!pq.empty()){ll d=pq.top().first;int u=pq.top().second;pq.pop();if(d>dist[u])continue;for(int i=0;i<(int)g[u].size();i++){int v=g[u][i].first;ll w=g[u][i].second;if(dist[u]+w<dist[v]){dist[v]=dist[u]+w;pq.push({dist[v],v});}}}return dist;}
 vi dfs_order(const Graph&g,int src){int n=g.size();vi vis(n,0),order;stk<int>st;st.push(src);while(!st.empty()){int u=st.top();st.pop();if(vis[u])continue;vis[u]=1;order.push_back(u);for(int v:g[u])if(!vis[v])st.push(v);}return order;}
 vi topo_sort(const Graph&g){int n=g.size();vi indeg(n,0);for(int u=0;u<n;u++)for(int v:g[u])indeg[v]++;que<int>q;for(int i=0;i<n;i++)if(!indeg[i])q.push(i);vi order;while(!q.empty()){int u=q.front();q.pop();order.push_back(u);for(int v:g[u])if(--indeg[v]==0)q.push(v);}return order;}
 
@@ -272,7 +272,11 @@ vi z_function(const string&s){int n=s.size();vi z(n,0);z[0]=n;for(int i=1,l=0,r=
     #define TIMER Timer __t;
     #define TIME  cerr<<"Time: "<<__t.elapsed()<<"s\n";
 #else
-    #define dbg(x) #define dbgv(a) #define dbg2(x,y) #define TIMER #define TIME
+    #define dbg(x)
+    #define dbgv(a)
+    #define dbg2(x,y)
+    #define TIMER
+    #define TIME
 #endif
 
 // ── Macros ─────────────────────────────────────────────────────
