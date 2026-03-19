@@ -10,8 +10,6 @@
  * ║      CODEFORCES C++ TEMPLATE  —  PYTHON-STYLE POWER         ║
  * ╚══════════════════════════════════════════════════════════════╝
  *  Python  →  C++ (this template)
- *  print(x)          →  print(x)
- *  input()           →  input<int>() / sinput()
  *  list              →  vec<T>
  *  dict              →  map<K,V> / umap<K,V>
  *  Counter(a)        →  counter(a)
@@ -19,11 +17,16 @@
  *  for x in a        →  each(x, a)
  *  for k,v in d      →  each2(k, v, d)
  *  sorted/reversed   →  sorted(a) / reversed(a)
- *  x in a            →  contains(a, x)
+ *  x in a            →  contains(a, x)    ← O(n) vec | O(1) uset | O(log n) contains_sorted
+ *  a.index(x)        →  index(a, x)       ← O(n) vec | O(log n) index_sorted (sorted array)
+ *  sorted (ints)     →  radix_sort(a)     ← O(n) vs sorted() O(n log n)
  *  [f(x) for x in a] →  transform_to(a, f)
  *  bisect            →  bisect_left / bisect_right
  *  pow(a,b,mod)      →  mpow(a,b,mod)
  *  float('inf')      →  INF
+ *
+ *  ⚠  contains(vec, x) is O(n)  — use uset<T> for O(1) membership
+ *  ⚠  Compiles on C++14 and C++17
  */
 
 #include <bits/stdc++.h>
@@ -52,47 +55,35 @@ const int dx8[]={0,0,1,-1,1,1,-1,-1}, dy8[]={1,-1,0,0,1,-1,1,-1};
 // ── Fast I/O ───────────────────────────────────────────────────
 #define FASTIO ios_base::sync_with_stdio(false);cin.tie(NULL);
 
-template<class T>           void print(T x){cout<<x<<"\n";}
-template<class T,class...A> void print(T x,A...a){cout<<x<<" ";print(a...);}
-template<class T>           void println(const vec<T>&a){for(auto&x:a)cout<<x<<"\n";}
-template<class T>           void printvec(const vec<T>&a,const string&s=" "){
-    for(int i=0;i<(int)a.size();i++){if(i)cout<<s;cout<<a[i];}cout<<"\n";}
-
-template<class T>    T      input(){T x;cin>>x;return x;}
-string sinput(){string s;cin>>s;return s;}
-string linput(){string s;getline(cin,s);return s;}
-template<class T>    vec<T> readvec(int n){vec<T>a(n);for(auto&x:a)cin>>x;return a;}
-vi readvi(int n){return readvec<int>(n);}
-vl readvl(int n){return readvec<ll>(n);}
-template<class A,class B> pair<A,B> readpair(){A a;B b;cin>>a>>b;return{a,b};}
-
 // ── Loops ──────────────────────────────────────────────────────
-#define rep(i,n)        for(ll i=0;i<(ll)(n);i++)
-#define repe(i,s,e)     for(ll i=(ll)(s);i<(ll)(e);i++)
-#define repd(i,n)       for(ll i=(ll)(n)-1;i>=0;i--)
-#define repde(i,s,e)    for(ll i=(ll)(e)-1;i>=(ll)(s);i--)
-#define repstep(i,s,e,k)for(ll i=(ll)(s);i<(ll)(e);i+=(k))
-#define each(x,a)       for(auto&x:(a))
-#define each2(k,v,m)    for(auto& _kv:(m)) if(auto& k=_kv.first, &v=_kv.second; true)
+#define rep(i,n)         for(ll i=0;i<(ll)(n);i++)
+#define repe(i,s,e)      for(ll i=(ll)(s);i<(ll)(e);i++)
+#define repd(i,n)        for(ll i=(ll)(n)-1;i>=0;i--)
+#define repde(i,s,e)     for(ll i=(ll)(e)-1;i>=(ll)(s);i--)
+#define repstep(i,s,e,k) for(ll i=(ll)(s);i<(ll)(e);i+=(k))
+#define each(x,a)        for(auto&x:(a))
+// each2: C++14-safe key-value iteration over any map  →  for k,v in d.items()
+#define each2(k,v,m)     for(auto&_p:(m))for(bool _b=true;_b;_b=false)for(auto&k=_p.first;_b;_b=false)for(auto&v=_p.second;_b;_b=false)
 
 template<class T,class F> void enumerate(const vec<T>&a,F f){for(int i=0;i<(int)a.size();i++)f(i,a[i]);}
 template<class A,class B,class F> void zip(const vec<A>&a,const vec<B>&b,F f){int n=min(a.size(),b.size());for(int i=0;i<n;i++)f(a[i],b[i]);}
 
 // ── List / Vector ──────────────────────────────────────────────
-template<class T> ll  len(const T&a){return(ll)a.size();}
+template<class T> ll   len(const T&a){return(ll)a.size();}
 template<class T> void append(vec<T>&a,T x){a.push_back(x);}
 template<class T> void extend(vec<T>&a,const vec<T>&b){a.insert(a.end(),b.begin(),b.end());}
 template<class T> void insert(vec<T>&a,int i,T x){a.insert(a.begin()+i,x);}
-template<class T> T   pop(vec<T>&a,int i=-1){if(i==-1){T v=a.back();a.pop_back();return v;}T v=a[i];a.erase(a.begin()+i);return v;}
+template<class T> T    pop(vec<T>&a,int i=-1){if(i==-1){T v=a.back();a.pop_back();return v;}T v=a[i];a.erase(a.begin()+i);return v;}
 template<class T> bool remove_val(vec<T>&a,T x){auto it=find(a.begin(),a.end(),x);if(it==a.end())return false;a.erase(it);return true;}
-template<class T> ll  count(const vec<T>&a,T x){return(ll)std::count(a.begin(),a.end(),x);}
-template<class T> int index(const vec<T>&a,T x){auto it=find(a.begin(),a.end(),x);return it==a.end()?-1:(int)(it-a.begin());}
+template<class T> ll   count(const vec<T>&a,T x){return(ll)std::count(a.begin(),a.end(),x);}
+template<class T> int  index(const vec<T>&a,T x){auto it=find(a.begin(),a.end(),x);return it==a.end()?-1:(int)(it-a.begin());}
 
+// contains — O(n) for vec, O(1) for uset/set/map  →  x in a
 template<class T,class V> bool contains(const vec<T>&a,V x){return find(a.begin(),a.end(),x)!=a.end();}
 template<class T,class V> bool contains(const set<T>&a,V x){return a.count(x);}
-template<class T,class V> bool contains(const unordered_set<T>&a,V x){return a.count(x);}
+template<class T,class V> bool contains(const uset<T>&a,V x){return a.count(x);}
 template<class K,class V,class Q> bool contains(const map<K,V>&a,Q x){return a.count(x);}
-template<class K,class V,class Q> bool contains(const unordered_map<K,V>&a,Q x){return a.count(x);}
+template<class K,class V,class Q> bool contains(const umap<K,V>&a,Q x){return a.count(x);}
 
 template<class T> T   sum(const vec<T>&a){return accumulate(a.begin(),a.end(),T(0));}
 template<class T> T   product(const vec<T>&a){return accumulate(a.begin(),a.end(),T(1),multiplies<T>());}
@@ -101,14 +92,48 @@ template<class T> T   vmax(const vec<T>&a){return*max_element(a.begin(),a.end())
 template<class T> int argmin(const vec<T>&a){return(int)(min_element(a.begin(),a.end())-a.begin());}
 template<class T> int argmax(const vec<T>&a){return(int)(max_element(a.begin(),a.end())-a.begin());}
 
-template<class T>        vec<T> sorted(vec<T>a){sort(a.begin(),a.end());return a;}
-template<class T,class C>vec<T> sorted(vec<T>a,C c){sort(a.begin(),a.end(),c);return a;}
-template<class T>        vec<T> reversed(vec<T>a){reverse(a.begin(),a.end());return a;}
-template<class T>        vec<T> slice(const vec<T>&a,int s,int e=-1){if(e<0)e=(int)a.size()+e+1;return vec<T>(a.begin()+s,a.begin()+e);}
-template<class T>        vec<T> flatten(const vec<vec<T>>&vv){vec<T>r;for(auto&v:vv)extend(r,v);return r;}
-template<class T,class F>auto   transform_to(const vec<T>&a,F f){using R=decltype(f(a[0]));vec<R>r(a.size());transform(a.begin(),a.end(),r.begin(),f);return r;}
-template<class T,class F>vec<T> filter_to(const vec<T>&a,F f){vec<T>r;copy_if(a.begin(),a.end(),back_inserter(r),f);return r;}
-template<class T>        vec<T> unique_vals(vec<T>a){sort(a.begin(),a.end());a.erase(unique(a.begin(),a.end()),a.end());return a;}
+template<class T>         vec<T> sorted(vec<T>a){sort(a.begin(),a.end());return a;}
+template<class T,class C> vec<T> sorted(vec<T>a,C c){sort(a.begin(),a.end(),c);return a;}
+template<class T>         vec<T> reversed(vec<T>a){reverse(a.begin(),a.end());return a;}
+template<class T>         vec<T> slice(const vec<T>&a,int s,int e=-1){if(e<0)e=(int)a.size()+e+1;return vec<T>(a.begin()+s,a.begin()+e);}
+template<class T>         vec<T> flatten(const vec<vec<T>>&vv){size_t tot=0;for(auto&v:vv)tot+=v.size();vec<T>r;r.reserve(tot);for(auto&v:vv)r.insert(r.end(),v.begin(),v.end());return r;}
+template<class T,class F> auto   transform_to(const vec<T>&a,F f)->vec<decltype(f(a[0]))>{using R=decltype(f(a[0]));vec<R>r(a.size());transform(a.begin(),a.end(),r.begin(),f);return r;}
+template<class T,class F> vec<T> filter_to(const vec<T>&a,F f){vec<T>r;copy_if(a.begin(),a.end(),back_inserter(r),f);return r;}
+template<class T>         vec<T> unique_vals(vec<T>a){sort(a.begin(),a.end());a.erase(unique(a.begin(),a.end()),a.end());return a;}
+
+// ── Sorted-array variants (require sorted input) ───────────────
+// contains_sorted: O(log n) vs contains(vec) O(n) — use on sorted arrays
+template<class T> bool contains_sorted(const vec<T>&a,T x){auto it=lower_bound(a.begin(),a.end(),x);return it!=a.end()&&*it==x;}
+// index_sorted: O(log n) vs index() O(n) — returns -1 if not found
+template<class T> int  index_sorted(const vec<T>&a,T x){auto it=lower_bound(a.begin(),a.end(),x);return(it!=a.end()&&*it==x)?(int)(it-a.begin()):-1;}
+
+// ── Radix Sort — O(n) for non-negative integers ────────────────
+// Use instead of sorted() when values are non-negative ints/ll
+// sorted() = O(n log n),  radix_sort() = O(n)  — massive win for large n
+void radix_sort(vi&a){
+    if(a.empty())return;
+    int mx=*max_element(a.begin(),a.end());
+    vi buf(a.size());
+    for(int exp=1;(ll)mx/exp>0;exp*=16){
+        int cnt[16]={};
+        for(int x:a)cnt[(x/exp)&15]++;
+        for(int i=1;i<16;i++)cnt[i]+=cnt[i-1];
+        for(int i=(int)a.size()-1;i>=0;i--)buf[--cnt[(a[i]/exp)&15]]=a[i];
+        a=buf;
+    }
+}
+void radix_sort(vl&a){
+    if(a.empty())return;
+    ll mx=*max_element(a.begin(),a.end());
+    vl buf(a.size());
+    for(ll exp=1;mx/exp>0;exp*=16){
+        int cnt[16]={};
+        for(ll x:a)cnt[(x/exp)&15]++;
+        for(int i=1;i<16;i++)cnt[i]+=cnt[i-1];
+        for(int i=(int)a.size()-1;i>=0;i--)buf[--cnt[(a[i]/exp)&15]]=a[i];
+        a=buf;
+    }
+}
 
 vi zeros(int n){return vi(n,0);} vi ones(int n){return vi(n,1);}
 vl lzeros(int n){return vl(n,0LL);}
@@ -126,7 +151,11 @@ template<class K,class V> vec<K> keys(const map<K,V>&d){vec<K>r;for(auto&p:d)r.p
 template<class K,class V> vec<V> values(const map<K,V>&d){vec<V>r;for(auto&p:d)r.push_back(p.second);return r;}
 template<class T> map<T,int>  counter (const vec<T>&a){map<T,int>c;for(auto&x:a)c[x]++;return c;}
 template<class T> umap<T,int> ucounter(const vec<T>&a){umap<T,int>c;for(auto&x:a)c[x]++;return c;}
-template<class T> pair<T,int> most_common(const vec<T>&a){auto c=counter(a);return*max_element(c.begin(),c.end(),[](auto&x,auto&y){return x.second<y.second;});}
+template<class T> pair<T,int> most_common(const vec<T>&a){
+    // ucounter = O(n) avg  vs  counter = O(n log n) — same result, faster
+    auto c=ucounter(a);
+    return *max_element(c.begin(),c.end(),[](const pair<T,int>&x,const pair<T,int>&y){return x.second<y.second;});
+}
 
 // ── Set ops ────────────────────────────────────────────────────
 template<class T> set<T> union_set(const set<T>&a,const set<T>&b){set<T>r=a;r.insert(b.begin(),b.end());return r;}
@@ -162,7 +191,7 @@ template<class F> ll bs_last (ll lo,ll hi,F c){while(lo<hi){ll m=(lo+hi+1)/2;if(
 ll pw(ll a,ll b){ll r=1;while(b>0){if(b&1)r*=a;a*=a;b>>=1;}return r;}
 ll mpow(ll a,ll b,ll mod=MOD){ll r=1;a%=mod;while(b>0){if(b&1)r=r*a%mod;a=a*a%mod;b>>=1;}return r;}
 ll modinv(ll a,ll mod=MOD){return mpow(a,mod-2,mod);}
-ll gcd(ll a,ll b){return b?gcd(b,a%b):a;}
+ll gcd(ll a,ll b){while(b){a%=b;swap(a,b);}return a;}  // iterative — no stack overflow
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 pair<ll,ll> divmod(ll a,ll b){return{a/b,a%b};}
 template<class T> int  sign(T x){return(x>0)-(x<0);}
@@ -205,7 +234,8 @@ template<class T> struct Compress{
 struct DSU{
     vi par,rnk,sz;
     DSU(int n):par(n),rnk(n,0),sz(n,1){iota(par.begin(),par.end(),0);}
-    int  find(int x){return par[x]==x?x:par[x]=find(par[x]);}
+    // iterative find with full path compression — no stack overflow on deep chains
+    int  find(int x){int r=x;while(par[r]!=r)r=par[r];while(par[x]!=r){int nx=par[x];par[x]=r;x=nx;}return r;}
     bool unite(int x,int y){x=find(x);y=find(y);if(x==y)return false;if(rnk[x]<rnk[y])swap(x,y);par[y]=x;sz[x]+=sz[y];if(rnk[x]==rnk[y])rnk[x]++;return true;}
     bool same(int x,int y){return find(x)==find(y);}
     int  size(int x){return sz[find(x)];}
@@ -235,7 +265,7 @@ struct SegTree{
 
 // ── Sparse Table ───────────────────────────────────────────────
 struct SparseTable{
-    vvl tb;vi lg;int n;
+    int n;vi lg;vvl tb;
     SparseTable(const vl&a):n(a.size()),lg(a.size()+1){
         lg[1]=0;for(int i=2;i<=n;i++)lg[i]=lg[i/2]+1;
         int k=lg[n]+1;tb.assign(k,vl(n));tb[0]=a;
@@ -293,14 +323,17 @@ vi z_function(const string&s){int n=s.size();vi z(n,0);z[0]=n;for(int i=1,l=0,r=
 
 // ══════════════════════════════════════════════════════════════
 void solve(){
-    // write solution here
+
+
+
+    
 }
 
 int main(){
     FASTIO
     TIMER
-    int t=1;
-    // cin>>t;
+    int t = 1;
+    cin >> t;
     while(t--) solve();
     TIME
     return 0;
