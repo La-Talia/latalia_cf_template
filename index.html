@@ -3,629 +3,997 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>C++ CF Template — Cheatsheet</title>
+<title>CF++ Template — Cheatsheet</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:       #0a0c10;
-    --surface:  #111318;
-    --card:     #161a22;
-    --border:   #1f2430;
-    --accent:   #00e5ff;
-    --accent2:  #ff6b35;
-    --accent3:  #a8ff3e;
-    --accent4:  #c77dff;
-    --text:     #e2e8f0;
-    --muted:    #64748b;
-    --keyword:  #ff6b35;
-    --type:     #00e5ff;
-    --fn:       #a8ff3e;
-    --str:      #ffd60a;
-    --comment:  #4a5568;
-  }
+:root {
+  --bg:#0a0c10; --surface:#111318; --card:#161a22; --border:#1f2430;
+  --accent:#00e5ff; --accent2:#ff6b35; --accent3:#a8ff3e; --accent4:#c77dff;
+  --text:#e2e8f0; --muted:#64748b;
+  --kw:#ff6b35; --tp:#00e5ff; --fn:#a8ff3e; --st:#ffd60a; --cm:#4a5568; --num:#ff9f1c;
+  --panel:#0d1117;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);
+  background-size:40px 40px;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.15;}
+.orb1{width:500px;height:500px;background:var(--accent);top:-100px;left:-100px;}
+.orb2{width:400px;height:400px;background:var(--accent4);bottom:-80px;right:-80px;}
+.orb3{width:300px;height:300px;background:var(--accent2);top:40%;left:60%;}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+header{position:relative;z-index:10;padding:48px 40px 24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;}
+.logo{font-size:2.4rem;font-weight:800;line-height:1;background:linear-gradient(120deg,var(--accent),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px;}
+.logo span{-webkit-text-fill-color:var(--accent2);}
+.subtitle{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:4px 10px;border-radius:4px;margin-bottom:4px;}
+.hint{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-top:8px;}
+.hint kbd{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:.65rem;}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+.search-wrap{position:relative;z-index:10;padding:20px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;}
+#search{flex:1;max-width:600px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:12px 20px 12px 44px;border-radius:8px;outline:none;transition:border-color .2s,box-shadow .2s;}
+#search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,255,.12);}
+#search::placeholder{color:var(--muted);}
+.search-icon{position:absolute;left:55px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem;pointer-events:none;}
+#result-count{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);white-space:nowrap;}
 
-  /* ── grid noise texture ── */
-  body::before {
-    content:'';
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background-image:
-      linear-gradient(rgba(0,229,255,.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
+.tabs{position:relative;z-index:10;display:flex;gap:4px;flex-wrap:wrap;padding:16px 40px 0;border-bottom:1px solid var(--border);}
+.tab{font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:8px 16px;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;transition:all .15s;color:var(--muted);background:transparent;position:relative;bottom:-1px;}
+.tab:hover{color:var(--text);background:var(--surface);}
+.tab.active{color:var(--accent);background:var(--card);border-color:var(--border);border-bottom-color:var(--card);}
+.tab-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;}
 
-  /* ── glow orbs ── */
-  .orb {
-    position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; opacity:.18;
-  }
-  .orb1 { width:500px;height:500px;background:var(--accent);  top:-100px; left:-100px; }
-  .orb2 { width:400px;height:400px;background:var(--accent4); bottom:-80px; right:-80px; }
-  .orb3 { width:300px;height:300px;background:var(--accent2); top:40%; left:60%; }
+main{position:relative;z-index:10;padding:32px 40px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:16px;}
 
-  /* ── header ── */
-  header {
-    position:relative; z-index:10;
-    padding: 48px 40px 24px;
-    border-bottom: 1px solid var(--border);
-    display:flex; align-items:flex-end; gap:24px; flex-wrap:wrap;
-  }
-  .logo {
-    font-size:2.4rem; font-weight:800; line-height:1;
-    background: linear-gradient(120deg, var(--accent), var(--accent4));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    letter-spacing:-1px;
-  }
-  .logo span { -webkit-text-fill-color: var(--accent2); }
-  .subtitle {
-    font-family:'JetBrains Mono',monospace;
-    font-size:.75rem; color:var(--muted);
-    background:var(--surface); border:1px solid var(--border);
-    padding:4px 10px; border-radius:4px;
-    margin-bottom:4px;
-  }
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;animation:fadeIn .3s ease both;}
+.card:hover{border-color:rgba(0,229,255,.25);box-shadow:0 4px 24px rgba(0,229,255,.06);}
+.card.hidden{display:none;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+.card-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.card-tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted);}
 
-  /* ── search bar ── */
-  .search-wrap {
-    position:relative; z-index:10;
-    padding: 20px 40px;
-    border-bottom: 1px solid var(--border);
-  }
-  #search {
-    width:100%; max-width:600px;
-    background:var(--surface); border:1px solid var(--border);
-    color:var(--text);
-    font-family:'JetBrains Mono',monospace; font-size:.9rem;
-    padding: 12px 20px 12px 44px;
-    border-radius:8px; outline:none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  #search:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,229,255,.12); }
-  #search::placeholder { color:var(--muted); }
-  .search-icon {
-    position:absolute; left:55px; top:50%; transform:translateY(-50%);
-    color:var(--muted); font-size:1rem; pointer-events:none;
-  }
-  #result-count {
-    display:inline-block; margin-left:16px;
-    font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--muted);
-  }
+/* ── row ── */
+.row{border-bottom:1px solid var(--border);}
+.row:last-child{border-bottom:none;}
+.row-main{display:grid;grid-template-columns:1fr 1fr;cursor:pointer;transition:background .15s;position:relative;}
+.row-main:hover{background:rgba(255,255,255,.03);}
+.row-main:hover .copy-hint{opacity:1;}
+.cell{padding:9px 14px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.5;}
+.cell:first-child{color:var(--accent);border-right:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cell:last-child{color:var(--muted);font-size:.72rem;display:flex;align-items:center;justify-content:space-between;}
+.copy-hint{opacity:0;transition:opacity .15s;font-size:.6rem;color:var(--accent3);flex-shrink:0;margin-left:4px;}
+.expand-arrow{font-size:.6rem;color:var(--muted);transition:transform .2s;flex-shrink:0;margin-left:6px;}
+.row.open .expand-arrow{transform:rotate(180deg);color:var(--accent);}
 
-  /* ── tabs ── */
-  .tabs {
-    position:relative; z-index:10;
-    display:flex; gap:4px; flex-wrap:wrap;
-    padding: 16px 40px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .tab {
-    font-family:'JetBrains Mono',monospace; font-size:.75rem;
-    padding:8px 16px; border-radius:6px 6px 0 0;
-    border:1px solid transparent; border-bottom:none;
-    cursor:pointer; transition:all .15s;
-    color:var(--muted); background:transparent;
-    position:relative; bottom:-1px;
-  }
-  .tab:hover { color:var(--text); background:var(--surface); }
-  .tab.active {
-    color:var(--accent); background:var(--card);
-    border-color:var(--border); border-bottom-color:var(--card);
-  }
-  .tab-dot { display:inline-block; width:6px;height:6px; border-radius:50%; margin-right:6px; }
+/* ── usage panel ── */
+.usage-panel{
+  max-height:0; overflow:hidden;
+  transition:max-height .3s ease, opacity .25s ease;
+  opacity:0;
+  background:var(--panel);
+  border-top:0px solid var(--border);
+}
+.row.open .usage-panel{
+  max-height:600px; opacity:1;
+  border-top:1px solid var(--border);
+}
+.usage-inner{padding:14px 16px 16px;}
+.usage-when{font-size:.72rem;color:var(--muted);margin-bottom:10px;line-height:1.6;}
+.usage-when strong{color:var(--accent2);font-weight:600;}
+.usage-code{
+  background:#0a0f14; border:1px solid #1e2a38; border-radius:6px;
+  padding:12px 14px; overflow-x:auto;
+  font-family:'JetBrains Mono',monospace; font-size:.76rem; line-height:1.7;
+  color:#c9d1d9;
+}
+.usage-code .c{color:#4a5568;font-style:italic;}   /* comment */
+.usage-code .k{color:#ff7b72;}   /* keyword */
+.usage-code .t{color:#79c0ff;}   /* type */
+.usage-code .f{color:#d2a8ff;}   /* function */
+.usage-code .n{color:#a8ff3e;}   /* number / variable */
+.usage-code .s{color:#a5d6ff;}   /* string */
+.usage-code .p{color:#ff9f1c;}   /* operator / punct */
+.usage-note{margin-top:9px;font-size:.7rem;color:#e6a817;background:rgba(230,168,23,.08);border-left:2px solid #e6a817;padding:6px 10px;border-radius:0 4px 4px 0;line-height:1.6;}
 
-  /* ── main grid ── */
-  main {
-    position:relative; z-index:10;
-    padding: 32px 40px 80px;
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 16px;
-  }
+/* ── syntax highlight in row ── */
+.kw{color:var(--kw);} .tp{color:var(--tp);} .fn{color:var(--fn);} .st{color:var(--st);} .cm{color:var(--cm);}
 
-  /* ── cards ── */
-  .card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:10px; overflow:hidden;
-    transition:border-color .2s, transform .15s, box-shadow .2s;
-    animation: fadeIn .3s ease both;
-  }
-  .card:hover {
-    border-color:rgba(0,229,255,.3);
-    transform:translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0,229,255,.08);
-  }
-  .card.hidden { display:none; }
+/* ── copy toast ── */
+#toast{position:fixed;bottom:32px;right:32px;z-index:1000;background:var(--accent3);color:#0a0c10;font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;padding:10px 20px;border-radius:6px;transform:translateY(20px);opacity:0;transition:all .25s;pointer-events:none;}
+#toast.show{transform:translateY(0);opacity:1;}
 
-  @keyframes fadeIn {
-    from { opacity:0; transform:translateY(8px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
+/* ── no results ── */
+#no-results{grid-column:1/-1;display:none;text-align:center;padding:80px 20px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.85rem;}
 
-  .card-header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 16px;
-    border-bottom:1px solid var(--border);
-    background:rgba(255,255,255,.02);
-  }
-  .card-title {
-    font-family:'JetBrains Mono',monospace; font-size:.7rem; font-weight:700;
-    text-transform:uppercase; letter-spacing:.08em;
-  }
-  .card-tag {
-    font-family:'JetBrains Mono',monospace; font-size:.62rem;
-    padding:2px 8px; border-radius:20px;
-    background:rgba(255,255,255,.06); color:var(--muted);
-  }
-
-  /* ── rows inside card ── */
-  .row {
-    display:grid; grid-template-columns:1fr 1fr;
-    border-bottom:1px solid var(--border);
-    transition: background .15s;
-    cursor:pointer;
-  }
-  .row:last-child { border-bottom:none; }
-  .row:hover { background:rgba(255,255,255,.03); }
-  .row:hover .copy-hint { opacity:1; }
-
-  .cell {
-    padding:9px 14px;
-    font-family:'JetBrains Mono',monospace; font-size:.78rem;
-    line-height:1.5;
-  }
-  .cell:first-child {
-    color:var(--accent); border-right:1px solid var(--border);
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .cell:last-child { color:var(--muted); font-size:.72rem; }
-
-  .copy-hint {
-    opacity:0; transition:opacity .15s;
-    font-size:.6rem; color:var(--accent3); margin-left:6px;
-  }
-
-  /* ── code coloring ── */
-  .kw  { color:var(--keyword); }
-  .tp  { color:var(--type); }
-  .fn  { color:var(--fn); }
-  .st  { color:var(--str); }
-  .cm  { color:var(--comment); }
-  .hl  { background:rgba(0,229,255,.08); border-radius:3px; padding:0 2px; }
-
-  /* ── copy toast ── */
-  #toast {
-    position:fixed; bottom:32px; right:32px; z-index:1000;
-    background:var(--accent3); color:#0a0c10;
-    font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:700;
-    padding:10px 20px; border-radius:6px;
-    transform:translateY(20px); opacity:0;
-    transition:all .25s;
-    pointer-events:none;
-  }
-  #toast.show { transform:translateY(0); opacity:1; }
-
-  /* ── section divider ── */
-  .section-label {
-    grid-column:1/-1;
-    font-size:.65rem; font-weight:700; text-transform:uppercase;
-    letter-spacing:.15em; color:var(--muted);
-    padding:16px 0 4px;
-    display:flex; align-items:center; gap:12px;
-  }
-  .section-label::after {
-    content:''; flex:1; height:1px; background:var(--border);
-  }
-
-  /* ── no results ── */
-  #no-results {
-    grid-column:1/-1; display:none;
-    text-align:center; padding:80px 20px;
-    color:var(--muted);
-    font-family:'JetBrains Mono',monospace; font-size:.85rem;
-  }
-
-  /* ── responsive ── */
-  @media(max-width:600px) {
-    header,main,.search-wrap,.tabs { padding-left:16px; padding-right:16px; }
-    main { grid-template-columns:1fr; }
-    .logo { font-size:1.8rem; }
-  }
+@media(max-width:600px){
+  header,main,.search-wrap,.tabs{padding-left:16px;padding-right:16px;}
+  main{grid-template-columns:1fr;}
+  .logo{font-size:1.8rem;}
+  .row-main{grid-template-columns:1fr;}
+  .cell:first-child{border-right:none;border-bottom:1px solid var(--border);}
+}
 </style>
 </head>
 <body>
-
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
+<div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
 
 <header>
   <div>
-    <div class="logo">LATALIA CF C<span>++</span> Template</div>
-    <div style="color:var(--muted);font-size:.85rem;margin-top:4px;">Python-style C++ for Codeforces</div>
+    <div class="logo">CF<span>++</span> Template</div>
+    <div style="color:var(--muted);font-size:.85rem;margin-top:4px;">LATALIA — Python-style C++ for Codeforces</div>
+    <div class="hint">Click any row to expand usage &amp; examples &nbsp;|&nbsp; <kbd>click again</kbd> to copy code</div>
   </div>
-  <div class="subtitle">Click any row to copy • Search to filter</div>
+  <div class="subtitle">/ to search &nbsp;•&nbsp; tabs to filter</div>
 </header>
 
 <div class="search-wrap">
   <span class="search-icon">⌕</span>
-  <input id="search" type="text" placeholder="Search functions, macros, snippets..." autocomplete="off">
+  <input id="search" type="text" placeholder="Search functions, concepts, examples..." autocomplete="off">
   <span id="result-count"></span>
 </div>
 
 <div class="tabs" id="tabs">
-  <div class="tab active" data-filter="all">
-    <span class="tab-dot" style="background:var(--accent)"></span>All
-  </div>
-  <div class="tab" data-filter="io">
-    <span class="tab-dot" style="background:#ffd60a"></span>I/O
-  </div>
-  <div class="tab" data-filter="loops">
-    <span class="tab-dot" style="background:var(--accent3)"></span>Loops
-  </div>
-  <div class="tab" data-filter="list">
-    <span class="tab-dot" style="background:var(--accent)"></span>List
-  </div>
-  <div class="tab" data-filter="dict">
-    <span class="tab-dot" style="background:var(--accent2)"></span>Dict/Set
-  </div>
-  <div class="tab" data-filter="string">
-    <span class="tab-dot" style="background:#ff9f1c"></span>String
-  </div>
-  <div class="tab" data-filter="math">
-    <span class="tab-dot" style="background:var(--accent4)"></span>Math
-  </div>
-  <div class="tab" data-filter="ds">
-    <span class="tab-dot" style="background:#ff6b6b"></span>Data Structs
-  </div>
-  <div class="tab" data-filter="graph">
-    <span class="tab-dot" style="background:#4ecdc4"></span>Graph
-  </div>
-  <div class="tab" data-filter="algo">
-    <span class="tab-dot" style="background:#ffe66d"></span>Algorithms
-  </div>
-  <div class="tab" data-filter="macro">
-    <span class="tab-dot" style="background:#a29bfe"></span>Macros
-  </div>
+  <div class="tab active" data-filter="all"><span class="tab-dot" style="background:var(--accent)"></span>All</div>
+  <div class="tab" data-filter="loops"><span class="tab-dot" style="background:var(--accent3)"></span>Loops</div>
+  <div class="tab" data-filter="list"><span class="tab-dot" style="background:var(--accent)"></span>List</div>
+  <div class="tab" data-filter="dict"><span class="tab-dot" style="background:var(--accent2)"></span>Dict/Set</div>
+  <div class="tab" data-filter="string"><span class="tab-dot" style="background:#ff9f1c"></span>String</div>
+  <div class="tab" data-filter="math"><span class="tab-dot" style="background:var(--accent4)"></span>Math</div>
+  <div class="tab" data-filter="ds"><span class="tab-dot" style="background:#ff6b6b"></span>Data Structs</div>
+  <div class="tab" data-filter="graph"><span class="tab-dot" style="background:#4ecdc4"></span>Graph</div>
+  <div class="tab" data-filter="algo"><span class="tab-dot" style="background:#ffe66d"></span>Algorithms</div>
+  <div class="tab" data-filter="macro"><span class="tab-dot" style="background:#a29bfe"></span>Macros</div>
 </div>
 
-<main id="grid">
-  <div id="no-results">No results found. Try a different search term.</div>
-</main>
-
-<div id="toast">✓ Copied!</div>
+<main id="grid"></main>
+<div id="no-results">No results found. Try a different search term.</div>
+<div id="toast">Copied!</div>
 
 <script>
+// ── DATA  [cpp, python, when_to_use, code_example, optional_note] ────────────
+// code_example uses tags: <c>=comment <k>=keyword <t>=type <f>=func <n>=var/num <s>=string <p>=punct
 const DATA = [
-  // ── I/O ──────────────────────────────────────────────────────────────────
-  { cat:'io', title:'Input', color:'#ffd60a', rows:[
-    ['input<int>()',        'int(input())'],
-    ['input<ll>()',         'int(input())  — long long'],
-    ['input<string>()',     'str(input())'],
-    ['sinput()',            'input()  — string word'],
-    ['linput()',            'input()  — full line'],
-    ['readvi(n)',           'list(map(int, input().split()))'],
-    ['readvl(n)',           'list(map(int,…)) — ll'],
-    ['readpair<int,int>()', 'a,b = map(int, input().split())'],
-  ]},
-  { cat:'io', title:'Output', color:'#ffd60a', rows:[
-    ['print(x)',            'print(x)'],
-    ['print(a, b, c)',      'print(a, b, c)  — space sep'],
-    ['println(vec)',        'print(*a, sep="\\n")'],
-    ['printvec(vec)',       'print(*a)  — space sep'],
-    ['yes',                 'print("YES")'],
-    ['no',                  'print("NO")'],
-    ['cout << x << endl',   'print(x)  — raw'],
-  ]},
 
-  // ── LOOPS ─────────────────────────────────────────────────────────────────
-  { cat:'loops', title:'Loop Macros', color:'#a8ff3e', rows:[
-    ['rep(i, n)',            'for i in range(n)'],
-    ['repe(i, s, e)',        'for i in range(s, e)'],
-    ['repd(i, n)',           'for i in range(n-1,-1,-1)'],
-    ['repde(i, s, e)',       'reversed range(s,e)'],
-    ['repstep(i,s,e,k)',     'for i in range(s,e,k)'],
-    ['each(x, a)',           'for x in a'],
-    ['each2(k, v, d)',       'for k,v in d.items()'],
-  ]},
-  { cat:'loops', title:'Functional Loops', color:'#a8ff3e', rows:[
-    ['enumerate(a, [&](int i, auto v){ })', 'for i,v in enumerate(a)'],
-    ['zip(a, b, [&](auto x, auto y){ })',   'for x,y in zip(a,b)'],
-  ]},
+// ══════════════ LOOPS ══════════════════════════════════════════════════════
+{ cat:'loops', title:'Loop Macros', color:'#a8ff3e', rows:[
+  ['rep(i, n)', 'for i in range(n)',
+   'Use for any simple 0-to-n loop. The go-to loop for iterating n times.',
+   `<k>rep</k>(<n>i</n>, <n>n</n>) {
+    cout << <n>i</n> << <s>"\\n"</s>;   <c>// prints 0 1 2 ... n-1</c>
+}
 
-  // ── LIST ──────────────────────────────────────────────────────────────────
-  { cat:'list', title:'List — Create & Info', color:'#00e5ff', rows:[
-    ['vec<int> a = {1,2,3}',  'a = [1,2,3]'],
-    ['vec<int> a(n, 0)',       'a = [0]*n'],
-    ['zeros(n)',               '[0]*n  — vi'],
-    ['ones(n)',                '[1]*n  — vi'],
-    ['lzeros(n)',              '[0]*n  — vl'],
-    ['iota_vec(n)',            'list(range(n))'],
-    ['len(a)',                 'len(a)'],
-    ['sz(a)',                  'len(a)  — int cast'],
-  ]},
-  { cat:'list', title:'List — Modify', color:'#00e5ff', rows:[
-    ['append(a, x)',           'a.append(x)'],
-    ['a.push_back(x)',         'a.append(x)  — raw'],
-    ['extend(a, b)',           'a.extend(b)'],
-    ['insert(a, i, x)',        'a.insert(i, x)'],
-    ['pop(a)',                 'a.pop()'],
-    ['pop(a, i)',              'a.pop(i)'],
-    ['remove_val(a, x)',       'a.remove(x)'],
-    ['fill(a, v)',             'a = [v]*n  — in place'],
-    ['rotate_left(a, k)',      'a = a[k:]+a[:k]'],
-    ['rotate_right(a, k)',     'a = a[-k:]+a[:-k]'],
-  ]},
-  { cat:'list', title:'List — Query', color:'#00e5ff', rows:[
-    ['contains(a, x)',         'x in a'],
-    ['count(a, x)',            'a.count(x)'],
-    ['index(a, x)',            'a.index(x)'],
-    ['sum(a)',                 'sum(a)'],
-    ['product(a)',             'math.prod(a)'],
-    ['vmin(a)',                'min(a)'],
-    ['vmax(a)',                'max(a)'],
-    ['argmin(a)',              'a.index(min(a))'],
-    ['argmax(a)',              'a.index(max(a))'],
-  ]},
-  { cat:'list', title:'List — Transform', color:'#00e5ff', rows:[
-    ['sorted(a)',                         'sorted(a)  — copy'],
-    ['sorted(a, cmp)',                    'sorted(a, key=...)'],
-    ['reversed(a)',                       'list(reversed(a))'],
-    ['slice(a, s, e)',                    'a[s:e]'],
-    ['flatten(vv)',                       '[x for row in vv for x in row]'],
-    ['transform_to(a, [](auto x){...})', '[f(x) for x in a]'],
-    ['filter_to(a, [](auto x){...})',    '[x for x in a if p(x)]'],
-    ['unique_vals(a)',                    'sorted(set(a))'],
-    ['all(a, pred)',                      'all(p(x) for x in a)'],
-    ['any(a, pred)',                      'any(p(x) for x in a)'],
-    ['none(a, pred)',                     'not any(p(x) for x in a)'],
-  ]},
+<c>// Count elements matching a condition</c>
+<t>int</t> cnt = <n>0</n>;
+<k>rep</k>(<n>i</n>, <n>n</n>) <k>if</k> (<n>a</n>[<n>i</n>] > <n>0</n>) <n>cnt</n>++;`],
 
-  // ── DICT / SET ────────────────────────────────────────────────────────────
-  { cat:'dict', title:'Dict — Operations', color:'#ff6b35', rows:[
-    ['map<int,int> d',         'd = {}'],
-    ['umap<int,int> d',        'd = {}  — faster'],
-    ['d[key]++',               'd[key] = d.get(key,0)+1'],
-    ['get(d, key, def)',        'd.get(key, def)'],
-    ['keys(d)',                 'list(d.keys())'],
-    ['values(d)',               'list(d.values())'],
-    ['contains(d, key)',        'key in d'],
-    ['counter(a)',              'Counter(a)'],
-    ['ucounter(a)',             'Counter(a)  — unordered'],
-    ['most_common(a)',          'Counter(a).most_common(1)[0]'],
-  ]},
-  { cat:'dict', title:'Set — Operations', color:'#ff6b35', rows:[
-    ['set<int> s',             's = set()'],
-    ['uset<int> s',            's = set()  — faster'],
-    ['s.insert(x)',            's.add(x)'],
-    ['s.erase(x)',             's.discard(x)'],
-    ['contains(s, x)',         'x in s'],
-    ['to_set(a)',              'set(a)'],
-    ['to_vec(s)',              'list(s)'],
-    ['union_set(a, b)',        'a | b'],
-    ['intersection(a, b)',     'a & b'],
-    ['difference(a, b)',       'a - b'],
-  ]},
+  ['repe(i, s, e)', 'for i in range(s, e)',
+   'Use when you need to start from a non-zero value. Exactly like Python range(s, e).',
+   `<c>// Sum elements from index 2 to n-1</c>
+<t>ll</t> <n>total</n> = <n>0</n>;
+<k>repe</k>(<n>i</n>, <n>2</n>, <n>n</n>) <n>total</n> += <n>a</n>[<n>i</n>];
 
-  // ── STRING ────────────────────────────────────────────────────────────────
-  { cat:'string', title:'String — Core', color:'#ff9f1c', rows:[
-    ['split(s, delim)',        's.split(delim)'],
-    ['join(a, sep)',           'sep.join(a)'],
-    ['strip(s)',               's.strip()'],
-    ['lstrip(s)',              's.lstrip()'],
-    ['rstrip(s)',              's.rstrip()'],
-    ['upper(s)',               's.upper()'],
-    ['lower(s)',               's.lower()'],
-    ['repeat(s, n)',           's * n'],
-    ['to_string(x)',           'str(x)'],
-    ['stoi(s) / stoll(s)',     'int(s)'],
-  ]},
-  { cat:'string', title:'String — Search & Check', color:'#ff9f1c', rows:[
-    ['startswith(s, pre)',     's.startswith(pre)'],
-    ['endswith(s, suf)',       's.endswith(suf)'],
-    ['replace_all(s, f, t)',   's.replace(f, t)'],
-    ['str_count(s, sub)',      's.count(sub)'],
-    ['str_find(s, sub)',       's.find(sub)  — -1 if missing'],
-    ['is_digit(s)',            's.isdigit()'],
-    ['is_alpha(s)',            's.isalpha()'],
-    ['is_alnum(s)',            's.isalnum()'],
-    ['bin_str(n)',             'bin(n)'],
-  ]},
+<c>// Print odd numbers 1..19</c>
+<k>repe</k>(<n>i</n>, <n>1</n>, <n>20</n>) <k>if</k> (<n>i</n> % <n>2</n>) cout << <n>i</n> << <s>" "</s>;`],
 
-  // ── MATH ──────────────────────────────────────────────────────────────────
-  { cat:'math', title:'Math — Basic', color:'#c77dff', rows:[
-    ['pw(a, b)',               'a**b  — integer'],
-    ['mpow(a, b, mod)',        'pow(a, b, mod)'],
-    ['modinv(a, mod)',         'modular inverse'],
-    ['gcd(a, b)',              'math.gcd(a, b)'],
-    ['lcm(a, b)',              'math.lcm(a, b)'],
-    ['divmod(a, b)',           'divmod(a, b)'],
-    ['sign(x)',                'cmp(x, 0)'],
-    ['clamp(x, lo, hi)',       'max(lo, min(hi, x))'],
-    ['chmin(a, b)',            'a = min(a, b)'],
-    ['chmax(a, b)',            'a = max(a, b)'],
-    ['absll(x)',               'abs(x)  — ll safe'],
-  ]},
-  { cat:'math', title:'Math — Number Theory', color:'#c77dff', rows:[
-    ['is_prime(n)',            'primality test'],
-    ['sieve(n)',               'primes up to n'],
-    ['prime_factors(n)',       'factorization map'],
-    ['divisors(n)',            'sorted list of divisors'],
-    ['popcount(n)',            "bin(n).count('1')"],
-    ['bit_length(n)',          'n.bit_length()'],
-    ['ctz(n)',                 'trailing zeros count'],
-    ['is_pow2(n)',             '(n & n-1) == 0'],
-    ['next_pow2(n)',           'next power of 2 >= n'],
-  ]},
-  { cat:'math', title:'Combinatorics', color:'#c77dff', rows:[
-    ['init_comb()',            '— call once in main —'],
-    ['Comb::C(n, r)',          'math.comb(n, r)  mod p'],
-    ['Comb::P(n, r)',          'nPr  mod p'],
-  ]},
-  { cat:'math', title:'Prefix Sum', color:'#c77dff', rows:[
-    ['prefix_sum(a)',          'running sum array'],
-    ['range_sum(ps, l, r)',    'sum(a[l:r+1])'],
-    ['prefix_sum2d(a)',        '2D prefix sum'],
-    ['range_sum2d(ps,r1,c1,r2,c2)', '2D range sum'],
-  ]},
+  ['repd(i, n)', 'for i in range(n-1,-1,-1)',
+   'Reverse iteration. Use when processing from the end — common in DP, suffix arrays, stack simulation.',
+   `<c>// Print array in reverse</c>
+<k>repd</k>(<n>i</n>, <n>n</n>) cout << <n>a</n>[<n>i</n>] << <s>" "</s>;
 
-  // ── DATA STRUCTURES ──────────────────────────────────────────────────────
-  { cat:'ds', title:'DSU / Union-Find', color:'#ff6b6b', rows:[
-    ['DSU dsu(n)',             '— create with n nodes —'],
-    ['dsu.unite(u, v)',        'union(u, v)'],
-    ['dsu.same(u, v)',         'find(u)==find(v)'],
-    ['dsu.size(u)',            'component size of u'],
-    ['dsu.components()',       'number of components'],
-  ]},
-  { cat:'ds', title:'Fenwick Tree (BIT)', color:'#ff6b6b', rows:[
-    ['Fenwick bit(n)',         '— create with size n —'],
-    ['bit.update(i, delta)',   'point add delta at i'],
-    ['bit.prefix(i)',          'prefix sum [0,i]'],
-    ['bit.query(l, r)',        'range sum [l,r]'],
-  ]},
-  { cat:'ds', title:'Segment Tree', color:'#ff6b6b', rows:[
-    ['SegTree seg(n)',         '— empty, size n —'],
-    ['SegTree seg(a)',         '— build from vec —'],
-    ['seg.update(i, val)',     'point update'],
-    ['seg.query(l, r)',        'range sum query'],
-  ]},
-  { cat:'ds', title:'Sparse Table', color:'#ff6b6b', rows:[
-    ['SparseTable sp(a)',      '— build from vec —'],
-    ['sp.qmin(l, r)',          'range minimum O(1)'],
-    ['sp.qmax(l, r)',          'range maximum O(1)'],
-  ]},
-  { cat:'ds', title:'Priority Queues', color:'#ff6b6b', rows:[
-    ['pq<int> q',              'max-heap (default)'],
-    ['pqmin<int> q',           'min-heap'],
-    ['q.push(x)',              'heapq.heappush(q, x)'],
-    ['q.top()',                'q[0]  — peek'],
-    ['q.pop()',                'heapq.heappop(q)'],
-  ]},
-  { cat:'ds', title:'Coordinate Compress', color:'#ff6b6b', rows:[
-    ['Compress<int> c(a)',     '— build from vec —'],
-    ['c.encode(x)',            'compressed index of x'],
-    ['c.decode(i)',            'original value at i'],
-    ['c.size()',               'number of unique values'],
-  ]},
+<c>// DP: fill from right to left (0-1 knapsack)</c>
+<k>repd</k>(<n>j</n>, <n>W</n>+<n>1</n>) <k>if</k> (<n>j</n> >= <n>w</n>[<n>i</n>])
+    <n>dp</n>[<n>j</n>] = max(<n>dp</n>[<n>j</n>], <n>dp</n>[<n>j</n>-<n>w</n>[<n>i</n>]] + <n>v</n>[<n>i</n>]);`],
 
-  // ── GRAPH ─────────────────────────────────────────────────────────────────
-  { cat:'graph', title:'Graph Setup', color:'#4ecdc4', rows:[
-    ['auto g = new_graph(n)',           'G = [[] for _ in range(n)]'],
-    ['add_edge(g, u, v)',               'G[u].append(v); G[v].append(u)'],
-    ['add_edge(g, u, v, true)',         'directed edge u→v'],
-    ['auto wg = new_wgraph(n)',         'weighted graph'],
-    ['add_edge(wg, u, v, weight)',      'weighted undirected'],
-    ['add_edge(wg, u, v, w, true)',     'weighted directed'],
-  ]},
-  { cat:'graph', title:'Graph Algorithms', color:'#4ecdc4', rows:[
-    ['bfs(g, src)',            'BFS — dist array, -1=unreachable'],
-    ['dijkstra(wg, src)',      'Dijkstra — dist array, INF=unreachable'],
-    ['dfs_order(g, src)',      'DFS — visit order'],
-    ['topo_sort(g)',           'topological sort (Kahn)'],
-  ]},
+  ['repstep(i, s, e, k)', 'for i in range(s, e, k)',
+   'Loop with custom step. Use for every-other-element, sieve-like patterns, or chunk processing.',
+   `<c>// Visit every 3rd index</c>
+<k>repstep</k>(<n>i</n>, <n>0</n>, <n>n</n>, <n>3</n>) cout << <n>a</n>[<n>i</n>] << <s>"\\n"</s>;
 
-  // ── ALGORITHMS ───────────────────────────────────────────────────────────
-  { cat:'algo', title:'Binary Search', color:'#ffe66d', rows:[
-    ['bisect_left(a, x)',              'bisect.bisect_left(a, x)'],
-    ['bisect_right(a, x)',             'bisect.bisect_right(a, x)'],
-    ['insort(a, x)',                   'bisect.insort(a, x)'],
-    ['bs_first(lo,hi,[&](ll x){...})', 'first x where cond is True'],
-    ['bs_last(lo,hi,[&](ll x){...})',  'last x where cond is True'],
-  ]},
-  { cat:'algo', title:'String Algorithms', color:'#ffe66d', rows:[
-    ['kmp_search(text, pat)',   'all occurrences of pat in text'],
-    ['z_function(s)',           'Z-array of s'],
-  ]},
-  { cat:'algo', title:'STL Algorithms', color:'#ffe66d', rows:[
-    ['sort(all(a))',                   'a.sort()'],
-    ['sort(all(a), greater<int>())',   'a.sort(reverse=True)'],
-    ['reverse(all(a))',                'a.reverse()'],
-    ['next_permutation(all(a))',       'itertools.permutations'],
-    ['prev_permutation(all(a))',       'reverse permutation'],
-    ['binary_search(all(a), x)',       'x in sorted_a  (bool)'],
-    ['lower_bound(all(a), x)',         'bisect.bisect_left  (iter)'],
-    ['upper_bound(all(a), x)',         'bisect.bisect_right (iter)'],
-    ['accumulate(all(a), 0)',          'sum(a)'],
-    ['*min_element(all(a))',           'min(a)'],
-    ['*max_element(all(a))',           'max(a)'],
-    ['count(all(a), x)',               'a.count(x)  — STL'],
-    ['fill(all(a), v)',                '[v]*n  — in place'],
-    ['iota(all(a), 0)',                'list(range(n))  — in place'],
-  ]},
+<c>// Sieve inner loop manually</c>
+<k>repstep</k>(<n>j</n>, <n>i</n>*<n>i</n>, <n>N</n>, <n>i</n>) <n>is_prime</n>[<n>j</n>] = <k>false</k>;`],
 
-  // ── MACROS ────────────────────────────────────────────────────────────────
-  { cat:'macro', title:'Shorthand Macros', color:'#a29bfe', rows:[
-    ['all(x)',     '(x).begin(), (x).end()'],
-    ['rall(x)',    '(x).rbegin(), (x).rend()'],
-    ['sz(x)',      '(int)(x).size()'],
-    ['fi',         '.first'],
-    ['se',         '.second'],
-    ['pb',         '.push_back'],
-    ['mp',         'make_pair'],
-    ['endl',       '"\\n"  — fast (no flush)'],
-    ['FASTIO',     'ios_base::sync_with_stdio(false); cin.tie(NULL)'],
-    ['yes',        'cout << "YES\\n"'],
-    ['no',         'cout << "NO\\n"'],
-  ]},
-  { cat:'macro', title:'Type Aliases', color:'#a29bfe', rows:[
-    ['ll',          'long long'],
-    ['ld',          'long double'],
-    ['vi',          'vector<int>'],
-    ['vl',          'vector<ll>'],
-    ['vvi',         'vector<vector<int>>'],
-    ['ii',          'pair<int,int>'],
-    ['vec<T>',      'vector<T>'],
-    ['umap<K,V>',   'unordered_map<K,V>'],
-    ['uset<T>',     'unordered_set<T>'],
-    ['pq<T>',       'priority_queue<T>  max'],
-    ['pqmin<T>',    'priority_queue min'],
-    ['que<T>',      'queue<T>'],
-    ['stk<T>',      'stack<T>'],
-    ['deq<T>',      'deque<T>'],
-  ]},
-  { cat:'macro', title:'Constants', color:'#a29bfe', rows:[
-    ['INF',         '2e18  — float("inf")'],
-    ['INF32',       '2e9'],
-    ['MOD',         '1e9+7'],
-    ['MOD2',        '998244353'],
-    ['PI',          'math.pi'],
-    ['dx4, dy4',    '4-directional grid offsets'],
-    ['dx8, dy8',    '8-directional grid offsets'],
-  ]},
-  { cat:'macro', title:'Debug (compile -DLOCAL)', color:'#a29bfe', rows:[
-    ['dbg(x)',       'print(f"{x=}")'],
-    ['dbgv(a)',      'print(a)  — vector'],
-    ['dbg2(x, y)',   'print(x, y)'],
-    ['dbg3(x,y,z)',  'print(x, y, z)'],
-    ['TIMER',        'start = time.time()'],
-    ['TIME',         'print(time.time()-start)'],
-  ]},
+  ['each(x, a)', 'for x in a',
+   'Range-for by reference. Use whenever you iterate all elements. Avoids index bugs. Works on any container.',
+   `<t>vec</t><<t>int</t>> <n>a</n> = {<n>3</n>, <n>1</n>, <n>4</n>, <n>1</n>, <n>5</n>};
+<t>ll</t> <n>s</n> = <n>0</n>;
+<k>each</k>(<n>x</n>, <n>a</n>) <n>s</n> += <n>x</n>;   <c>// sum = 14</c>
+
+<c>// Modify elements in place</c>
+<k>each</k>(<n>x</n>, <n>a</n>) <n>x</n> *= <n>2</n>;   <c>// doubles every element</c>`],
+
+  ['each2(k, v, d)', 'for k, v in d.items()',
+   'Iterate key-value pairs of any map. Use when you need both the key and value simultaneously.',
+   `<t>map</t><<t>string</t>,<t>int</t>> <n>freq</n>;
+<n>freq</n>[<s>"apple"</s>] = <n>3</n>; <n>freq</n>[<s>"mango"</s>] = <n>5</n>;
+
+<k>each2</k>(<n>k</n>, <n>v</n>, <n>freq</n>) {
+    cout << <n>k</n> << <s>": "</s> << <n>v</n> << <s>"\\n"</s>;
+}
+<c>// apple: 3</c>
+<c>// mango: 5</c>`],
+
+  ['enumerate(a, [&](int i, auto v){})', 'for i,v in enumerate(a)',
+   'When you need both index and value. Cleaner than using rep(i,n) and a[i] separately.',
+   `<t>vec</t><<t>string</t>> <n>names</n> = {<s>"Alice"</s>, <s>"Bob"</s>, <s>"Carol"</s>};
+<k>enumerate</k>(<n>names</n>, [&](<t>int</t> <n>i</n>, <t>auto</t> <n>v</n>) {
+    cout << <n>i</n> << <s>": "</s> << <n>v</n> << <s>"\\n"</s>;
+});
+<c>// 0: Alice</c>
+<c>// 1: Bob</c>
+<c>// 2: Carol</c>`],
+
+  ['zip(a, b, [&](auto x, auto y){})', 'for x,y in zip(a,b)',
+   'Process two arrays in parallel. Common for pairing items, computing pairwise differences.',
+   `<t>vec</t><<t>int</t>> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>}, <n>b</n> = {<n>4</n>,<n>5</n>,<n>6</n>};
+<k>zip</k>(<n>a</n>, <n>b</n>, [&](<t>auto</t> <n>x</n>, <t>auto</t> <n>y</n>) {
+    cout << <n>x</n> + <n>y</n> << <s>" "</s>;   <c>// 5 7 9</c>
+});`],
+]},
+
+// ══════════════ LIST — CREATE ══════════════════════════════════════════════
+{ cat:'list', title:'List — Create & Info', color:'#00e5ff', rows:[
+  ['vec<int> a = {1,2,3}', 'a = [1,2,3]',
+   'Declare and initialise a vector inline. Use whenever you know the values up front.',
+   `<t>vec</t><<t>int</t>> <n>primes</n> = {<n>2</n>, <n>3</n>, <n>5</n>, <n>7</n>, <n>11</n>};
+<t>vec</t><<t>ll</t>>  <n>a</n>(<n>n</n>, <n>0</n>);   <c>// n zeros</c>
+<t>vec</t><<t>string</t>> <n>s</n> = {<s>"hello"</s>, <s>"world"</s>};`],
+
+  ['zeros(n) / ones(n)', '[0]*n / [1]*n',
+   'Create zero-filled or one-filled arrays of int. Useful for DP tables, visited arrays, counting arrays.',
+   `<t>vi</t> <n>dp</n>   = <k>zeros</k>(<n>n</n>+<n>1</n>);    <c>// DP table all zeros</c>
+<t>vi</t> <n>vis</n>  = <k>zeros</k>(<n>n</n>);      <c>// visited array</c>
+<t>vi</t> <n>cnt</n>  = <k>zeros</k>(<n>26</n>);     <c>// letter frequency</c>
+<t>vl</t> <n>dist</n> = <k>lzeros</k>(<n>n</n>);    <c>// long long zeros</c>`],
+
+  ['iota_vec(n)', 'list(range(n))',
+   'Create [0,1,2,...,n-1]. Use for permutation indices, sorting by index, coordinate compression seeds.',
+   `<c>// Sort indices by value (argsort)</c>
+<t>vi</t> <n>idx</n> = <k>iota_vec</k>(<n>n</n>);
+<k>sort</k>(<k>all</k>(<n>idx</n>), [&](<t>int</t> <n>i</n>, <t>int</t> <n>j</n>){
+    <k>return</k> <n>a</n>[<n>i</n>] < <n>a</n>[<n>j</n>];
+});
+<c>// idx[0] is index of smallest element</c>`],
+
+  ['len(a)', 'len(a)',
+   'Get size as long long. Prefer len() over .size() to avoid signed/unsigned comparison warnings.',
+   `<k>if</k> (<k>len</k>(<n>a</n>) == <n>0</n>) { <c>/* empty */</c> }
+<k>rep</k>(<n>i</n>, <k>len</k>(<n>a</n>)) cout << <n>a</n>[<n>i</n>];
+<c>// sz(a) gives int instead of ll — use for array indexing</c>`],
+]},
+
+// ══════════════ LIST — MODIFY ══════════════════════════════════════════════
+{ cat:'list', title:'List — Modify', color:'#00e5ff', rows:[
+  ['append(a, x)', 'a.append(x)',
+   'Add element to end. O(1) amortised. The most common list operation in CP.',
+   `<t>vec</t><<t>int</t>> <n>a</n>;
+<k>append</k>(<n>a</n>, <n>5</n>);   <c>// a = [5]</c>
+<k>append</k>(<n>a</n>, <n>3</n>);   <c>// a = [5, 3]</c>
+<c>// Same as a.push_back(x) or a.pb(x)</c>`],
+
+  ['extend(a, b)', 'a.extend(b)',
+   'Append all elements of b to a. Use when merging two arrays or building a combined list.',
+   `<t>vec</t><<t>int</t>> <n>a</n> = {<n>1</n>,<n>2</n>}, <n>b</n> = {<n>3</n>,<n>4</n>};
+<k>extend</k>(<n>a</n>, <n>b</n>);   <c>// a = [1,2,3,4]</c>`],
+
+  ['insert(a, i, x)', 'a.insert(i, x)',
+   'Insert at index i. O(n) — shifts everything right. Avoid in tight loops; use deque if many inserts at front.',
+   `<t>vec</t><<t>int</t>> <n>a</n> = {<n>1</n>,<n>2</n>,<n>4</n>};
+<k>insert</k>(<n>a</n>, <n>2</n>, <n>3</n>);   <c>// a = [1,2,3,4]</c>`],
+
+  ['pop(a) / pop(a, i)', 'a.pop() / a.pop(i)',
+   'Remove and return last element (O(1)) or element at index i (O(n)). Use pop() for stack behaviour.',
+   `<t>vec</t><<t>int</t>> <n>stk</n> = {<n>1</n>,<n>2</n>,<n>3</n>};
+<t>int</t> <n>top</n> = <k>pop</k>(<n>stk</n>);    <c>// top=3, stk=[1,2]</c>
+<t>int</t> <n>mid</n> = <k>pop</k>(<n>stk</n>, <n>0</n>); <c>// mid=1, stk=[2]</c>`, '⚠ pop(a, i) is O(n) — avoid in loops. Use index only when necessary.'],
+
+  ['remove_val(a, x)', 'a.remove(x)',
+   'Remove first occurrence of x. O(n). Returns true if found. Use when you know the value but not the index.',
+   `<t>vec</t><<t>int</t>> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>};
+<k>remove_val</k>(<n>a</n>, <n>1</n>);   <c>// a = [3,4,1,5] — removes FIRST 1</c>
+<t>bool</t> <n>found</n> = <k>remove_val</k>(<n>a</n>, <n>9</n>);   <c>// false</c>`],
+
+  ['rotate_left(a, k)', 'a = a[k:]+a[:k]',
+   'Rotate array left by k positions in-place. Use for circular problems or shifting windows.',
+   `<t>vec</t><<t>int</t>> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>};
+<k>rotate_left</k>(<n>a</n>, <n>2</n>);  <c>// a = [3,4,5,1,2]</c>
+<k>rotate_right</k>(<n>a</n>, <n>2</n>); <c>// a = [1,2,3,4,5] (undoes it)</c>`],
+]},
+
+// ══════════════ LIST — QUERY ══════════════════════════════════════════════
+{ cat:'list', title:'List — Query', color:'#00e5ff', rows:[
+  ['contains(a, x)', 'x in a  — O(n)',
+   'Linear search. Fine for small arrays but TLEs on large inputs. Use uset for repeated lookups.',
+   `<c>// OK for small n (< 1000)</c>
+<k>if</k> (<k>contains</k>(<n>a</n>, <n>7</n>)) cout << <s>"found"</s>;
+
+<c>// For repeated lookups on large arrays, use uset:</c>
+<t>uset</t><<t>int</t>> <n>s</n>(<n>a</n>.begin(), <n>a</n>.end());
+<k>if</k> (<k>contains</k>(<n>s</n>, <n>7</n>)) cout << <s>"found"</s>;  <c>// O(1)</c>`, '⚠ This is O(n). If you call it in a loop → O(n²). Use uset<T> instead.'],
+
+  ['contains_sorted(a, x)', 'x in sorted_a  — O(log n)',
+   'Binary search on a SORTED array. Use this instead of contains() after sorting. 10x faster for large arrays.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>5</n>,<n>7</n>,<n>9</n>};   <c>// must be sorted!</c>
+<k>if</k> (<k>contains_sorted</k>(<n>a</n>, <n>5</n>)) cout << <s>"yes"</s>;  <c>// true</c>
+<k>if</k> (<k>contains_sorted</k>(<n>a</n>, <n>4</n>)) cout << <s>"yes"</s>;  <c>// false</c>`, 'Requires the array to be sorted first. After sort(all(a)), always prefer this over contains().'],
+
+  ['index(a, x)', 'a.index(x)  — O(n)',
+   'Find first index of x. Returns -1 if not found (unlike Python which throws). Use on small arrays.',
+   `<t>vi</t> <n>a</n> = {<n>10</n>, <n>20</n>, <n>30</n>, <n>20</n>};
+<t>int</t> <n>i</n> = <k>index</k>(<n>a</n>, <n>20</n>);   <c>// i = 1 (first occurrence)</c>
+<t>int</t> <n>j</n> = <k>index</k>(<n>a</n>, <n>99</n>);   <c>// j = -1 (not found)</c>`],
+
+  ['index_sorted(a, x)', 'a.index(x)  — O(log n)',
+   'Binary search index lookup. Use on sorted arrays — must faster than index() for large n.',
+   `<t>vi</t> <n>a</n> = {<n>2</n>,<n>5</n>,<n>8</n>,<n>12</n>,<n>20</n>};  <c>// sorted</c>
+<t>int</t> <n>i</n> = <k>index_sorted</k>(<n>a</n>, <n>8</n>);   <c>// i = 2</c>
+<t>int</t> <n>j</n> = <k>index_sorted</k>(<n>a</n>, <n>9</n>);   <c>// j = -1</c>`],
+
+  ['count(a, x)', 'a.count(x)',
+   'Count occurrences of x. O(n) — scans entire array. For frequency of all elements, use counter() instead.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>1</n>,<n>3</n>,<n>1</n>};
+<k>count</k>(<n>a</n>, <n>1</n>);   <c>// 3</c>
+<k>count</k>(<n>a</n>, <n>5</n>);   <c>// 0</c>
+
+<c>// For ALL frequencies at once, use counter():</c>
+<t>auto</t> <n>freq</n> = <k>counter</k>(<n>a</n>);  <c>// {1:3, 2:1, 3:1}</c>`],
+
+  ['sum(a)', 'sum(a)',
+   'Sum all elements. O(n). Works on any numeric vector type.',
+   `<t>vl</t> <n>a</n> = {<n>1</n>, <n>2</n>, <n>3</n>, <n>4</n>, <n>5</n>};
+<k>sum</k>(<n>a</n>);   <c>// 15</c>
+
+<c>// For range sums on large arrays, use prefix_sum() instead:</c>
+<t>auto</t> <n>ps</n> = <k>prefix_sum</k>(<n>a</n>);
+<k>range_sum</k>(<n>ps</n>, <n>1</n>, <n>3</n>);  <c>// sum of a[1..3] = 9, O(1)</c>`],
+
+  ['vmin(a) / vmax(a)', 'min(a) / max(a)',
+   'Min/max of entire vector. O(n). For repeated range min/max queries, build a SparseTable instead.',
+   `<t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>};
+<k>vmin</k>(<n>a</n>);   <c>// 1</c>
+<k>vmax</k>(<n>a</n>);   <c>// 5</c>
+<k>argmax</k>(<n>a</n>); <c>// 4  (index of 5)</c>`, 'For many range min/max queries: build SparseTable sp(a) once → sp.qmin(l,r) in O(1).'],
+
+  ['all(a, pred) / any(a, pred)', 'all(...) / any(...)',
+   'Check condition across all elements. Short-circuits on first match/mismatch, just like Python.',
+   `<t>vi</t> <n>a</n> = {<n>2</n>,<n>4</n>,<n>6</n>,<n>8</n>};
+<k>all</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n>%<n>2</n>==<n>0</n>; });  <c>// true</c>
+<k>any</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n> > <n>5</n>; });    <c>// true</c>
+<k>none</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n> < <n>0</n>; });   <c>// true</c>`],
+]},
+
+// ══════════════ LIST — TRANSFORM ══════════════════════════════════════════
+{ cat:'list', title:'List — Transform', color:'#00e5ff', rows:[
+  ['sorted(a)', 'sorted(a)  — O(n log n)',
+   'Returns a sorted COPY, leaves original unchanged — exactly like Python. Use when you need both sorted and original.',
+   `<t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>};
+<t>vi</t> <n>b</n> = <k>sorted</k>(<n>a</n>);        <c>// b=[1,1,3,4,5], a unchanged</c>
+<t>vi</t> <n>c</n> = <k>sorted</k>(<n>a</n>, <k>greater</k><<t>int</t>>());  <c>// c=[5,4,3,1,1]</c>
+
+<c>// If you want in-place: sort(all(a));</c>`, 'sorted() copies the array first. If you don\'t need the original, use sort(all(a)) — avoids the copy.'],
+
+  ['radix_sort(a)', 'a.sort()  — O(n) ✅',
+   'Fastest sort for non-negative integers. Use on large arrays (n > 100k) for a significant speedup over sort().',
+   `<t>vi</t> <n>a</n> = {<n>5</n>,<n>2</n>,<n>8</n>,<n>1</n>,<n>9</n>};
+<k>radix_sort</k>(<n>a</n>);   <c>// a = [1,2,5,8,9]  — in-place</c>
+
+<c>// vs sort(all(a))  — same result, faster for large n</c>
+<c>// Works on vi (int) and vl (long long) only</c>`, '⚠ Works on non-negative integers only. Does NOT work with negatives or custom comparators.'],
+
+  ['reversed(a)', 'list(reversed(a))',
+   'Returns a reversed COPY. Use when you need both the original and reversed version simultaneously.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>};
+<t>vi</t> <n>b</n> = <k>reversed</k>(<n>a</n>);   <c>// b=[5,4,3,2,1], a unchanged</c>
+
+<c>// In-place reverse (no copy): reverse(all(a));</c>
+<c>// Iterate in reverse without copying: repd(i, n)</c>`],
+
+  ['slice(a, s, e)', 'a[s:e]',
+   'Extract sub-array from index s to e (exclusive). Creates a new vector. Use for sub-problem decomposition.',
+   `<t>vi</t> <n>a</n> = {<n>0</n>,<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>};
+<t>vi</t> <n>b</n> = <k>slice</k>(<n>a</n>, <n>1</n>, <n>4</n>);   <c>// [1,2,3]</c>
+<t>vi</t> <n>c</n> = <k>slice</k>(<n>a</n>, <n>2</n>);    <c>// [2,3,4]  (to end)</c>`],
+
+  ['transform_to(a, f)', '[f(x) for x in a]',
+   'Apply a function to every element and return new array. Same as Python list comprehension.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>};
+
+<c>// Square every element</c>
+<t>auto</t> <n>sq</n> = <k>transform_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n>*<n>x</n>; });
+<c>// sq = [1,4,9,16]</c>
+
+<c>// Convert ints to strings</c>
+<t>auto</t> <n>ss</n> = <k>transform_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> to_string(<n>x</n>); });`],
+
+  ['filter_to(a, pred)', '[x for x in a if p(x)]',
+   'Keep only elements matching predicate. Returns new array. Perfect for extracting elements meeting a condition.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>,<n>6</n>};
+
+<t>auto</t> <n>evens</n> = <k>filter_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n>%<n>2</n>==<n>0</n>; });
+<c>// evens = [2,4,6]</c>
+
+<t>auto</t> <n>big</n> = <k>filter_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n> > <n>3</n>; });
+<c>// big = [4,5,6]</c>`],
+
+  ['unique_vals(a)', 'sorted(set(a))',
+   'Returns sorted array of distinct values. Useful for coordinate compression, deduplication, finding distinct counts.',
+   `<t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>,<n>9</n>,<n>2</n>,<n>6</n>,<n>5</n>};
+<t>vi</t> <n>u</n> = <k>unique_vals</k>(<n>a</n>);
+<c>// u = [1,2,3,4,5,6,9]</c>
+
+<c>// Count distinct values:</c>
+<k>len</k>(<k>unique_vals</k>(<n>a</n>));   <c>// 7</c>`],
+
+  ['flatten(vv)', '[x for row in vv for x in row]',
+   'Merge a 2D vector into 1D. O(n) with reserve. Use when you have results from multiple sub-problems.',
+   `<t>vvi</t> <n>groups</n> = {{<n>1</n>,<n>2</n>},{<n>3</n>,<n>4</n>},{<n>5</n>}};
+<t>vi</t> <n>all</n> = <k>flatten</k>(<n>groups</n>);
+<c>// all = [1,2,3,4,5]</c>`],
+]},
+
+// ══════════════ DICT / MAP ════════════════════════════════════════════════
+{ cat:'dict', title:'Dict — Operations', color:'#ff6b35', rows:[
+  ['map<K,V> d', 'd = {}  — ordered O(log n)',
+   'Ordered map — keys always sorted. Use when you need min/max key, iteration in order, or ordered output.',
+   `<t>map</t><<t>int</t>,<t>int</t>> <n>d</n>;
+<n>d</n>[<n>3</n>] = <n>10</n>;
+<n>d</n>[<n>1</n>] = <n>20</n>;
+<k>each2</k>(<n>k</n>, <n>v</n>, <n>d</n>) cout << <n>k</n> << <s>" "</s>;  <c>// 1 3  (sorted!)</c>
+
+<c>// First/last key in O(log n)</c>
+<n>d</n>.begin()-><n>first</n>;    <c>// smallest key</c>
+<n>d</n>.rbegin()-><n>first</n>;   <c>// largest key</c>`],
+
+  ['umap<K,V> d', 'd = {}  — O(1) avg ✅',
+   'Unordered map — hash table. Use for pure key lookup/insert when order doesn\'t matter. 3-5x faster than map.',
+   `<t>umap</t><<t>string</t>,<t>int</t>> <n>score</n>;
+<n>score</n>[<s>"Alice"</s>] = <n>95</n>;
+<n>score</n>[<s>"Bob"</s>]   = <n>87</n>;
+<k>get</k>(<n>score</n>, <s>"Alice"</s>, <n>0</n>);  <c>// 95</c>
+<k>get</k>(<n>score</n>, <s>"Carol"</s>, <n>0</n>);  <c>// 0 (default)</c>`, '⚠ umap has worst-case O(n) if hash collisions occur. Adversarial inputs can hack it. Use map for safety in contests.'],
+
+  ['d[key]++', 'd[key] = d.get(key,0)+1',
+   'Default-insert 0 then increment. The standard way to count frequencies. Works on both map and umap.',
+   `<t>umap</t><<t>int</t>,<t>int</t>> <n>freq</n>;
+<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>1</n>,<n>3</n>,<n>2</n>,<n>1</n>};
+<k>each</k>(<n>x</n>, <n>a</n>) <n>freq</n>[<n>x</n>]++;
+<c>// freq = {1:3, 2:2, 3:1}</c>
+<c>// Or just use counter(a) for the same result</c>`],
+
+  ['get(d, key, def)', 'd.get(key, def)',
+   'Safe lookup with default. Use instead of d[key] when the key might not exist — d[key] inserts 0 for missing keys.',
+   `<t>map</t><<t>string</t>,<t>int</t>> <n>d</n> = {{<s>"a"</s>,<n>1</n>}};
+<k>get</k>(<n>d</n>, <s>"a"</s>, <n>0</n>);   <c>// 1  — found</c>
+<k>get</k>(<n>d</n>, <s>"z"</s>, <n>-1</n>); <c>// -1 — not found, no side effect</c>
+<c>// d["z"] would INSERT z:0 — don't use for lookup only!</c>`],
+
+  ['counter(a) / ucounter(a)', 'Counter(a)',
+   'counter() = ordered (O(n log n)), ucounter() = hash (O(n) avg). Use ucounter for speed unless order matters.',
+   `<t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>,<n>9</n>,<n>2</n>,<n>6</n>,<n>5</n>};
+<t>auto</t> <n>c</n> = <k>counter</k>(<n>a</n>);   <c>// ordered: {1:2, 2:1, 3:1, ...}</c>
+<t>auto</t> <n>u</n> = <k>ucounter</k>(<n>a</n>);  <c>// unordered, faster</c>
+
+<c>// Access like normal map:</c>
+<n>c</n>[<n>1</n>];   <c>// 2  (1 appears twice)</c>
+<n>c</n>[<n>9</n>];   <c>// 1</c>`],
+
+  ['most_common(a)', 'Counter(a).most_common(1)[0]',
+   'Find the element that appears most often. O(n) avg using hash map internally. Returns {value, count} pair.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>3</n>,<n>2</n>,<n>3</n>,<n>2</n>};
+<t>auto</t> [<n>val</n>, <n>cnt</n>] = <k>most_common</k>(<n>a</n>);
+<c>// val=3, cnt=3</c>
+cout << <s>"Mode: "</s> << <n>val</n> << <s>" (appears "</s> << <n>cnt</n> << <s>" times)"</s>;`],
+]},
+
+// ══════════════ SET ════════════════════════════════════════════════════════
+{ cat:'dict', title:'Set — Operations', color:'#ff6b35', rows:[
+  ['uset<T> s', 's = set()  — O(1) avg ✅',
+   'Hash set. Use for fast membership testing. Contains/insert/erase all O(1) average. The main set to use in CP.',
+   `<t>uset</t><<t>int</t>> <n>seen</n>;
+<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>2</n>,<n>1</n>};
+<k>each</k>(<n>x</n>, <n>a</n>) {
+    <k>if</k> (<k>contains</k>(<n>seen</n>, <n>x</n>)) {
+        cout << <n>x</n> << <s>" is duplicate\\n"</s>;
+    }
+    <n>seen</n>.insert(<n>x</n>);
+}`],
+
+  ['set<T> s', 's = SortedList()  — O(log n)',
+   'Ordered set. Use when you need min/max element, predecessor/successor queries, or ordered iteration.',
+   `<t>set</t><<t>int</t>> <n>s</n> = {<n>5</n>,<n>3</n>,<n>8</n>,<n>1</n>};
+*<n>s</n>.begin();    <c>// 1  (minimum)</c>
+*<n>s</n>.rbegin();   <c>// 8  (maximum)</c>
+
+<c>// Next element larger than x:</c>
+<t>auto</t> <n>it</n> = <n>s</n>.upper_bound(<n>4</n>);  <c>// points to 5</c>`],
+
+  ['union_set(a, b)', 'a | b',
+   'Return set containing all elements from both sets. Use for merging groups.',
+   `<t>set</t><<t>int</t>> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>}, <n>b</n> = {<n>2</n>,<n>3</n>,<n>4</n>};
+<t>auto</t> <n>u</n> = <k>union_set</k>(<n>a</n>, <n>b</n>);       <c>// {1,2,3,4}</c>
+<t>auto</t> <n>i</n> = <k>intersection</k>(<n>a</n>, <n>b</n>);   <c>// {2,3}</c>
+<t>auto</t> <n>d</n> = <k>difference</k>(<n>a</n>, <n>b</n>);     <c>// {1}  (in a not b)</c>`],
+]},
+
+// ══════════════ STRING ════════════════════════════════════════════════════
+{ cat:'string', title:'String — Core', color:'#ff9f1c', rows:[
+  ['split(s, delim)', 's.split(delim)',
+   'Split string by delimiter. Use to parse space/comma-separated input, tokenize lines.',
+   `<t>string</t> <n>s</n> = <s>"hello world foo"</s>;
+<t>auto</t> <n>words</n> = <k>split</k>(<n>s</n>, <s>' '</s>);
+<c>// words = ["hello", "world", "foo"]</c>
+
+<t>string</t> <n>csv</n> = <s>"1,2,3,4"</s>;
+<t>auto</t> <n>parts</n> = <k>split</k>(<n>csv</n>, <s>','</s>);
+<c>// parts = ["1","2","3","4"]</c>`],
+
+  ['join(a, sep)', 'sep.join(a)',
+   'Concatenate a vector of strings or numbers with a separator. Use to format output nicely.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>};
+<k>join</k>(<n>a</n>, <s>", "</s>);   <c>// "1, 2, 3"</c>
+
+<t>vec</t><<t>string</t>> <n>words</n> = {<s>"hello"</s>, <s>"world"</s>};
+<k>join</k>(<n>words</n>, <s>" "</s>);   <c>// "hello world"</c>`],
+
+  ['strip(s)', 's.strip()',
+   'Remove leading and trailing whitespace. Use when reading lines that may have trailing spaces/newlines.',
+   `<t>string</t> <n>s</n> = <s>"  hello world  "</s>;
+<k>strip</k>(<n>s</n>);   <c>// "hello world"</c>`],
+
+  ['upper(s) / lower(s)', 's.upper() / s.lower()',
+   'Case conversion. Use for case-insensitive comparison or normalising input.',
+   `<t>string</t> <n>s</n> = <s>"Hello World"</s>;
+<k>upper</k>(<n>s</n>);   <c>// "HELLO WORLD"</c>
+<k>lower</k>(<n>s</n>);   <c>// "hello world"</c>
+
+<c>// Case-insensitive comparison:</c>
+<k>if</k> (<k>lower</k>(<n>s1</n>) == <k>lower</k>(<n>s2</n>)) { <c>/* same */</c> }`],
+
+  ['replace_all(s, from, to)', 's.replace(from, to)',
+   'Replace ALL occurrences of substring. Use for text transformation, cleaning input.',
+   `<t>string</t> <n>s</n> = <s>"aababab"</s>;
+<k>replace_all</k>(<n>s</n>, <s>"ab"</s>, <s>"X"</s>);   <c>// "aXXX"</c>
+
+<c>// Remove all spaces:</c>
+<k>replace_all</k>(<n>s</n>, <s>" "</s>, <s>""</s>);`],
+
+  ['startswith / endswith', 's.startswith / s.endswith',
+   'Check string prefix/suffix. Use for parsing formatted input or filtering strings by pattern.',
+   `<t>string</t> <n>s</n> = <s>"hello_world"</s>;
+<k>startswith</k>(<n>s</n>, <s>"hello"</s>);   <c>// true</c>
+<k>endswith</k>(<n>s</n>, <s>"world"</s>);     <c>// true</c>
+<k>startswith</k>(<n>s</n>, <s>"world"</s>);   <c>// false</c>`],
+
+  ['bin_str(n)', 'bin(n)',
+   'Binary string representation. Use for bitmask debugging, printing binary numbers.',
+   `<k>bin_str</k>(<n>10</n>);   <c>// "0b1010"</c>
+<k>bin_str</k>(<n>255</n>);  <c>// "0b11111111"</c>
+<k>bin_str</k>(<n>0</n>);    <c>// "0b0"</c>`],
+]},
+
+// ══════════════ MATH ══════════════════════════════════════════════════════
+{ cat:'math', title:'Math — Modular Arithmetic', color:'#c77dff', rows:[
+  ['mpow(a, b, mod)', 'pow(a, b, mod)',
+   'Modular exponentiation. Use for any a^b mod p in number theory, combinatorics, or crypto problems.',
+   `<k>mpow</k>(<n>2</n>, <n>10</n>, <n>MOD</n>);     <c>// 1024</c>
+<k>mpow</k>(<n>2</n>, <n>1000000000</n>, <n>MOD</n>); <c>// fast — O(log b)</c>
+
+<c>// Fermat's little theorem: a^(p-1) ≡ 1 (mod p)</c>
+<k>mpow</k>(<n>a</n>, <n>MOD</n>-<n>2</n>, <n>MOD</n>);  <c>// = modinv(a)</c>`],
+
+  ['modinv(a, mod)', '— modular inverse',
+   'Modular inverse: finds x such that a*x ≡ 1 (mod p). Required for modular division. mod must be prime.',
+   `<c>// Modular division: a/b mod p = a * modinv(b) mod p</c>
+<t>ll</t> <n>ans</n> = (<n>a</n> % <n>MOD</n>) * <k>modinv</k>(<n>b</n>, <n>MOD</n>) % <n>MOD</n>;
+
+<c>// Example: 10/3 mod 1e9+7</c>
+<k>modinv</k>(<n>3</n>, <n>MOD</n>);   <c>// 333333336</c>
+(<n>10</n> * <k>modinv</k>(<n>3</n>, <n>MOD</n>)) % <n>MOD</n>;  <c>// works!</c>`, '⚠ mod must be a prime number. modinv(a, MOD) = mpow(a, MOD-2, MOD) by Fermat\'s little theorem.'],
+
+  ['gcd(a, b) / lcm(a, b)', 'math.gcd / math.lcm',
+   'gcd is iterative (no stack overflow). lcm = a/gcd*b. Use for fraction reduction, cycle detection.',
+   `<k>gcd</k>(<n>12</n>, <n>8</n>);    <c>// 4</c>
+<k>lcm</k>(<n>4</n>, <n>6</n>);     <c>// 12</c>
+
+<c>// GCD of whole array:</c>
+<t>ll</t> <n>g</n> = <n>a</n>[<n>0</n>];
+<k>each</k>(<n>x</n>, <n>a</n>) <n>g</n> = <k>gcd</k>(<n>g</n>, <n>x</n>);`],
+
+  ['chmin(a, b) / chmax(a, b)', 'a = min(a,b) / a = max(a,b)',
+   'Update variable if smaller/larger. Returns true if updated. Essential for clean DP transitions.',
+   `<c>// DP: shortest path relaxation</c>
+<k>if</k> (<k>chmin</k>(<n>dist</n>[<n>v</n>], <n>dist</n>[<n>u</n>] + <n>w</n>)) {
+    <n>pq</n>.push({<n>dist</n>[<n>v</n>], <n>v</n>});
+}
+
+<c>// Track running max:</c>
+<t>int</t> <n>ans</n> = <n>0</n>;
+<k>each</k>(<n>x</n>, <n>a</n>) <k>chmax</k>(<n>ans</n>, <n>x</n>);  <c>// ans = max of array</c>`],
+]},
+
+{ cat:'math', title:'Math — Number Theory', color:'#c77dff', rows:[
+  ['is_prime(n)', 'primality test  O(√n)',
+   'Trial division primality test. Fast for single queries. Use sieve for testing many numbers.',
+   `<k>is_prime</k>(<n>7</n>);    <c>// true</c>
+<k>is_prime</k>(<n>100</n>);  <c>// false</c>
+<k>is_prime</k>(<n>1</n>);    <c>// false</c>
+
+<c>// For many queries, use sieve:</c>
+<t>vi</t> <n>primes</n> = <k>sieve</k>(<n>1000000</n>);  <c>// all primes up to 1M</c>`],
+
+  ['sieve(n)', 'primes up to n  O(n log log n)',
+   'Sieve of Eratosthenes. Use when you need ALL primes up to n, or need to check primality of many numbers.',
+   `<t>vi</t> <n>p</n> = <k>sieve</k>(<n>20</n>);
+<c>// p = [2,3,5,7,11,13,17,19]</c>
+
+<c>// Check if x is prime (after sieve):</c>
+<t>vi</t> <n>primes</n> = <k>sieve</k>(<n>N</n>);
+<t>uset</t><<t>int</t>> <n>pset</n>(<n>primes</n>.begin(), <n>primes</n>.end());
+<k>contains</k>(<n>pset</n>, <n>x</n>);   <c>// O(1) lookup</c>`],
+
+  ['prime_factors(n)', 'factorization  O(√n)',
+   'Returns {prime: exponent} map. Use for divisibility problems, Euler phi, number of divisors.',
+   `<k>prime_factors</k>(<n>12</n>);   <c>// {2:2, 3:1}  (2²×3)</c>
+<k>prime_factors</k>(<n>360</n>);  <c>// {2:3, 3:2, 5:1}</c>
+
+<c>// Number of divisors = product of (exp+1):</c>
+<t>auto</t> <n>f</n> = <k>prime_factors</k>(<n>n</n>);
+<t>ll</t> <n>ndiv</n> = <n>1</n>;
+<k>each2</k>(<n>p</n>, <n>e</n>, <n>f</n>) <n>ndiv</n> *= (<n>e</n>+<n>1</n>);`],
+
+  ['divisors(n)', 'sorted divisors  O(√n)',
+   'All divisors in sorted order. Use for problems involving factors, sum of divisors, proper divisors.',
+   `<k>divisors</k>(<n>12</n>);   <c>// [1,2,3,4,6,12]</c>
+<k>divisors</k>(<n>1</n>);    <c>// [1]</c>
+
+<c>// Sum of proper divisors (all except n itself):</c>
+<t>auto</t> <n>d</n> = <k>divisors</k>(<n>n</n>);
+<t>ll</t> <n>s</n> = <k>sum</k>(<t>vl</t>(<n>d</n>.begin(), <n>d</n>.end()-<n>1</n>));`],
+
+  ['popcount(n)', "bin(n).count('1')",
+   'Count set bits (1s) in binary representation. Use for bitmask DP, hamming distance, subset enumeration.',
+   `<k>popcount</k>(<n>7</n>);    <c>// 3  (111 in binary)</c>
+<k>popcount</k>(<n>8</n>);    <c>// 1  (1000)</c>
+<k>bit_length</k>(<n>8</n>);  <c>// 4  (needs 4 bits)</c>
+<k>is_pow2</k>(<n>8</n>);     <c>// true</c>
+<k>is_pow2</k>(<n>6</n>);     <c>// false</c>`],
+]},
+
+{ cat:'math', title:'Combinatorics — C(n,r) and P(n,r)', color:'#c77dff', rows:[
+  ['init_comb()', 'precompute factorials',
+   'Call ONCE at start of main. Precomputes factorials and inverse factorials up to 2e6. Required before using C() or P().',
+   `<t>int</t> <k>main</k>() {
+    <k>FASTIO</k>
+    <k>init_comb</k>();    <c>// call once, O(n) setup</c>
+    <t>int</t> <n>t</n>; cin >> <n>t</n>;
+    <k>while</k>(<n>t</n>--) <k>solve</k>();
+}`],
+
+  ['Comb::C(n, r)', 'math.comb(n, r) mod p',
+   'Binomial coefficient n choose r, modulo MOD. O(1) after init. Use for counting paths, subsets, combinations.',
+   `<k>init_comb</k>();
+
+<k>Comb</k>::<k>C</k>(<n>5</n>, <n>2</n>);     <c>// 10  (5 choose 2)</c>
+<k>Comb</k>::<k>C</k>(<n>10</n>, <n>3</n>);    <c>// 120</c>
+<k>Comb</k>::<k>C</k>(<n>100</n>, <n>50</n>);  <c>// huge number mod 1e9+7</c>
+<k>Comb</k>::<k>C</k>(<n>5</n>, <n>6</n>);     <c>// 0  (r > n)</c>
+
+<c>// Count grid paths (n+m choose n):</c>
+<k>Comb</k>::<k>C</k>(<n>n</n>+<n>m</n>, <n>n</n>);`],
+
+  ['Comb::P(n, r)', 'permutations(n, r)',
+   'Permutations nPr = n!/(n-r)!, mod p. O(1) after init. Use for ordered arrangements.',
+   `<k>Comb</k>::<k>P</k>(<n>5</n>, <n>2</n>);   <c>// 20  (5×4)</c>
+<k>Comb</k>::<k>P</k>(<n>10</n>, <n>3</n>);  <c>// 720  (10×9×8)</c>`],
+]},
+
+// ══════════════ PREFIX SUM ════════════════════════════════════════════════
+{ cat:'ds', title:'Prefix Sum', color:'#ff6b6b', rows:[
+  ['prefix_sum(a)', 'running cumulative sum',
+   'Build prefix sum array in O(n), then answer range sum queries in O(1). The most common CP trick.',
+   `<t>vl</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>};
+<t>auto</t> <n>ps</n> = <k>prefix_sum</k>(<n>a</n>);
+<c>// ps = [0,1,3,6,10,15]</c>
+
+<k>range_sum</k>(<n>ps</n>, <n>1</n>, <n>3</n>);  <c>// 2+3+4 = 9  — O(1)!</c>
+<k>range_sum</k>(<n>ps</n>, <n>0</n>, <n>4</n>);  <c>// 1+2+3+4+5 = 15</c>`, 'Build once in O(n), then each range_sum query is O(1). Use when you have many range sum queries.'],
+
+  ['prefix_sum2d(a)', '2D prefix sum',
+   'Same idea for 2D grids. Build in O(n*m), query any rectangle in O(1). Use for grid range sum problems.',
+   `<t>vec</t><<t>vl</t>> <n>grid</n> = {{<n>1</n>,<n>2</n>,<n>3</n>},{<n>4</n>,<n>5</n>,<n>6</n>},{<n>7</n>,<n>8</n>,<n>9</n>}};
+<t>auto</t> <n>ps</n> = <k>prefix_sum2d</k>(<n>grid</n>);
+
+<c>// Sum of entire grid:</c>
+<k>range_sum2d</k>(<n>ps</n>, <n>0</n>,<n>0</n>, <n>2</n>,<n>2</n>);  <c>// 45</c>
+
+<c>// Sum of top-left 2×2:</c>
+<k>range_sum2d</k>(<n>ps</n>, <n>0</n>,<n>0</n>, <n>1</n>,<n>1</n>);  <c>// 12</c>`],
+]},
+
+// ══════════════ DATA STRUCTURES ═══════════════════════════════════════════
+{ cat:'ds', title:'DSU / Union-Find', color:'#ff6b6b', rows:[
+  ['DSU dsu(n)', 'n disjoint components',
+   'Initialise n nodes each in their own component. O(α n) per operation. Use for connected components, Kruskal.',
+   `<t>DSU</t> <n>dsu</n>(<n>5</n>);   <c>// 5 nodes: 0,1,2,3,4</c>
+
+<n>dsu</n>.unite(<n>0</n>, <n>1</n>);   <c>// merge 0 and 1</c>
+<n>dsu</n>.unite(<n>1</n>, <n>2</n>);   <c>// merge 1 and 2 → {0,1,2},{3},{4}</c>
+<n>dsu</n>.same(<n>0</n>, <n>2</n>);    <c>// true</c>
+<n>dsu</n>.same(<n>0</n>, <n>3</n>);    <c>// false</c>
+<n>dsu</n>.size(<n>0</n>);             <c>// 3</c>
+<n>dsu</n>.components();              <c>// 3</c>`],
+]},
+
+{ cat:'ds', title:'Fenwick Tree (BIT)', color:'#ff6b6b', rows:[
+  ['Fenwick bit(n)', 'point update, range sum',
+   'Fastest structure for point update + prefix sum queries. O(log n) both. Use for inversion count, range sums.',
+   `<t>Fenwick</t> <n>bit</n>(<n>n</n>);
+
+<n>bit</n>.update(<n>2</n>, <n>5</n>);   <c>// add 5 at index 2</c>
+<n>bit</n>.update(<n>4</n>, <n>3</n>);   <c>// add 3 at index 4</c>
+
+<n>bit</n>.query(<n>0</n>, <n>4</n>);    <c>// sum of [0..4] = 8</c>
+<n>bit</n>.prefix(<n>2</n>);   <c>// prefix sum [0..2] = 5</c>
+
+<c>// Count inversions pattern:</c>
+<k>repd</k>(<n>i</n>, <n>n</n>) {
+    <n>ans</n> += <n>bit</n>.prefix(<n>a</n>[<n>i</n>]-<n>1</n>);
+    <n>bit</n>.update(<n>a</n>[<n>i</n>], <n>1</n>);
+}`],
+]},
+
+{ cat:'ds', title:'Segment Tree', color:'#ff6b6b', rows:[
+  ['SegTree seg(a)', 'range sum, point update',
+   'More flexible than Fenwick — can support any associative operation. O(log n) update and range query.',
+   `<t>vl</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>2</n>,<n>7</n>,<n>5</n>};
+<t>SegTree</t> <n>seg</n>(<n>a</n>);    <c>// build from array</c>
+
+<n>seg</n>.query(<n>1</n>, <n>3</n>);   <c>// sum [1..3] = 3+2+7 = 12</c>
+<n>seg</n>.update(<n>2</n>, <n>10</n>); <c>// set a[2] = 10</c>
+<n>seg</n>.query(<n>1</n>, <n>3</n>);   <c>// now = 3+10+7 = 20</c>`, 'Unlike Fenwick, SegTree supports both update and arbitrary range queries. Modify qry() for min/max instead of sum.'],
+]},
+
+{ cat:'ds', title:'Sparse Table', color:'#ff6b6b', rows:[
+  ['SparseTable sp(a)', 'static range min/max  O(1)',
+   'O(1) range min/max queries after O(n log n) build. Use for static arrays with MANY range queries.',
+   `<t>vl</t> <n>a</n> = {<n>2</n>,<n>4</n>,<n>3</n>,<n>1</n>,<n>6</n>,<n>7</n>,<n>8</n>,<n>9</n>};
+<t>SparseTable</t> <n>sp</n>(<n>a</n>);   <c>// O(n log n) build</c>
+
+<n>sp</n>.qmin(<n>1</n>, <n>5</n>);   <c>// min of a[1..5] = 1  — O(1)!</c>
+<n>sp</n>.qmax(<n>2</n>, <n>6</n>);   <c>// max of a[2..6] = 8  — O(1)!</c>`, '⚠ Static only — cannot update. Perfect for RMQ problems where array never changes.'],
+]},
+
+{ cat:'ds', title:'Coordinate Compression', color:'#ff6b6b', rows:[
+  ['Compress<int> comp(a)', 'map large values → small indices',
+   'Map large/sparse values to indices 0,1,...,k-1. Use when values are huge but count is small (e.g. coordinates in segment tree).',
+   `<t>vi</t> <n>a</n> = {<n>1000000</n>, <n>5</n>, <n>999</n>, <n>5</n>, <n>1000000</n>};
+<t>Compress</t><<t>int</t>> <n>comp</n>(<n>a</n>);
+
+<n>comp</n>.encode(<n>5</n>);        <c>// 0  (smallest unique)</c>
+<n>comp</n>.encode(<n>999</n>);      <c>// 1</c>
+<n>comp</n>.encode(<n>1000000</n>);  <c>// 2</c>
+<n>comp</n>.size();           <c>// 3  (3 unique values)</c>
+<n>comp</n>.decode(<n>1</n>);        <c>// 999</c>`],
+]},
+
+{ cat:'ds', title:'Priority Queues', color:'#ff6b6b', rows:[
+  ['pq<T> / pqmin<T>', 'max-heap / min-heap',
+   'pq is max-heap (largest first), pqmin is min-heap (smallest first). Use for greedy algorithms, Dijkstra.',
+   `<t>pqmin</t><<t>int</t>> <n>minq</n>;
+<n>minq</n>.push(<n>5</n>); <n>minq</n>.push(<n>1</n>); <n>minq</n>.push(<n>3</n>);
+<n>minq</n>.top();   <c>// 1  — always smallest</c>
+<n>minq</n>.pop();   <c>// removes 1</c>
+
+<c>// Dijkstra uses pqmin<pair<ll,int>></c>
+<c>// Task scheduling: pqmin for earliest deadline</c>`],
+]},
+
+// ══════════════ GRAPH ════════════════════════════════════════════════════
+{ cat:'graph', title:'Graph Setup', color:'#4ecdc4', rows:[
+  ['new_graph(n) / add_edge', 'G = adjacency list',
+   'Create adjacency list graph and add edges. Use for BFS, DFS, all graph algorithms.',
+   `<t>auto</t> <n>g</n> = <k>new_graph</k>(<n>5</n>);   <c>// 5 nodes: 0..4</c>
+<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>1</n>);       <c>// undirected</c>
+<k>add_edge</k>(<n>g</n>, <n>1</n>, <n>2</n>);
+<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>2</n>, <k>true</k>); <c>// directed 0→2</c>
+
+<c>// Weighted graph:</c>
+<t>auto</t> <n>wg</n> = <k>new_wgraph</k>(<n>n</n>);
+<k>add_edge</k>(<n>wg</n>, <n>u</n>, <n>v</n>, <n>weight</n>);`],
+]},
+
+{ cat:'graph', title:'Graph Algorithms', color:'#4ecdc4', rows:[
+  ['bfs(g, src)', 'BFS — shortest hops  O(V+E)',
+   'Unweighted shortest paths from src. dist[v] = -1 if unreachable. Use for minimum steps problems.',
+   `<t>auto</t> <n>g</n> = <k>new_graph</k>(<n>n</n>);
+<c>// ... add edges ...</c>
+<t>vl</t> <n>dist</n> = <k>bfs</k>(<n>g</n>, <n>0</n>);
+<c>// dist[v] = shortest path 0→v in hops</c>
+<c>// dist[v] = -1 if unreachable</c>`],
+
+  ['dijkstra(wg, src)', 'Dijkstra  O((V+E) log V)',
+   'Weighted shortest paths. Only for NON-NEGATIVE weights. Returns INF for unreachable nodes.',
+   `<t>auto</t> <n>wg</n> = <k>new_wgraph</k>(<n>n</n>);
+<k>add_edge</k>(<n>wg</n>, <n>0</n>, <n>1</n>, <n>4</n>);
+<k>add_edge</k>(<n>wg</n>, <n>0</n>, <n>2</n>, <n>1</n>);
+<k>add_edge</k>(<n>wg</n>, <n>2</n>, <n>1</n>, <n>2</n>);
+
+<t>vl</t> <n>dist</n> = <k>dijkstra</k>(<n>wg</n>, <n>0</n>);
+<c>// dist[1] = 3  (0→2→1)</c>
+<c>// dist[2] = 1</c>`, '⚠ Does NOT work with negative edge weights. Use Bellman-Ford for negative weights.'],
+
+  ['topo_sort(g)', 'topological sort  O(V+E)',
+   'Order nodes so all edges go forward. Use for dependency resolution, course prerequisites, build systems.',
+   `<t>auto</t> <n>g</n> = <k>new_graph</k>(<n>4</n>);
+<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>1</n>, <k>true</k>);   <c>// directed!</c>
+<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>2</n>, <k>true</k>);
+<k>add_edge</k>(<n>g</n>, <n>1</n>, <n>3</n>, <k>true</k>);
+<k>add_edge</k>(<n>g</n>, <n>2</n>, <n>3</n>, <k>true</k>);
+
+<t>vi</t> <n>order</n> = <k>topo_sort</k>(<n>g</n>);
+<c>// [0, 1, 2, 3]  or [0, 2, 1, 3]</c>
+<c>// len(order) < n  →  cycle exists!</c>`],
+]},
+
+// ══════════════ ALGORITHMS ════════════════════════════════════════════════
+{ cat:'algo', title:'Fast Lookups (sorted arrays)', color:'#ffe66d', rows:[
+  ['bisect_left(a, x)', 'bisect.bisect_left  O(log n)',
+   'Index of first element >= x in a sorted array. Use to find insertion point or count elements < x.',
+   `<t>vi</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>3</n>,<n>5</n>,<n>7</n>};
+<k>bisect_left</k>(<n>a</n>, <n>3</n>);    <c>// 1  (first 3)</c>
+<k>bisect_right</k>(<n>a</n>, <n>3</n>);   <c>// 3  (after last 3)</c>
+
+<c>// Count elements equal to x:</c>
+<k>bisect_right</k>(<n>a</n>,<n>x</n>) - <k>bisect_left</k>(<n>a</n>,<n>x</n>);
+
+<c>// Count elements < x:</c>
+<k>bisect_left</k>(<n>a</n>, <n>x</n>);`],
+
+  ['bs_first(lo, hi, cond)', 'binary search on answer',
+   'Find SMALLEST x in [lo,hi] where cond(x) is true. The classic "binary search on answer" pattern.',
+   `<c>// Is it possible to split array into k groups with max sum <= mid?</c>
+<t>ll</t> <n>ans</n> = <k>bs_first</k>(<n>0</n>, <n>1e18</n>, [&](<t>ll</t> <n>mid</n>) {
+    <t>int</t> <n>groups</n> = <n>1</n>, <n>cur</n> = <n>0</n>;
+    <k>each</k>(<n>x</n>, <n>a</n>) {
+        <k>if</k> (<n>cur</n> + <n>x</n> > <n>mid</n>) { <n>groups</n>++; <n>cur</n> = <n>0</n>; }
+        <n>cur</n> += <n>x</n>;
+    }
+    <k>return</k> <n>groups</n> <= <n>k</n>;
+});`, 'The condition function must be monotone: false...false...true...true (never true then false again).'],
+]},
+
+{ cat:'algo', title:'String Algorithms', color:'#ffe66d', rows:[
+  ['kmp_search(text, pat)', 'all occurrences  O(n+m)',
+   'Find ALL positions where pat appears in text. O(n+m) — far better than O(n*m) naive search.',
+   `<t>vi</t> <n>pos</n> = <k>kmp_search</k>(<s>"abcabcabc"</s>, <s>"abc"</s>);
+<c>// pos = [0, 3, 6]  — all start indices</c>
+
+<t>vi</t> <n>pos2</n> = <k>kmp_search</k>(<s>"aaaa"</s>, <s>"aa"</s>);
+<c>// pos2 = [0, 1, 2]</c>`],
+
+  ['z_function(s)', 'Z-array  O(n)',
+   'z[i] = length of longest substring starting at i that matches prefix of s. Use for pattern matching, period finding.',
+   `<t>vi</t> <n>z</n> = <k>z_function</k>(<s>"aabxaa"</s>);
+<c>// z = [6,1,0,0,2,1]</c>
+<c>// z[4]=2: s[4..5]="aa" matches prefix s[0..1]="aa"</c>
+
+<c>// Pattern matching using Z:</c>
+<t>vi</t> <n>z2</n> = <k>z_function</k>(<n>pat</n> + <s>"#"</s> + <n>text</n>);
+<c>// positions where z2[i] == len(pat) are matches</c>`],
+]},
+
+// ══════════════ MACROS ════════════════════════════════════════════════════
+{ cat:'macro', title:'Shorthand Macros', color:'#a29bfe', rows:[
+  ['all(x) / rall(x)', '(x).begin(),(x).end()',
+   'Pass entire container to STL algorithms. all() = forward, rall() = reverse order.',
+   `<k>sort</k>(<k>all</k>(<n>a</n>));                     <c>// sort ascending</c>
+<k>sort</k>(<k>all</k>(<n>a</n>), <k>greater</k><<t>int</t>>());  <c>// sort descending</c>
+<k>reverse</k>(<k>all</k>(<n>a</n>));                  <c>// reverse in place</c>
+<k>sort</k>(<k>rall</k>(<n>a</n>));                    <c>// sort descending (alt)</c>`],
+
+  ['yes / no', 'print("YES") / print("NO")',
+   'Print YES or NO and newline. Many CF problems require exactly this output format.',
+   `<k>if</k> (<n>possible</n>) <k>yes</k>;
+<k>else</k> <k>no</k>;
+
+<c>// Ternary:</c>
+<n>condition</n> ? <k>yes</k> : <k>no</k>;`],
+
+  ['INF / INF32 / MOD', 'float("inf") / 1e9+7',
+   'Use INF for ll distance initialisation, INF32 for int, MOD for modular arithmetic.',
+   `<t>vl</t> <n>dist</n>(<n>n</n>, <n>INF</n>);    <c>// unreachable initialisation</c>
+<t>vi</t> <n>dp</n>(<n>n</n>, <n>INF32</n>);   <c>// for int DP</c>
+<t>dp</t>[<n>0</n>] = <n>0</n>;
+
+<t>ll</t> <n>ans</n> = (<n>a</n> % <n>MOD</n> + <n>b</n> % <n>MOD</n>) % <n>MOD</n>;`],
+
+  ['FASTIO', 'speed up cin/cout',
+   'Put at very start of main(). Makes cin/cout as fast as scanf/printf. Required in almost every CF solution.',
+   `<t>int</t> <k>main</k>() {
+    <k>FASTIO</k>            <c>// always first line</c>
+    <t>int</t> <n>t</n>; cin >> <n>t</n>;
+    <k>while</k>(<n>t</n>--) <k>solve</k>();
+}`, '⚠ After FASTIO, never use printf/scanf/puts/getchar — mixing them causes UB. Stick to cin/cout only.'],
+
+  ['dbg(x) / dbgv(a)', 'print(f"{x=}")',
+   'Debug print that is COMPLETELY SILENT on Codeforces. Only prints when compiled with -DLOCAL.',
+   `<c>// Locally: g++ -DLOCAL solution.cpp</c>
+<t>int</t> <n>x</n> = <n>42</n>;
+<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>};
+<k>dbg</k>(<n>x</n>);     <c>// x = 42</c>
+<k>dbgv</k>(<n>a</n>);    <c>// a = [1, 2, 3]</c>
+<k>dbg2</k>(<n>x</n>,<n>n</n>); <c>// x=42, n=5</c>
+
+<c>// On Codeforces: all above lines do nothing ✅</c>`, 'Safe to leave debug prints in your submission — they vanish automatically when LOCAL is not defined.'],
+]},
+
+{ cat:'macro', title:'Type Aliases', color:'#a29bfe', rows:[
+  ['ll / ld / ull', 'long long / long double / unsigned',
+   'Always use ll instead of int for competitive programming — avoids overflow on large inputs.',
+   `<c>// Common mistake — overflow with int:</c>
+<t>int</t> <n>a</n> = <n>1e9</n>, <n>b</n> = <n>1e9</n>;
+<n>a</n> * <n>b</n>;   <c>// OVERFLOW — int max is ~2.1e9</c>
+
+<c>// Correct:</c>
+<t>ll</t> <n>a</n> = <n>1e9</n>, <n>b</n> = <n>1e9</n>;
+<n>a</n> * <n>b</n>;   <c>// 1e18 — fits in ll</c>`],
+
+  ['vec<T> / umap<K,V> / uset<T>', 'list / dict / set',
+   'Generic container aliases. vec<T> = vector<T>, umap = unordered_map, uset = unordered_set.',
+   `<t>vec</t><<t>int</t>>  <n>a</n>;          <c>// vector<int></c>
+<t>vec</t><<t>string</t>> <n>words</n>;     <c>// vector<string></c>
+<t>umap</t><<t>int</t>,<t>int</t>> <n>freq</n>;   <c>// hash map</c>
+<t>uset</t><<t>ll</t>>  <n>seen</n>;        <c>// hash set</c>
+<t>pqmin</t><<t>ll</t>> <n>minheap</n>;     <c>// min-heap</c>`],
+]},
+
 ];
 
-// ── Build grid ──────────────────────────────────────────────────────────────
-const grid    = document.getElementById('grid');
-const noRes   = document.getElementById('no-results');
+// ── Build grid ─────────────────────────────────────────────────────────────────
+const grid   = document.getElementById('grid');
+const noRes  = document.getElementById('no-results');
 const allCards = [];
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function hlCpp(s){
+  const e = escHtml(s);
+  return e
+    .replace(/\b(int|ll|auto|void|bool|string|char|const|struct|class|while|for|if|else|return|true|false|nullptr|using)\b/g,'<span class="kw">$1</span>')
+    .replace(/\b(vec|map|set|umap|uset|pq|pqmin|que|stk|deq|Graph|WGraph|DSU|Fenwick|SegTree|SparseTable|Compress|vi|vl|vvi|vvl|ii|ll2)\b/g,'<span class="tp">$1</span>')
+    .replace(/\b([a-z_][a-z_0-9]*)(?=\()/g,'<span class="fn">$1</span>')
+    .replace(/&lt;|&gt;/g,m=>`<span class="kw">${m}</span>`);
+}
 
 DATA.forEach(section => {
   const card = document.createElement('div');
   card.className = 'card';
-  card.dataset.cat = section.cat;
-  card.dataset.text = (section.title + ' ' + section.rows.map(r=>r.join(' ')).join(' ')).toLowerCase();
+  card.dataset.cat  = section.cat;
+  card.dataset.text = (section.title+' '+section.rows.map(r=>r.join(' ')).join(' ')).toLowerCase();
 
-  let rowsHTML = section.rows.map(([cpp, py]) => `
-    <div class="row" data-cpp="${escHtml(cpp)}">
-      <div class="cell">${hlCpp(cpp)}<span class="copy-hint">copy</span></div>
-      <div class="cell">${escHtml(py)}</div>
-    </div>`).join('');
+  const rowsHTML = section.rows.map(([cpp, py, when, code, note]) => {
+    const codeHtml = code ? `<pre class="usage-code">${code}</pre>` : '';
+    const noteHtml = note ? `<div class="usage-note">⚠ ${escHtml(note)}</div>` : '';
+    const hasUsage = !!(when || code);
+    return `
+    <div class="row">
+      <div class="row-main" data-cpp="${escHtml(cpp)}">
+        <div class="cell">${hlCpp(cpp)}<span class="copy-hint">copy</span></div>
+        <div class="cell">
+          <span>${escHtml(py)}</span>
+          ${hasUsage ? '<span class="expand-arrow">▼</span>' : ''}
+        </div>
+      </div>
+      ${hasUsage ? `
+      <div class="usage-panel">
+        <div class="usage-inner">
+          ${when ? `<div class="usage-when"><strong>When/How:</strong> ${escHtml(when)}</div>` : ''}
+          ${codeHtml}
+          ${noteHtml}
+        </div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
 
   card.innerHTML = `
     <div class="card-header">
@@ -638,68 +1006,73 @@ DATA.forEach(section => {
   allCards.push(card);
 });
 
-function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function hlCpp(s) {
-  const e = escHtml(s);
-  return e
-    .replace(/\b(int|ll|auto|void|bool|string|char|const|struct|class|while|for|if|else|return|true|false|nullptr)\b/g,'<span class="kw">$1</span>')
-    .replace(/\b(vec|map|set|umap|uset|pq|pqmin|que|stk|deq|Graph|WGraph|DSU|Fenwick|SegTree|SparseTable|Compress|vi|vl|vvi)\b/g,'<span class="tp">$1</span>')
-    .replace(/\b([a-z_][a-z_0-9]*)\s*(?=\()/g,'<span class="fn">$1</span>')
-    .replace(/&lt;|&gt;/g, m => `<span class="kw">${m}</span>`);
-}
-
-// ── Copy on row click ───────────────────────────────────────────────────────
+// ── Row click: expand usage OR copy if already open ────────────────────────────
 const toast = document.getElementById('toast');
 let toastTimer;
+
+function showToast(){
+  clearTimeout(toastTimer);
+  toast.classList.add('show');
+  toastTimer = setTimeout(()=>toast.classList.remove('show'), 1800);
+}
+
 grid.addEventListener('click', e => {
-  const row = e.target.closest('.row');
-  if (!row) return;
-  const text = row.dataset.cpp;
-  navigator.clipboard.writeText(text).then(() => {
-    clearTimeout(toastTimer);
-    toast.classList.add('show');
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-  });
+  const rowMain = e.target.closest('.row-main');
+  if (!rowMain) return;
+  const row = rowMain.parentElement;
+  const panel = row.querySelector('.usage-panel');
+
+  if (!panel) {
+    // no usage — just copy
+    navigator.clipboard.writeText(rowMain.dataset.cpp).then(showToast);
+    return;
+  }
+
+  if (row.classList.contains('open')) {
+    // already open — copy code
+    navigator.clipboard.writeText(rowMain.dataset.cpp).then(showToast);
+  } else {
+    // close all others, open this
+    document.querySelectorAll('.row.open').forEach(r => r.classList.remove('open'));
+    row.classList.add('open');
+  }
 });
 
-// ── Search ──────────────────────────────────────────────────────────────────
+// ── Search ─────────────────────────────────────────────────────────────────────
 const search  = document.getElementById('search');
 const counter = document.getElementById('result-count');
 let activeFilter = 'all';
 
-function applyFilters() {
+function applyFilters(){
   const q = search.value.toLowerCase().trim();
   let visible = 0;
   allCards.forEach(card => {
-    const matchCat = activeFilter === 'all' || card.dataset.cat === activeFilter;
+    const matchCat = activeFilter==='all' || card.dataset.cat===activeFilter;
     const matchQ   = !q || card.dataset.text.includes(q);
     const show = matchCat && matchQ;
     card.classList.toggle('hidden', !show);
-    if (show) visible++;
+    if(show) visible++;
   });
-  noRes.style.display = visible === 0 ? 'block' : 'none';
-  counter.textContent = q || activeFilter !== 'all' ? `${visible} section${visible!==1?'s':''}` : '';
+  noRes.style.display = visible===0 ? 'block' : 'none';
+  counter.textContent = q||activeFilter!=='all' ? `${visible} section${visible!==1?'s':''}` : '';
 }
 
 search.addEventListener('input', applyFilters);
 
-// ── Tabs ────────────────────────────────────────────────────────────────────
 document.getElementById('tabs').addEventListener('click', e => {
   const tab = e.target.closest('.tab');
-  if (!tab) return;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if(!tab) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   tab.classList.add('active');
   activeFilter = tab.dataset.filter;
   applyFilters();
 });
 
-// ── Keyboard shortcut  / to focus search ────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement !== search) {
+  if(e.key==='/' && document.activeElement!==search){
     e.preventDefault(); search.focus();
   }
-  if (e.key === 'Escape') { search.value=''; applyFilters(); search.blur(); }
+  if(e.key==='Escape') search.blur();
 });
 </script>
 </body>
