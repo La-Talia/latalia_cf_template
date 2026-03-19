@@ -1,8 +1,10 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CF++ Template — Cheatsheet</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Syne:wght@400;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#0a0c10; --surface:#111318; --card:#161a22; --border:#1f2430;
@@ -104,6 +106,17 @@ main{position:relative;z-index:10;padding:32px 40px 80px;display:grid;grid-templ
 /* ── no results ── */
 #no-results{grid-column:1/-1;display:none;text-align:center;padding:80px 20px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.85rem;}
 
+/* ── download bar ── */
+.dl-bar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:16px 40px;background:linear-gradient(90deg,rgba(0,255,65,.07),rgba(0,212,255,.04));border-bottom:1px solid rgba(0,255,65,.18);}
+.dl-info-title{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;color:var(--accent3);letter-spacing:.04em;}
+.dl-info-sub{font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--muted);margin-top:3px;}
+.dl-btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.dl-btn{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;letter-spacing:.06em;padding:10px 20px;border-radius:6px;cursor:pointer;transition:all .2s;border:none;text-decoration:none;}
+.dl-primary{background:var(--accent3);color:#0a0c10;}
+.dl-primary:hover{background:#69b2ff;transform:translateY(-1px);box-shadow:0 6px 20px rgba(77,158,255,.3);}
+.dl-secondary{background:transparent;color:var(--accent);border:1px solid rgba(0,255,65,.35);}
+.dl-secondary:hover{background:rgba(0,255,65,.08);border-color:var(--accent);transform:translateY(-1px);}
+
 @media(max-width:600px){
   header,main,.search-wrap,.tabs{padding-left:16px;padding-right:16px;}
   main{grid-template-columns:1fr;}
@@ -112,18 +125,36 @@ main{position:relative;z-index:10;padding:32px 40px 80px;display:grid;grid-templ
   .cell:first-child{border-right:none;border-bottom:1px solid var(--border);}
 }
 </style>
-<link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style></head>
+</head>
 <body>
 <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
 
 <header>
   <div>
-    <div class="logo">LATALIA CF C<span>++</span> Template</div>
+    <div class="logo">CF<span>++</span> Template</div>
     <div style="color:var(--muted);font-size:.85rem;margin-top:4px;">LATALIA — Python-style C++ for Codeforces</div>
     <div class="hint">Click any row to expand usage &amp; examples &nbsp;|&nbsp; <kbd>click again</kbd> to copy code</div>
   </div>
   <div class="subtitle">/ to search &nbsp;•&nbsp; tabs to filter</div>
 </header>
+
+<!-- ── DOWNLOAD BAR ── -->
+<div class="dl-bar">
+  <div>
+    <div class="dl-info-title">CF++ Template v3 — Python-style C++ for Codeforces</div>
+    <div class="dl-info-sub">300 lines · 60+ functions · C++14 &amp; C++17 · zero warnings · solve(){} ready</div>
+  </div>
+  <div class="dl-btns">
+    <a class="dl-btn dl-primary" id="dl-btn" href="cf_template.cpp" download="cf_template.cpp">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12z"/><path d="M2 13h12v1.5H2z"/></svg>
+      Download .cpp
+    </a>
+    <button class="dl-btn dl-secondary" onclick="copyTemplate()">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2h7l3 3v9H4V2zm1 1v10h8V6H9V3H5zm4 0v2h2l-2-2z"/></svg>
+      Copy to clipboard
+    </button>
+  </div>
+</div>
 
 <div class="search-wrap">
   <span class="search-icon">⌕</span>
@@ -144,2354 +175,9 @@ main{position:relative;z-index:10;padding:32px 40px 80px;display:grid;grid-templ
   <div class="tab" data-filter="macro"><span class="tab-dot" style="background:#a29bfe"></span>Macros</div>
 </div>
 
-<main id="grid"><div class="card" data-cat="loops" data-text="loop macros rep(i, n) for i in range(n) use for any simple 0-to-n loop. the go-to loop for iterating n times. &lt;k&gt;rep&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;) {
-    cout &lt;&lt; &lt;n&gt;i&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot;\n&quot;&lt;/s&gt;;   &lt;c&gt;// prints 0 1 2 ... n-1&lt;/c&gt;
-}
-
-&lt;c&gt;// count elements matching a condition&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; cnt = &lt;n&gt;0&lt;/n&gt;;
-&lt;k&gt;rep&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;) &lt;k&gt;if&lt;/k&gt; (&lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;] &gt; &lt;n&gt;0&lt;/n&gt;) &lt;n&gt;cnt&lt;/n&gt;++; repe(i, s, e) for i in range(s, e) use when you need to start from a non-zero value. exactly like python range(s, e). &lt;c&gt;// sum elements from index 2 to n-1&lt;/c&gt;
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;total&lt;/n&gt; = &lt;n&gt;0&lt;/n&gt;;
-&lt;k&gt;repe&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;) &lt;n&gt;total&lt;/n&gt; += &lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;];
-
-&lt;c&gt;// print odd numbers 1..19&lt;/c&gt;
-&lt;k&gt;repe&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;20&lt;/n&gt;) &lt;k&gt;if&lt;/k&gt; (&lt;n&gt;i&lt;/n&gt; % &lt;n&gt;2&lt;/n&gt;) cout &lt;&lt; &lt;n&gt;i&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot; &quot;&lt;/s&gt;; repd(i, n) for i in range(n-1,-1,-1) reverse iteration. use when processing from the end — common in dp, suffix arrays, stack simulation. &lt;c&gt;// print array in reverse&lt;/c&gt;
-&lt;k&gt;repd&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;) cout &lt;&lt; &lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;] &lt;&lt; &lt;s&gt;&quot; &quot;&lt;/s&gt;;
-
-&lt;c&gt;// dp: fill from right to left (0-1 knapsack)&lt;/c&gt;
-&lt;k&gt;repd&lt;/k&gt;(&lt;n&gt;j&lt;/n&gt;, &lt;n&gt;w&lt;/n&gt;+&lt;n&gt;1&lt;/n&gt;) &lt;k&gt;if&lt;/k&gt; (&lt;n&gt;j&lt;/n&gt; &gt;= &lt;n&gt;w&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;])
-    &lt;n&gt;dp&lt;/n&gt;[&lt;n&gt;j&lt;/n&gt;] = max(&lt;n&gt;dp&lt;/n&gt;[&lt;n&gt;j&lt;/n&gt;], &lt;n&gt;dp&lt;/n&gt;[&lt;n&gt;j&lt;/n&gt;-&lt;n&gt;w&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;]] + &lt;n&gt;v&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;]); repstep(i, s, e, k) for i in range(s, e, k) loop with custom step. use for every-other-element, sieve-like patterns, or chunk processing. &lt;c&gt;// visit every 3rd index&lt;/c&gt;
-&lt;k&gt;repstep&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;) cout &lt;&lt; &lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;] &lt;&lt; &lt;s&gt;&quot;\n&quot;&lt;/s&gt;;
-
-&lt;c&gt;// sieve inner loop manually&lt;/c&gt;
-&lt;k&gt;repstep&lt;/k&gt;(&lt;n&gt;j&lt;/n&gt;, &lt;n&gt;i&lt;/n&gt;*&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;, &lt;n&gt;i&lt;/n&gt;) &lt;n&gt;is_prime&lt;/n&gt;[&lt;n&gt;j&lt;/n&gt;] = &lt;k&gt;false&lt;/k&gt;; each(x, a) for x in a range-for by reference. use whenever you iterate all elements. avoids index bugs. works on any container. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;3&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;4&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;};
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;s&lt;/n&gt; = &lt;n&gt;0&lt;/n&gt;;
-&lt;k&gt;each&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;, &lt;n&gt;a&lt;/n&gt;) &lt;n&gt;s&lt;/n&gt; += &lt;n&gt;x&lt;/n&gt;;   &lt;c&gt;// sum = 14&lt;/c&gt;
-
-&lt;c&gt;// modify elements in place&lt;/c&gt;
-&lt;k&gt;each&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;, &lt;n&gt;a&lt;/n&gt;) &lt;n&gt;x&lt;/n&gt; *= &lt;n&gt;2&lt;/n&gt;;   &lt;c&gt;// doubles every element&lt;/c&gt; each2(k, v, d) for k, v in d.items() iterate key-value pairs of any map. use when you need both the key and value simultaneously. &lt;t&gt;map&lt;/t&gt;&lt;&lt;t&gt;string&lt;/t&gt;,&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;freq&lt;/n&gt;;
-&lt;n&gt;freq&lt;/n&gt;[&lt;s&gt;&quot;apple&quot;&lt;/s&gt;] = &lt;n&gt;3&lt;/n&gt;; &lt;n&gt;freq&lt;/n&gt;[&lt;s&gt;&quot;mango&quot;&lt;/s&gt;] = &lt;n&gt;5&lt;/n&gt;;
-
-&lt;k&gt;each2&lt;/k&gt;(&lt;n&gt;k&lt;/n&gt;, &lt;n&gt;v&lt;/n&gt;, &lt;n&gt;freq&lt;/n&gt;) {
-    cout &lt;&lt; &lt;n&gt;k&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot;: &quot;&lt;/s&gt; &lt;&lt; &lt;n&gt;v&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot;\n&quot;&lt;/s&gt;;
-}
-&lt;c&gt;// apple: 3&lt;/c&gt;
-&lt;c&gt;// mango: 5&lt;/c&gt; enumerate(a, [&amp;](int i, auto v){}) for i,v in enumerate(a) when you need both index and value. cleaner than using rep(i,n) and a[i] separately. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;string&lt;/t&gt;&gt; &lt;n&gt;names&lt;/n&gt; = {&lt;s&gt;&quot;alice&quot;&lt;/s&gt;, &lt;s&gt;&quot;bob&quot;&lt;/s&gt;, &lt;s&gt;&quot;carol&quot;&lt;/s&gt;};
-&lt;k&gt;enumerate&lt;/k&gt;(&lt;n&gt;names&lt;/n&gt;, [&amp;](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;i&lt;/n&gt;, &lt;t&gt;auto&lt;/t&gt; &lt;n&gt;v&lt;/n&gt;) {
-    cout &lt;&lt; &lt;n&gt;i&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot;: &quot;&lt;/s&gt; &lt;&lt; &lt;n&gt;v&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot;\n&quot;&lt;/s&gt;;
-});
-&lt;c&gt;// 0: alice&lt;/c&gt;
-&lt;c&gt;// 1: bob&lt;/c&gt;
-&lt;c&gt;// 2: carol&lt;/c&gt; zip(a, b, [&amp;](auto x, auto y){}) for x,y in zip(a,b) process two arrays in parallel. common for pairing items, computing pairwise differences. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;}, &lt;n&gt;b&lt;/n&gt; = {&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;6&lt;/n&gt;};
-&lt;k&gt;zip&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;b&lt;/n&gt;, [&amp;](&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;, &lt;t&gt;auto&lt;/t&gt; &lt;n&gt;y&lt;/n&gt;) {
-    cout &lt;&lt; &lt;n&gt;x&lt;/n&gt; + &lt;n&gt;y&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot; &quot;&lt;/s&gt;;   &lt;c&gt;// 5 7 9&lt;/c&gt;
-});">
-    <div class="card-header">
-      <div class="card-title" style="color:#a8ff3e">Loop Macros</div>
-      <div class="card-tag">loops</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="rep(i, n)">
-        <div class="cell"><span class="fn">rep</span>(i, n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for i in range(n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Use for any simple 0-to-n loop. The go-to loop for iterating n times.</div>
-          <pre class="usage-code"><k>rep</k>(<n>i</n>, <n>n</n>) {
-    cout &lt;&lt; <n>i</n> &lt;&lt; <s>"\n"</s>;   <c>// prints 0 1 2 ... n-1</c>
-}
-
-<c>// Count elements matching a condition</c>
-<t>int</t> cnt = <n>0</n>;
-<k>rep</k>(<n>i</n>, <n>n</n>) <k>if</k> (<n>a</n>[<n>i</n>] &gt; <n>0</n>) <n>cnt</n>++;</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="repe(i, s, e)">
-        <div class="cell"><span class="fn">repe</span>(i, s, e)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for i in range(s, e)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Use when you need to start from a non-zero value. Exactly like Python range(s, e).</div>
-          <pre class="usage-code"><c>// Sum elements from index 2 to n-1</c>
-<t>ll</t> <n>total</n> = <n>0</n>;
-<k>repe</k>(<n>i</n>, <n>2</n>, <n>n</n>) <n>total</n> += <n>a</n>[<n>i</n>];
-
-<c>// Print odd numbers 1..19</c>
-<k>repe</k>(<n>i</n>, <n>1</n>, <n>20</n>) <k>if</k> (<n>i</n> % <n>2</n>) cout &lt;&lt; <n>i</n> &lt;&lt; <s>" "</s>;</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="repd(i, n)">
-        <div class="cell"><span class="fn">repd</span>(i, n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for i in range(n-1,-1,-1)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Reverse iteration. Use when processing from the end — common in DP, suffix arrays, stack simulation.</div>
-          <pre class="usage-code"><c>// Print array in reverse</c>
-<k>repd</k>(<n>i</n>, <n>n</n>) cout &lt;&lt; <n>a</n>[<n>i</n>] &lt;&lt; <s>" "</s>;
-
-<c>// DP: fill from right to left (0-1 knapsack)</c>
-<k>repd</k>(<n>j</n>, <n>W</n>+<n>1</n>) <k>if</k> (<n>j</n> &gt;= <n>w</n>[<n>i</n>])
-    <n>dp</n>[<n>j</n>] = max(<n>dp</n>[<n>j</n>], <n>dp</n>[<n>j</n>-<n>w</n>[<n>i</n>]] + <n>v</n>[<n>i</n>]);</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="repstep(i, s, e, k)">
-        <div class="cell"><span class="fn">repstep</span>(i, s, e, k)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for i in range(s, e, k)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Loop with custom step. Use for every-other-element, sieve-like patterns, or chunk processing.</div>
-          <pre class="usage-code"><c>// Visit every 3rd index</c>
-<k>repstep</k>(<n>i</n>, <n>0</n>, <n>n</n>, <n>3</n>) cout &lt;&lt; <n>a</n>[<n>i</n>] &lt;&lt; <s>"\n"</s>;
-
-<c>// Sieve inner loop manually</c>
-<k>repstep</k>(<n>j</n>, <n>i</n>*<n>i</n>, <n>N</n>, <n>i</n>) <n>is_prime</n>[<n>j</n>] = <k>false</k>;</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="each(x, a)">
-        <div class="cell"><span class="fn">each</span>(x, a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for x in a</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Range-for by reference. Use whenever you iterate all elements. Avoids index bugs. Works on any container.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>a</n> = {<n>3</n>, <n>1</n>, <n>4</n>, <n>1</n>, <n>5</n>};
-<t>ll</t> <n>s</n> = <n>0</n>;
-<k>each</k>(<n>x</n>, <n>a</n>) <n>s</n> += <n>x</n>;   <c>// sum = 14</c>
-
-<c>// Modify elements in place</c>
-<k>each</k>(<n>x</n>, <n>a</n>) <n>x</n> *= <n>2</n>;   <c>// doubles every element</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="each2(k, v, d)">
-        <div class="cell"><span class="fn">each2</span>(k, v, d)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for k, v in d.items()</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Iterate key-value pairs of any map. Use when you need both the key and value simultaneously.</div>
-          <pre class="usage-code"><t>map</t>&lt;<t>string</t>,<t>int</t>&gt; <n>freq</n>;
-<n>freq</n>[<s>"apple"</s>] = <n>3</n>; <n>freq</n>[<s>"mango"</s>] = <n>5</n>;
-
-<k>each2</k>(<n>k</n>, <n>v</n>, <n>freq</n>) {
-    cout &lt;&lt; <n>k</n> &lt;&lt; <s>": "</s> &lt;&lt; <n>v</n> &lt;&lt; <s>"\n"</s>;
-}
-<c>// apple: 3</c>
-<c>// mango: 5</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="enumerate(a, [&amp;](int i, auto v){})">
-        <div class="cell"><span class="fn">enumerate</span>(a, [&amp;](<span class="kw">int</span> i, <span class="kw">auto</span> v){})<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for i,v in enumerate(a)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> When you need both index and value. Cleaner than using rep(i,n) and a[i] separately.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>string</t>&gt; <n>names</n> = {<s>"Alice"</s>, <s>"Bob"</s>, <s>"Carol"</s>};
-<k>enumerate</k>(<n>names</n>, [&amp;](<t>int</t> <n>i</n>, <t>auto</t> <n>v</n>) {
-    cout &lt;&lt; <n>i</n> &lt;&lt; <s>": "</s> &lt;&lt; <n>v</n> &lt;&lt; <s>"\n"</s>;
-});
-<c>// 0: Alice</c>
-<c>// 1: Bob</c>
-<c>// 2: Carol</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="zip(a, b, [&amp;](auto x, auto y){})">
-        <div class="cell"><span class="fn">zip</span>(a, b, [&amp;](<span class="kw">auto</span> x, <span class="kw">auto</span> y){})<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>for x,y in zip(a,b)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Process two arrays in parallel. Common for pairing items, computing pairwise differences.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>}, <n>b</n> = {<n>4</n>,<n>5</n>,<n>6</n>};
-<k>zip</k>(<n>a</n>, <n>b</n>, [&amp;](<t>auto</t> <n>x</n>, <t>auto</t> <n>y</n>) {
-    cout &lt;&lt; <n>x</n> + <n>y</n> &lt;&lt; <s>" "</s>;   <c>// 5 7 9</c>
-});</pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="list" data-text="list — create &amp; info vec&lt;int&gt; a = {1,2,3} a = [1,2,3] declare and initialise a vector inline. use whenever you know the values up front. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;primes&lt;/n&gt; = {&lt;n&gt;2&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;, &lt;n&gt;7&lt;/n&gt;, &lt;n&gt;11&lt;/n&gt;};
-&lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;ll&lt;/t&gt;&gt;  &lt;n&gt;a&lt;/n&gt;(&lt;n&gt;n&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;);   &lt;c&gt;// n zeros&lt;/c&gt;
-&lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;string&lt;/t&gt;&gt; &lt;n&gt;s&lt;/n&gt; = {&lt;s&gt;&quot;hello&quot;&lt;/s&gt;, &lt;s&gt;&quot;world&quot;&lt;/s&gt;}; zeros(n) / ones(n) [0]*n / [1]*n create zero-filled or one-filled arrays of int. useful for dp tables, visited arrays, counting arrays. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;dp&lt;/n&gt;   = &lt;k&gt;zeros&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;+&lt;n&gt;1&lt;/n&gt;);    &lt;c&gt;// dp table all zeros&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;vis&lt;/n&gt;  = &lt;k&gt;zeros&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);      &lt;c&gt;// visited array&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;cnt&lt;/n&gt;  = &lt;k&gt;zeros&lt;/k&gt;(&lt;n&gt;26&lt;/n&gt;);     &lt;c&gt;// letter frequency&lt;/c&gt;
-&lt;t&gt;vl&lt;/t&gt; &lt;n&gt;dist&lt;/n&gt; = &lt;k&gt;lzeros&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);    &lt;c&gt;// long long zeros&lt;/c&gt; iota_vec(n) list(range(n)) create [0,1,2,...,n-1]. use for permutation indices, sorting by index, coordinate compression seeds. &lt;c&gt;// sort indices by value (argsort)&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;idx&lt;/n&gt; = &lt;k&gt;iota_vec&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);
-&lt;k&gt;sort&lt;/k&gt;(&lt;k&gt;all&lt;/k&gt;(&lt;n&gt;idx&lt;/n&gt;), [&amp;](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;i&lt;/n&gt;, &lt;t&gt;int&lt;/t&gt; &lt;n&gt;j&lt;/n&gt;){
-    &lt;k&gt;return&lt;/k&gt; &lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;] &lt; &lt;n&gt;a&lt;/n&gt;[&lt;n&gt;j&lt;/n&gt;];
-});
-&lt;c&gt;// idx[0] is index of smallest element&lt;/c&gt; len(a) len(a) get size as long long. prefer len() over .size() to avoid signed/unsigned comparison warnings. &lt;k&gt;if&lt;/k&gt; (&lt;k&gt;len&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;) == &lt;n&gt;0&lt;/n&gt;) { &lt;c&gt;/* empty */&lt;/c&gt; }
-&lt;k&gt;rep&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;k&gt;len&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;)) cout &lt;&lt; &lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;];
-&lt;c&gt;// sz(a) gives int instead of ll — use for array indexing&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#00e5ff">List — Create &amp; Info</div>
-      <div class="card-tag">list</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="vec&lt;int&gt; a = {1,2,3}">
-        <div class="cell"><span class="tp">vec</span><span class="kw">&lt;</span><span class="kw">int</span><span class="kw">&gt;</span> a = {1,2,3}<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a = [1,2,3]</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Declare and initialise a vector inline. Use whenever you know the values up front.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>primes</n> = {<n>2</n>, <n>3</n>, <n>5</n>, <n>7</n>, <n>11</n>};
-<t>vec</t>&lt;<t>ll</t>&gt;  <n>a</n>(<n>n</n>, <n>0</n>);   <c>// n zeros</c>
-<t>vec</t>&lt;<t>string</t>&gt; <n>s</n> = {<s>"hello"</s>, <s>"world"</s>};</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="zeros(n) / ones(n)">
-        <div class="cell"><span class="fn">zeros</span>(n) / <span class="fn">ones</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>[0]*n / [1]*n</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Create zero-filled or one-filled arrays of int. Useful for DP tables, visited arrays, counting arrays.</div>
-          <pre class="usage-code"><t>vi</t> <n>dp</n>   = <k>zeros</k>(<n>n</n>+<n>1</n>);    <c>// DP table all zeros</c>
-<t>vi</t> <n>vis</n>  = <k>zeros</k>(<n>n</n>);      <c>// visited array</c>
-<t>vi</t> <n>cnt</n>  = <k>zeros</k>(<n>26</n>);     <c>// letter frequency</c>
-<t>vl</t> <n>dist</n> = <k>lzeros</k>(<n>n</n>);    <c>// long long zeros</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="iota_vec(n)">
-        <div class="cell"><span class="fn">iota_vec</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>list(range(n))</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Create [0,1,2,...,n-1]. Use for permutation indices, sorting by index, coordinate compression seeds.</div>
-          <pre class="usage-code"><c>// Sort indices by value (argsort)</c>
-<t>vi</t> <n>idx</n> = <k>iota_vec</k>(<n>n</n>);
-<k>sort</k>(<k>all</k>(<n>idx</n>), [&amp;](<t>int</t> <n>i</n>, <t>int</t> <n>j</n>){
-    <k>return</k> <n>a</n>[<n>i</n>] &lt; <n>a</n>[<n>j</n>];
-});
-<c>// idx[0] is index of smallest element</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="len(a)">
-        <div class="cell"><span class="fn">len</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>len(a)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Get size as long long. Prefer len() over .size() to avoid signed/unsigned comparison warnings.</div>
-          <pre class="usage-code"><k>if</k> (<k>len</k>(<n>a</n>) == <n>0</n>) { <c>/* empty */</c> }
-<k>rep</k>(<n>i</n>, <k>len</k>(<n>a</n>)) cout &lt;&lt; <n>a</n>[<n>i</n>];
-<c>// sz(a) gives int instead of ll — use for array indexing</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="list" data-text="list — modify append(a, x) a.append(x) add element to end. o(1) amortised. the most common list operation in cp. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt;;
-&lt;k&gt;append&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;);   &lt;c&gt;// a = [5]&lt;/c&gt;
-&lt;k&gt;append&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);   &lt;c&gt;// a = [5, 3]&lt;/c&gt;
-&lt;c&gt;// same as a.push_back(x) or a.pb(x)&lt;/c&gt; extend(a, b) a.extend(b) append all elements of b to a. use when merging two arrays or building a combined list. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;}, &lt;n&gt;b&lt;/n&gt; = {&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;};
-&lt;k&gt;extend&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;b&lt;/n&gt;);   &lt;c&gt;// a = [1,2,3,4]&lt;/c&gt; insert(a, i, x) a.insert(i, x) insert at index i. o(n) — shifts everything right. avoid in tight loops; use deque if many inserts at front. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;};
-&lt;k&gt;insert&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);   &lt;c&gt;// a = [1,2,3,4]&lt;/c&gt; pop(a) / pop(a, i) a.pop() / a.pop(i) remove and return last element (o(1)) or element at index i (o(n)). use pop() for stack behaviour. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;stk&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;};
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;top&lt;/n&gt; = &lt;k&gt;pop&lt;/k&gt;(&lt;n&gt;stk&lt;/n&gt;);    &lt;c&gt;// top=3, stk=[1,2]&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;mid&lt;/n&gt; = &lt;k&gt;pop&lt;/k&gt;(&lt;n&gt;stk&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;); &lt;c&gt;// mid=1, stk=[2]&lt;/c&gt; ⚠ pop(a, i) is o(n) — avoid in loops. use index only when necessary. remove_val(a, x) a.remove(x) remove first occurrence of x. o(n). returns true if found. use when you know the value but not the index. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;k&gt;remove_val&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;);   &lt;c&gt;// a = [3,4,1,5] — removes first 1&lt;/c&gt;
-&lt;t&gt;bool&lt;/t&gt; &lt;n&gt;found&lt;/n&gt; = &lt;k&gt;remove_val&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;9&lt;/n&gt;);   &lt;c&gt;// false&lt;/c&gt; rotate_left(a, k) a = a[k:]+a[:k] rotate array left by k positions in-place. use for circular problems or shifting windows. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;k&gt;rotate_left&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);  &lt;c&gt;// a = [3,4,5,1,2]&lt;/c&gt;
-&lt;k&gt;rotate_right&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;); &lt;c&gt;// a = [1,2,3,4,5] (undoes it)&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#00e5ff">List — Modify</div>
-      <div class="card-tag">list</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="append(a, x)">
-        <div class="cell"><span class="fn">append</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.append(x)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Add element to end. O(1) amortised. The most common list operation in CP.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>a</n>;
-<k>append</k>(<n>a</n>, <n>5</n>);   <c>// a = [5]</c>
-<k>append</k>(<n>a</n>, <n>3</n>);   <c>// a = [5, 3]</c>
-<c>// Same as a.push_back(x) or a.pb(x)</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="extend(a, b)">
-        <div class="cell"><span class="fn">extend</span>(a, b)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.extend(b)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Append all elements of b to a. Use when merging two arrays or building a combined list.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>a</n> = {<n>1</n>,<n>2</n>}, <n>b</n> = {<n>3</n>,<n>4</n>};
-<k>extend</k>(<n>a</n>, <n>b</n>);   <c>// a = [1,2,3,4]</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="insert(a, i, x)">
-        <div class="cell"><span class="fn">insert</span>(a, i, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.insert(i, x)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Insert at index i. O(n) — shifts everything right. Avoid in tight loops; use deque if many inserts at front.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>a</n> = {<n>1</n>,<n>2</n>,<n>4</n>};
-<k>insert</k>(<n>a</n>, <n>2</n>, <n>3</n>);   <c>// a = [1,2,3,4]</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="pop(a) / pop(a, i)">
-        <div class="cell"><span class="fn">pop</span>(a) / <span class="fn">pop</span>(a, i)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.pop() / a.pop(i)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Remove and return last element (O(1)) or element at index i (O(n)). Use pop() for stack behaviour.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>stk</n> = {<n>1</n>,<n>2</n>,<n>3</n>};
-<t>int</t> <n>top</n> = <k>pop</k>(<n>stk</n>);    <c>// top=3, stk=[1,2]</c>
-<t>int</t> <n>mid</n> = <k>pop</k>(<n>stk</n>, <n>0</n>); <c>// mid=1, stk=[2]</c></pre>
-          <div class="usage-note">⚠ ⚠ pop(a, i) is O(n) — avoid in loops. Use index only when necessary.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="remove_val(a, x)">
-        <div class="cell"><span class="fn">remove_val</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.remove(x)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Remove first occurrence of x. O(n). Returns true if found. Use when you know the value but not the index.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>};
-<k>remove_val</k>(<n>a</n>, <n>1</n>);   <c>// a = [3,4,1,5] — removes FIRST 1</c>
-<t>bool</t> <n>found</n> = <k>remove_val</k>(<n>a</n>, <n>9</n>);   <c>// false</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="rotate_left(a, k)">
-        <div class="cell"><span class="fn">rotate_left</span>(a, k)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a = a[k:]+a[:k]</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Rotate array left by k positions in-place. Use for circular problems or shifting windows.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt; <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>};
-<k>rotate_left</k>(<n>a</n>, <n>2</n>);  <c>// a = [3,4,5,1,2]</c>
-<k>rotate_right</k>(<n>a</n>, <n>2</n>); <c>// a = [1,2,3,4,5] (undoes it)</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="list" data-text="list — query contains(a, x) x in a  — o(n) linear search. fine for small arrays but tles on large inputs. use uset for repeated lookups. &lt;c&gt;// ok for small n (&lt; 1000)&lt;/c&gt;
-&lt;k&gt;if&lt;/k&gt; (&lt;k&gt;contains&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;7&lt;/n&gt;)) cout &lt;&lt; &lt;s&gt;&quot;found&quot;&lt;/s&gt;;
-
-&lt;c&gt;// for repeated lookups on large arrays, use uset:&lt;/c&gt;
-&lt;t&gt;uset&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;s&lt;/n&gt;(&lt;n&gt;a&lt;/n&gt;.begin(), &lt;n&gt;a&lt;/n&gt;.end());
-&lt;k&gt;if&lt;/k&gt; (&lt;k&gt;contains&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;, &lt;n&gt;7&lt;/n&gt;)) cout &lt;&lt; &lt;s&gt;&quot;found&quot;&lt;/s&gt;;  &lt;c&gt;// o(1)&lt;/c&gt; ⚠ this is o(n). if you call it in a loop → o(n²). use uset&lt;t&gt; instead. contains_sorted(a, x) x in sorted_a  — o(log n) binary search on a sorted array. use this instead of contains() after sorting. 10x faster for large arrays. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;7&lt;/n&gt;,&lt;n&gt;9&lt;/n&gt;};   &lt;c&gt;// must be sorted!&lt;/c&gt;
-&lt;k&gt;if&lt;/k&gt; (&lt;k&gt;contains_sorted&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;)) cout &lt;&lt; &lt;s&gt;&quot;yes&quot;&lt;/s&gt;;  &lt;c&gt;// true&lt;/c&gt;
-&lt;k&gt;if&lt;/k&gt; (&lt;k&gt;contains_sorted&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;4&lt;/n&gt;)) cout &lt;&lt; &lt;s&gt;&quot;yes&quot;&lt;/s&gt;;  &lt;c&gt;// false&lt;/c&gt; requires the array to be sorted first. after sort(all(a)), always prefer this over contains(). index(a, x) a.index(x)  — o(n) find first index of x. returns -1 if not found (unlike python which throws). use on small arrays. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;10&lt;/n&gt;, &lt;n&gt;20&lt;/n&gt;, &lt;n&gt;30&lt;/n&gt;, &lt;n&gt;20&lt;/n&gt;};
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;i&lt;/n&gt; = &lt;k&gt;index&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;20&lt;/n&gt;);   &lt;c&gt;// i = 1 (first occurrence)&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;j&lt;/n&gt; = &lt;k&gt;index&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;99&lt;/n&gt;);   &lt;c&gt;// j = -1 (not found)&lt;/c&gt; index_sorted(a, x) a.index(x)  — o(log n) binary search index lookup. use on sorted arrays — must faster than index() for large n. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;8&lt;/n&gt;,&lt;n&gt;12&lt;/n&gt;,&lt;n&gt;20&lt;/n&gt;};  &lt;c&gt;// sorted&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;i&lt;/n&gt; = &lt;k&gt;index_sorted&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;8&lt;/n&gt;);   &lt;c&gt;// i = 2&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;j&lt;/n&gt; = &lt;k&gt;index_sorted&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;9&lt;/n&gt;);   &lt;c&gt;// j = -1&lt;/c&gt; count(a, x) a.count(x) count occurrences of x. o(n) — scans entire array. for frequency of all elements, use counter() instead. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;};
-&lt;k&gt;count&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;);   &lt;c&gt;// 3&lt;/c&gt;
-&lt;k&gt;count&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;);   &lt;c&gt;// 0&lt;/c&gt;
-
-&lt;c&gt;// for all frequencies at once, use counter():&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;freq&lt;/n&gt; = &lt;k&gt;counter&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);  &lt;c&gt;// {1:3, 2:1, 3:1}&lt;/c&gt; sum(a) sum(a) sum all elements. o(n). works on any numeric vector type. &lt;t&gt;vl&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;, &lt;n&gt;4&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;};
-&lt;k&gt;sum&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);   &lt;c&gt;// 15&lt;/c&gt;
-
-&lt;c&gt;// for range sums on large arrays, use prefix_sum() instead:&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;ps&lt;/n&gt; = &lt;k&gt;prefix_sum&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);
-&lt;k&gt;range_sum&lt;/k&gt;(&lt;n&gt;ps&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);  &lt;c&gt;// sum of a[1..3] = 9, o(1)&lt;/c&gt; vmin(a) / vmax(a) min(a) / max(a) min/max of entire vector. o(n). for repeated range min/max queries, build a sparsetable instead. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;k&gt;vmin&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);   &lt;c&gt;// 1&lt;/c&gt;
-&lt;k&gt;vmax&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);   &lt;c&gt;// 5&lt;/c&gt;
-&lt;k&gt;argmax&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;); &lt;c&gt;// 4  (index of 5)&lt;/c&gt; for many range min/max queries: build sparsetable sp(a) once → sp.qmin(l,r) in o(1). all(a, pred) / any(a, pred) all(...) / any(...) check condition across all elements. short-circuits on first match/mismatch, just like python. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;6&lt;/n&gt;,&lt;n&gt;8&lt;/n&gt;};
-&lt;k&gt;all&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, [](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;){ &lt;k&gt;return&lt;/k&gt; &lt;n&gt;x&lt;/n&gt;%&lt;n&gt;2&lt;/n&gt;==&lt;n&gt;0&lt;/n&gt;; });  &lt;c&gt;// true&lt;/c&gt;
-&lt;k&gt;any&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, [](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;){ &lt;k&gt;return&lt;/k&gt; &lt;n&gt;x&lt;/n&gt; &gt; &lt;n&gt;5&lt;/n&gt;; });    &lt;c&gt;// true&lt;/c&gt;
-&lt;k&gt;none&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, [](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;){ &lt;k&gt;return&lt;/k&gt; &lt;n&gt;x&lt;/n&gt; &lt; &lt;n&gt;0&lt;/n&gt;; });   &lt;c&gt;// true&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#00e5ff">List — Query</div>
-      <div class="card-tag">list</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="contains(a, x)">
-        <div class="cell"><span class="fn">contains</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>x in a  — O(n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Linear search. Fine for small arrays but TLEs on large inputs. Use uset for repeated lookups.</div>
-          <pre class="usage-code"><c>// OK for small n (&lt; 1000)</c>
-<k>if</k> (<k>contains</k>(<n>a</n>, <n>7</n>)) cout &lt;&lt; <s>"found"</s>;
-
-<c>// For repeated lookups on large arrays, use uset:</c>
-<t>uset</t>&lt;<t>int</t>&gt; <n>s</n>(<n>a</n>.begin(), <n>a</n>.end());
-<k>if</k> (<k>contains</k>(<n>s</n>, <n>7</n>)) cout &lt;&lt; <s>"found"</s>;  <c>// O(1)</c></pre>
-          <div class="usage-note">⚠ ⚠ This is O(n). If you call it in a loop → O(n²). Use uset&lt;T&gt; instead.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="contains_sorted(a, x)">
-        <div class="cell"><span class="fn">contains_sorted</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>x in sorted_a  — O(log n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Binary search on a SORTED array. Use this instead of contains() after sorting. 10x faster for large arrays.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>5</n>,<n>7</n>,<n>9</n>};   <c>// must be sorted!</c>
-<k>if</k> (<k>contains_sorted</k>(<n>a</n>, <n>5</n>)) cout &lt;&lt; <s>"yes"</s>;  <c>// true</c>
-<k>if</k> (<k>contains_sorted</k>(<n>a</n>, <n>4</n>)) cout &lt;&lt; <s>"yes"</s>;  <c>// false</c></pre>
-          <div class="usage-note">⚠ Requires the array to be sorted first. After sort(all(a)), always prefer this over contains().</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="index(a, x)">
-        <div class="cell"><span class="fn">index</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.index(x)  — O(n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Find first index of x. Returns -1 if not found (unlike Python which throws). Use on small arrays.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>10</n>, <n>20</n>, <n>30</n>, <n>20</n>};
-<t>int</t> <n>i</n> = <k>index</k>(<n>a</n>, <n>20</n>);   <c>// i = 1 (first occurrence)</c>
-<t>int</t> <n>j</n> = <k>index</k>(<n>a</n>, <n>99</n>);   <c>// j = -1 (not found)</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="index_sorted(a, x)">
-        <div class="cell"><span class="fn">index_sorted</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.index(x)  — O(log n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Binary search index lookup. Use on sorted arrays — must faster than index() for large n.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>2</n>,<n>5</n>,<n>8</n>,<n>12</n>,<n>20</n>};  <c>// sorted</c>
-<t>int</t> <n>i</n> = <k>index_sorted</k>(<n>a</n>, <n>8</n>);   <c>// i = 2</c>
-<t>int</t> <n>j</n> = <k>index_sorted</k>(<n>a</n>, <n>9</n>);   <c>// j = -1</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="count(a, x)">
-        <div class="cell"><span class="fn">count</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.count(x)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Count occurrences of x. O(n) — scans entire array. For frequency of all elements, use counter() instead.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>1</n>,<n>3</n>,<n>1</n>};
-<k>count</k>(<n>a</n>, <n>1</n>);   <c>// 3</c>
-<k>count</k>(<n>a</n>, <n>5</n>);   <c>// 0</c>
-
-<c>// For ALL frequencies at once, use counter():</c>
-<t>auto</t> <n>freq</n> = <k>counter</k>(<n>a</n>);  <c>// {1:3, 2:1, 3:1}</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="sum(a)">
-        <div class="cell"><span class="fn">sum</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>sum(a)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Sum all elements. O(n). Works on any numeric vector type.</div>
-          <pre class="usage-code"><t>vl</t> <n>a</n> = {<n>1</n>, <n>2</n>, <n>3</n>, <n>4</n>, <n>5</n>};
-<k>sum</k>(<n>a</n>);   <c>// 15</c>
-
-<c>// For range sums on large arrays, use prefix_sum() instead:</c>
-<t>auto</t> <n>ps</n> = <k>prefix_sum</k>(<n>a</n>);
-<k>range_sum</k>(<n>ps</n>, <n>1</n>, <n>3</n>);  <c>// sum of a[1..3] = 9, O(1)</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="vmin(a) / vmax(a)">
-        <div class="cell"><span class="fn">vmin</span>(a) / <span class="fn">vmax</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>min(a) / max(a)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Min/max of entire vector. O(n). For repeated range min/max queries, build a SparseTable instead.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>};
-<k>vmin</k>(<n>a</n>);   <c>// 1</c>
-<k>vmax</k>(<n>a</n>);   <c>// 5</c>
-<k>argmax</k>(<n>a</n>); <c>// 4  (index of 5)</c></pre>
-          <div class="usage-note">⚠ For many range min/max queries: build SparseTable sp(a) once → sp.qmin(l,r) in O(1).</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="all(a, pred) / any(a, pred)">
-        <div class="cell"><span class="fn">all</span>(a, pred) / <span class="fn">any</span>(a, pred)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>all(...) / any(...)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Check condition across all elements. Short-circuits on first match/mismatch, just like Python.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>2</n>,<n>4</n>,<n>6</n>,<n>8</n>};
-<k>all</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n>%<n>2</n>==<n>0</n>; });  <c>// true</c>
-<k>any</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n> &gt; <n>5</n>; });    <c>// true</c>
-<k>none</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n> &lt; <n>0</n>; });   <c>// true</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="list" data-text="list — transform sorted(a) sorted(a)  — o(n log n) returns a sorted copy, leaves original unchanged — exactly like python. use when you need both sorted and original. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;b&lt;/n&gt; = &lt;k&gt;sorted&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);        &lt;c&gt;// b=[1,1,3,4,5], a unchanged&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;c&lt;/n&gt; = &lt;k&gt;sorted&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;k&gt;greater&lt;/k&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt;());  &lt;c&gt;// c=[5,4,3,1,1]&lt;/c&gt;
-
-&lt;c&gt;// if you want in-place: sort(all(a));&lt;/c&gt; sorted() copies the array first. if you don't need the original, use sort(all(a)) — avoids the copy. radix_sort(a) a.sort()  — o(n) ✅ fastest sort for non-negative integers. use on large arrays (n &gt; 100k) for a significant speedup over sort(). &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;8&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;9&lt;/n&gt;};
-&lt;k&gt;radix_sort&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);   &lt;c&gt;// a = [1,2,5,8,9]  — in-place&lt;/c&gt;
-
-&lt;c&gt;// vs sort(all(a))  — same result, faster for large n&lt;/c&gt;
-&lt;c&gt;// works on vi (int) and vl (long long) only&lt;/c&gt; ⚠ works on non-negative integers only. does not work with negatives or custom comparators. reversed(a) list(reversed(a)) returns a reversed copy. use when you need both the original and reversed version simultaneously. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;b&lt;/n&gt; = &lt;k&gt;reversed&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);   &lt;c&gt;// b=[5,4,3,2,1], a unchanged&lt;/c&gt;
-
-&lt;c&gt;// in-place reverse (no copy): reverse(all(a));&lt;/c&gt;
-&lt;c&gt;// iterate in reverse without copying: repd(i, n)&lt;/c&gt; slice(a, s, e) a[s:e] extract sub-array from index s to e (exclusive). creates a new vector. use for sub-problem decomposition. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;0&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;};
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;b&lt;/n&gt; = &lt;k&gt;slice&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;4&lt;/n&gt;);   &lt;c&gt;// [1,2,3]&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;c&lt;/n&gt; = &lt;k&gt;slice&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);    &lt;c&gt;// [2,3,4]  (to end)&lt;/c&gt; transform_to(a, f) [f(x) for x in a] apply a function to every element and return new array. same as python list comprehension. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;};
-
-&lt;c&gt;// square every element&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;sq&lt;/n&gt; = &lt;k&gt;transform_to&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, [](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;){ &lt;k&gt;return&lt;/k&gt; &lt;n&gt;x&lt;/n&gt;*&lt;n&gt;x&lt;/n&gt;; });
-&lt;c&gt;// sq = [1,4,9,16]&lt;/c&gt;
-
-&lt;c&gt;// convert ints to strings&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;ss&lt;/n&gt; = &lt;k&gt;transform_to&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, [](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;){ &lt;k&gt;return&lt;/k&gt; to_string(&lt;n&gt;x&lt;/n&gt;); }); filter_to(a, pred) [x for x in a if p(x)] keep only elements matching predicate. returns new array. perfect for extracting elements meeting a condition. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;6&lt;/n&gt;};
-
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;evens&lt;/n&gt; = &lt;k&gt;filter_to&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, [](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;){ &lt;k&gt;return&lt;/k&gt; &lt;n&gt;x&lt;/n&gt;%&lt;n&gt;2&lt;/n&gt;==&lt;n&gt;0&lt;/n&gt;; });
-&lt;c&gt;// evens = [2,4,6]&lt;/c&gt;
-
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;big&lt;/n&gt; = &lt;k&gt;filter_to&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, [](&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt;){ &lt;k&gt;return&lt;/k&gt; &lt;n&gt;x&lt;/n&gt; &gt; &lt;n&gt;3&lt;/n&gt;; });
-&lt;c&gt;// big = [4,5,6]&lt;/c&gt; unique_vals(a) sorted(set(a)) returns sorted array of distinct values. useful for coordinate compression, deduplication, finding distinct counts. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;9&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;6&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;u&lt;/n&gt; = &lt;k&gt;unique_vals&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);
-&lt;c&gt;// u = [1,2,3,4,5,6,9]&lt;/c&gt;
-
-&lt;c&gt;// count distinct values:&lt;/c&gt;
-&lt;k&gt;len&lt;/k&gt;(&lt;k&gt;unique_vals&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;));   &lt;c&gt;// 7&lt;/c&gt; flatten(vv) [x for row in vv for x in row] merge a 2d vector into 1d. o(n) with reserve. use when you have results from multiple sub-problems. &lt;t&gt;vvi&lt;/t&gt; &lt;n&gt;groups&lt;/n&gt; = {{&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;},{&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;},{&lt;n&gt;5&lt;/n&gt;}};
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;all&lt;/n&gt; = &lt;k&gt;flatten&lt;/k&gt;(&lt;n&gt;groups&lt;/n&gt;);
-&lt;c&gt;// all = [1,2,3,4,5]&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#00e5ff">List — Transform</div>
-      <div class="card-tag">list</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="sorted(a)">
-        <div class="cell"><span class="fn">sorted</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>sorted(a)  — O(n log n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Returns a sorted COPY, leaves original unchanged — exactly like Python. Use when you need both sorted and original.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>};
-<t>vi</t> <n>b</n> = <k>sorted</k>(<n>a</n>);        <c>// b=[1,1,3,4,5], a unchanged</c>
-<t>vi</t> <n>c</n> = <k>sorted</k>(<n>a</n>, <k>greater</k>&lt;<t>int</t>&gt;());  <c>// c=[5,4,3,1,1]</c>
-
-<c>// If you want in-place: sort(all(a));</c></pre>
-          <div class="usage-note">⚠ sorted() copies the array first. If you don't need the original, use sort(all(a)) — avoids the copy.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="radix_sort(a)">
-        <div class="cell"><span class="fn">radix_sort</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a.sort()  — O(n) ✅</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Fastest sort for non-negative integers. Use on large arrays (n &gt; 100k) for a significant speedup over sort().</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>5</n>,<n>2</n>,<n>8</n>,<n>1</n>,<n>9</n>};
-<k>radix_sort</k>(<n>a</n>);   <c>// a = [1,2,5,8,9]  — in-place</c>
-
-<c>// vs sort(all(a))  — same result, faster for large n</c>
-<c>// Works on vi (int) and vl (long long) only</c></pre>
-          <div class="usage-note">⚠ ⚠ Works on non-negative integers only. Does NOT work with negatives or custom comparators.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="reversed(a)">
-        <div class="cell"><span class="fn">reversed</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>list(reversed(a))</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Returns a reversed COPY. Use when you need both the original and reversed version simultaneously.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>};
-<t>vi</t> <n>b</n> = <k>reversed</k>(<n>a</n>);   <c>// b=[5,4,3,2,1], a unchanged</c>
-
-<c>// In-place reverse (no copy): reverse(all(a));</c>
-<c>// Iterate in reverse without copying: repd(i, n)</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="slice(a, s, e)">
-        <div class="cell"><span class="fn">slice</span>(a, s, e)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a[s:e]</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Extract sub-array from index s to e (exclusive). Creates a new vector. Use for sub-problem decomposition.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>0</n>,<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>};
-<t>vi</t> <n>b</n> = <k>slice</k>(<n>a</n>, <n>1</n>, <n>4</n>);   <c>// [1,2,3]</c>
-<t>vi</t> <n>c</n> = <k>slice</k>(<n>a</n>, <n>2</n>);    <c>// [2,3,4]  (to end)</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="transform_to(a, f)">
-        <div class="cell"><span class="fn">transform_to</span>(a, f)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>[f(x) for x in a]</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Apply a function to every element and return new array. Same as Python list comprehension.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>};
-
-<c>// Square every element</c>
-<t>auto</t> <n>sq</n> = <k>transform_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n>*<n>x</n>; });
-<c>// sq = [1,4,9,16]</c>
-
-<c>// Convert ints to strings</c>
-<t>auto</t> <n>ss</n> = <k>transform_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> to_string(<n>x</n>); });</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="filter_to(a, pred)">
-        <div class="cell"><span class="fn">filter_to</span>(a, pred)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>[x for x in a if p(x)]</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Keep only elements matching predicate. Returns new array. Perfect for extracting elements meeting a condition.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>,<n>6</n>};
-
-<t>auto</t> <n>evens</n> = <k>filter_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n>%<n>2</n>==<n>0</n>; });
-<c>// evens = [2,4,6]</c>
-
-<t>auto</t> <n>big</n> = <k>filter_to</k>(<n>a</n>, [](<t>int</t> <n>x</n>){ <k>return</k> <n>x</n> &gt; <n>3</n>; });
-<c>// big = [4,5,6]</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="unique_vals(a)">
-        <div class="cell"><span class="fn">unique_vals</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>sorted(set(a))</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Returns sorted array of distinct values. Useful for coordinate compression, deduplication, finding distinct counts.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>,<n>9</n>,<n>2</n>,<n>6</n>,<n>5</n>};
-<t>vi</t> <n>u</n> = <k>unique_vals</k>(<n>a</n>);
-<c>// u = [1,2,3,4,5,6,9]</c>
-
-<c>// Count distinct values:</c>
-<k>len</k>(<k>unique_vals</k>(<n>a</n>));   <c>// 7</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="flatten(vv)">
-        <div class="cell"><span class="fn">flatten</span>(vv)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>[x for row in vv for x in row]</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Merge a 2D vector into 1D. O(n) with reserve. Use when you have results from multiple sub-problems.</div>
-          <pre class="usage-code"><t>vvi</t> <n>groups</n> = {{<n>1</n>,<n>2</n>},{<n>3</n>,<n>4</n>},{<n>5</n>}};
-<t>vi</t> <n>all</n> = <k>flatten</k>(<n>groups</n>);
-<c>// all = [1,2,3,4,5]</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="dict" data-text="dict — operations map&lt;k,v&gt; d d = {}  — ordered o(log n) ordered map — keys always sorted. use when you need min/max key, iteration in order, or ordered output. &lt;t&gt;map&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;,&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;d&lt;/n&gt;;
-&lt;n&gt;d&lt;/n&gt;[&lt;n&gt;3&lt;/n&gt;] = &lt;n&gt;10&lt;/n&gt;;
-&lt;n&gt;d&lt;/n&gt;[&lt;n&gt;1&lt;/n&gt;] = &lt;n&gt;20&lt;/n&gt;;
-&lt;k&gt;each2&lt;/k&gt;(&lt;n&gt;k&lt;/n&gt;, &lt;n&gt;v&lt;/n&gt;, &lt;n&gt;d&lt;/n&gt;) cout &lt;&lt; &lt;n&gt;k&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot; &quot;&lt;/s&gt;;  &lt;c&gt;// 1 3  (sorted!)&lt;/c&gt;
-
-&lt;c&gt;// first/last key in o(log n)&lt;/c&gt;
-&lt;n&gt;d&lt;/n&gt;.begin()-&gt;&lt;n&gt;first&lt;/n&gt;;    &lt;c&gt;// smallest key&lt;/c&gt;
-&lt;n&gt;d&lt;/n&gt;.rbegin()-&gt;&lt;n&gt;first&lt;/n&gt;;   &lt;c&gt;// largest key&lt;/c&gt; umap&lt;k,v&gt; d d = {}  — o(1) avg ✅ unordered map — hash table. use for pure key lookup/insert when order doesn't matter. 3-5x faster than map. &lt;t&gt;umap&lt;/t&gt;&lt;&lt;t&gt;string&lt;/t&gt;,&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;score&lt;/n&gt;;
-&lt;n&gt;score&lt;/n&gt;[&lt;s&gt;&quot;alice&quot;&lt;/s&gt;] = &lt;n&gt;95&lt;/n&gt;;
-&lt;n&gt;score&lt;/n&gt;[&lt;s&gt;&quot;bob&quot;&lt;/s&gt;]   = &lt;n&gt;87&lt;/n&gt;;
-&lt;k&gt;get&lt;/k&gt;(&lt;n&gt;score&lt;/n&gt;, &lt;s&gt;&quot;alice&quot;&lt;/s&gt;, &lt;n&gt;0&lt;/n&gt;);  &lt;c&gt;// 95&lt;/c&gt;
-&lt;k&gt;get&lt;/k&gt;(&lt;n&gt;score&lt;/n&gt;, &lt;s&gt;&quot;carol&quot;&lt;/s&gt;, &lt;n&gt;0&lt;/n&gt;);  &lt;c&gt;// 0 (default)&lt;/c&gt; ⚠ umap has worst-case o(n) if hash collisions occur. adversarial inputs can hack it. use map for safety in contests. d[key]++ d[key] = d.get(key,0)+1 default-insert 0 then increment. the standard way to count frequencies. works on both map and umap. &lt;t&gt;umap&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;,&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;freq&lt;/n&gt;;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;};
-&lt;k&gt;each&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;, &lt;n&gt;a&lt;/n&gt;) &lt;n&gt;freq&lt;/n&gt;[&lt;n&gt;x&lt;/n&gt;]++;
-&lt;c&gt;// freq = {1:3, 2:2, 3:1}&lt;/c&gt;
-&lt;c&gt;// or just use counter(a) for the same result&lt;/c&gt; get(d, key, def) d.get(key, def) safe lookup with default. use instead of d[key] when the key might not exist — d[key] inserts 0 for missing keys. &lt;t&gt;map&lt;/t&gt;&lt;&lt;t&gt;string&lt;/t&gt;,&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;d&lt;/n&gt; = {{&lt;s&gt;&quot;a&quot;&lt;/s&gt;,&lt;n&gt;1&lt;/n&gt;}};
-&lt;k&gt;get&lt;/k&gt;(&lt;n&gt;d&lt;/n&gt;, &lt;s&gt;&quot;a&quot;&lt;/s&gt;, &lt;n&gt;0&lt;/n&gt;);   &lt;c&gt;// 1  — found&lt;/c&gt;
-&lt;k&gt;get&lt;/k&gt;(&lt;n&gt;d&lt;/n&gt;, &lt;s&gt;&quot;z&quot;&lt;/s&gt;, &lt;n&gt;-1&lt;/n&gt;); &lt;c&gt;// -1 — not found, no side effect&lt;/c&gt;
-&lt;c&gt;// d[&quot;z&quot;] would insert z:0 — don't use for lookup only!&lt;/c&gt; counter(a) / ucounter(a) counter(a) counter() = ordered (o(n log n)), ucounter() = hash (o(n) avg). use ucounter for speed unless order matters. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;9&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;6&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;c&lt;/n&gt; = &lt;k&gt;counter&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);   &lt;c&gt;// ordered: {1:2, 2:1, 3:1, ...}&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;u&lt;/n&gt; = &lt;k&gt;ucounter&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);  &lt;c&gt;// unordered, faster&lt;/c&gt;
-
-&lt;c&gt;// access like normal map:&lt;/c&gt;
-&lt;n&gt;c&lt;/n&gt;[&lt;n&gt;1&lt;/n&gt;];   &lt;c&gt;// 2  (1 appears twice)&lt;/c&gt;
-&lt;n&gt;c&lt;/n&gt;[&lt;n&gt;9&lt;/n&gt;];   &lt;c&gt;// 1&lt;/c&gt; most_common(a) counter(a).most_common(1)[0] find the element that appears most often. o(n) avg using hash map internally. returns {value, count} pair. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;};
-&lt;t&gt;auto&lt;/t&gt; [&lt;n&gt;val&lt;/n&gt;, &lt;n&gt;cnt&lt;/n&gt;] = &lt;k&gt;most_common&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);
-&lt;c&gt;// val=3, cnt=3&lt;/c&gt;
-cout &lt;&lt; &lt;s&gt;&quot;mode: &quot;&lt;/s&gt; &lt;&lt; &lt;n&gt;val&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot; (appears &quot;&lt;/s&gt; &lt;&lt; &lt;n&gt;cnt&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot; times)&quot;&lt;/s&gt;;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b35">Dict — Operations</div>
-      <div class="card-tag">dict</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="map&lt;K,V&gt; d">
-        <div class="cell"><span class="tp">map</span><span class="kw">&lt;</span>K,V<span class="kw">&gt;</span> d<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>d = {}  — ordered O(log n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Ordered map — keys always sorted. Use when you need min/max key, iteration in order, or ordered output.</div>
-          <pre class="usage-code"><t>map</t>&lt;<t>int</t>,<t>int</t>&gt; <n>d</n>;
-<n>d</n>[<n>3</n>] = <n>10</n>;
-<n>d</n>[<n>1</n>] = <n>20</n>;
-<k>each2</k>(<n>k</n>, <n>v</n>, <n>d</n>) cout &lt;&lt; <n>k</n> &lt;&lt; <s>" "</s>;  <c>// 1 3  (sorted!)</c>
-
-<c>// First/last key in O(log n)</c>
-<n>d</n>.begin()-&gt;<n>first</n>;    <c>// smallest key</c>
-<n>d</n>.rbegin()-&gt;<n>first</n>;   <c>// largest key</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="umap&lt;K,V&gt; d">
-        <div class="cell"><span class="tp">umap</span><span class="kw">&lt;</span>K,V<span class="kw">&gt;</span> d<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>d = {}  — O(1) avg ✅</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Unordered map — hash table. Use for pure key lookup/insert when order doesn't matter. 3-5x faster than map.</div>
-          <pre class="usage-code"><t>umap</t>&lt;<t>string</t>,<t>int</t>&gt; <n>score</n>;
-<n>score</n>[<s>"Alice"</s>] = <n>95</n>;
-<n>score</n>[<s>"Bob"</s>]   = <n>87</n>;
-<k>get</k>(<n>score</n>, <s>"Alice"</s>, <n>0</n>);  <c>// 95</c>
-<k>get</k>(<n>score</n>, <s>"Carol"</s>, <n>0</n>);  <c>// 0 (default)</c></pre>
-          <div class="usage-note">⚠ ⚠ umap has worst-case O(n) if hash collisions occur. Adversarial inputs can hack it. Use map for safety in contests.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="d[key]++">
-        <div class="cell">d[key]++<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>d[key] = d.get(key,0)+1</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Default-insert 0 then increment. The standard way to count frequencies. Works on both map and umap.</div>
-          <pre class="usage-code"><t>umap</t>&lt;<t>int</t>,<t>int</t>&gt; <n>freq</n>;
-<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>1</n>,<n>3</n>,<n>2</n>,<n>1</n>};
-<k>each</k>(<n>x</n>, <n>a</n>) <n>freq</n>[<n>x</n>]++;
-<c>// freq = {1:3, 2:2, 3:1}</c>
-<c>// Or just use counter(a) for the same result</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="get(d, key, def)">
-        <div class="cell"><span class="fn">get</span>(d, key, def)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>d.get(key, def)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Safe lookup with default. Use instead of d[key] when the key might not exist — d[key] inserts 0 for missing keys.</div>
-          <pre class="usage-code"><t>map</t>&lt;<t>string</t>,<t>int</t>&gt; <n>d</n> = {{<s>"a"</s>,<n>1</n>}};
-<k>get</k>(<n>d</n>, <s>"a"</s>, <n>0</n>);   <c>// 1  — found</c>
-<k>get</k>(<n>d</n>, <s>"z"</s>, <n>-1</n>); <c>// -1 — not found, no side effect</c>
-<c>// d["z"] would INSERT z:0 — don't use for lookup only!</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="counter(a) / ucounter(a)">
-        <div class="cell"><span class="fn">counter</span>(a) / <span class="fn">ucounter</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>Counter(a)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> counter() = ordered (O(n log n)), ucounter() = hash (O(n) avg). Use ucounter for speed unless order matters.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>3</n>,<n>1</n>,<n>4</n>,<n>1</n>,<n>5</n>,<n>9</n>,<n>2</n>,<n>6</n>,<n>5</n>};
-<t>auto</t> <n>c</n> = <k>counter</k>(<n>a</n>);   <c>// ordered: {1:2, 2:1, 3:1, ...}</c>
-<t>auto</t> <n>u</n> = <k>ucounter</k>(<n>a</n>);  <c>// unordered, faster</c>
-
-<c>// Access like normal map:</c>
-<n>c</n>[<n>1</n>];   <c>// 2  (1 appears twice)</c>
-<n>c</n>[<n>9</n>];   <c>// 1</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="most_common(a)">
-        <div class="cell"><span class="fn">most_common</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>Counter(a).most_common(1)[0]</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Find the element that appears most often. O(n) avg using hash map internally. Returns {value, count} pair.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>3</n>,<n>2</n>,<n>3</n>,<n>2</n>};
-<t>auto</t> [<n>val</n>, <n>cnt</n>] = <k>most_common</k>(<n>a</n>);
-<c>// val=3, cnt=3</c>
-cout &lt;&lt; <s>"Mode: "</s> &lt;&lt; <n>val</n> &lt;&lt; <s>" (appears "</s> &lt;&lt; <n>cnt</n> &lt;&lt; <s>" times)"</s>;</pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="dict" data-text="set — operations uset&lt;t&gt; s s = set()  — o(1) avg ✅ hash set. use for fast membership testing. contains/insert/erase all o(1) average. the main set to use in cp. &lt;t&gt;uset&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;seen&lt;/n&gt;;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;};
-&lt;k&gt;each&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;, &lt;n&gt;a&lt;/n&gt;) {
-    &lt;k&gt;if&lt;/k&gt; (&lt;k&gt;contains&lt;/k&gt;(&lt;n&gt;seen&lt;/n&gt;, &lt;n&gt;x&lt;/n&gt;)) {
-        cout &lt;&lt; &lt;n&gt;x&lt;/n&gt; &lt;&lt; &lt;s&gt;&quot; is duplicate\n&quot;&lt;/s&gt;;
-    }
-    &lt;n&gt;seen&lt;/n&gt;.insert(&lt;n&gt;x&lt;/n&gt;);
-} set&lt;t&gt; s s = sortedlist()  — o(log n) ordered set. use when you need min/max element, predecessor/successor queries, or ordered iteration. &lt;t&gt;set&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;s&lt;/n&gt; = {&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;8&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;};
-*&lt;n&gt;s&lt;/n&gt;.begin();    &lt;c&gt;// 1  (minimum)&lt;/c&gt;
-*&lt;n&gt;s&lt;/n&gt;.rbegin();   &lt;c&gt;// 8  (maximum)&lt;/c&gt;
-
-&lt;c&gt;// next element larger than x:&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;it&lt;/n&gt; = &lt;n&gt;s&lt;/n&gt;.upper_bound(&lt;n&gt;4&lt;/n&gt;);  &lt;c&gt;// points to 5&lt;/c&gt; union_set(a, b) a | b return set containing all elements from both sets. use for merging groups. &lt;t&gt;set&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;}, &lt;n&gt;b&lt;/n&gt; = {&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;};
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;u&lt;/n&gt; = &lt;k&gt;union_set&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;b&lt;/n&gt;);       &lt;c&gt;// {1,2,3,4}&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;i&lt;/n&gt; = &lt;k&gt;intersection&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;b&lt;/n&gt;);   &lt;c&gt;// {2,3}&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;d&lt;/n&gt; = &lt;k&gt;difference&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;b&lt;/n&gt;);     &lt;c&gt;// {1}  (in a not b)&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b35">Set — Operations</div>
-      <div class="card-tag">dict</div>
-    </div>
-    
-    <div class="row open">
-      <div class="row-main" data-cpp="uset&lt;T&gt; s">
-        <div class="cell"><span class="tp">uset</span><span class="kw">&lt;</span>T<span class="kw">&gt;</span> s<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>s = set()  — O(1) avg ✅</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Hash set. Use for fast membership testing. Contains/insert/erase all O(1) average. The main set to use in CP.</div>
-          <pre class="usage-code"><t>uset</t>&lt;<t>int</t>&gt; <n>seen</n>;
-<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>2</n>,<n>1</n>};
-<k>each</k>(<n>x</n>, <n>a</n>) {
-    <k>if</k> (<k>contains</k>(<n>seen</n>, <n>x</n>)) {
-        cout &lt;&lt; <n>x</n> &lt;&lt; <s>" is duplicate\n"</s>;
-    }
-    <n>seen</n>.insert(<n>x</n>);
-}</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="set&lt;T&gt; s">
-        <div class="cell"><span class="tp">set</span><span class="kw">&lt;</span>T<span class="kw">&gt;</span> s<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>s = SortedList()  — O(log n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Ordered set. Use when you need min/max element, predecessor/successor queries, or ordered iteration.</div>
-          <pre class="usage-code"><t>set</t>&lt;<t>int</t>&gt; <n>s</n> = {<n>5</n>,<n>3</n>,<n>8</n>,<n>1</n>};
-*<n>s</n>.begin();    <c>// 1  (minimum)</c>
-*<n>s</n>.rbegin();   <c>// 8  (maximum)</c>
-
-<c>// Next element larger than x:</c>
-<t>auto</t> <n>it</n> = <n>s</n>.upper_bound(<n>4</n>);  <c>// points to 5</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="union_set(a, b)">
-        <div class="cell"><span class="fn">union_set</span>(a, b)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a | b</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Return set containing all elements from both sets. Use for merging groups.</div>
-          <pre class="usage-code"><t>set</t>&lt;<t>int</t>&gt; <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>}, <n>b</n> = {<n>2</n>,<n>3</n>,<n>4</n>};
-<t>auto</t> <n>u</n> = <k>union_set</k>(<n>a</n>, <n>b</n>);       <c>// {1,2,3,4}</c>
-<t>auto</t> <n>i</n> = <k>intersection</k>(<n>a</n>, <n>b</n>);   <c>// {2,3}</c>
-<t>auto</t> <n>d</n> = <k>difference</k>(<n>a</n>, <n>b</n>);     <c>// {1}  (in a not b)</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="string" data-text="string — core split(s, delim) s.split(delim) split string by delimiter. use to parse space/comma-separated input, tokenize lines. &lt;t&gt;string&lt;/t&gt; &lt;n&gt;s&lt;/n&gt; = &lt;s&gt;&quot;hello world foo&quot;&lt;/s&gt;;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;words&lt;/n&gt; = &lt;k&gt;split&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;, &lt;s&gt;' '&lt;/s&gt;);
-&lt;c&gt;// words = [&quot;hello&quot;, &quot;world&quot;, &quot;foo&quot;]&lt;/c&gt;
-
-&lt;t&gt;string&lt;/t&gt; &lt;n&gt;csv&lt;/n&gt; = &lt;s&gt;&quot;1,2,3,4&quot;&lt;/s&gt;;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;parts&lt;/n&gt; = &lt;k&gt;split&lt;/k&gt;(&lt;n&gt;csv&lt;/n&gt;, &lt;s&gt;','&lt;/s&gt;);
-&lt;c&gt;// parts = [&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;]&lt;/c&gt; join(a, sep) sep.join(a) concatenate a vector of strings or numbers with a separator. use to format output nicely. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;};
-&lt;k&gt;join&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;s&gt;&quot;, &quot;&lt;/s&gt;);   &lt;c&gt;// &quot;1, 2, 3&quot;&lt;/c&gt;
-
-&lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;string&lt;/t&gt;&gt; &lt;n&gt;words&lt;/n&gt; = {&lt;s&gt;&quot;hello&quot;&lt;/s&gt;, &lt;s&gt;&quot;world&quot;&lt;/s&gt;};
-&lt;k&gt;join&lt;/k&gt;(&lt;n&gt;words&lt;/n&gt;, &lt;s&gt;&quot; &quot;&lt;/s&gt;);   &lt;c&gt;// &quot;hello world&quot;&lt;/c&gt; strip(s) s.strip() remove leading and trailing whitespace. use when reading lines that may have trailing spaces/newlines. &lt;t&gt;string&lt;/t&gt; &lt;n&gt;s&lt;/n&gt; = &lt;s&gt;&quot;  hello world  &quot;&lt;/s&gt;;
-&lt;k&gt;strip&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;);   &lt;c&gt;// &quot;hello world&quot;&lt;/c&gt; upper(s) / lower(s) s.upper() / s.lower() case conversion. use for case-insensitive comparison or normalising input. &lt;t&gt;string&lt;/t&gt; &lt;n&gt;s&lt;/n&gt; = &lt;s&gt;&quot;hello world&quot;&lt;/s&gt;;
-&lt;k&gt;upper&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;);   &lt;c&gt;// &quot;hello world&quot;&lt;/c&gt;
-&lt;k&gt;lower&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;);   &lt;c&gt;// &quot;hello world&quot;&lt;/c&gt;
-
-&lt;c&gt;// case-insensitive comparison:&lt;/c&gt;
-&lt;k&gt;if&lt;/k&gt; (&lt;k&gt;lower&lt;/k&gt;(&lt;n&gt;s1&lt;/n&gt;) == &lt;k&gt;lower&lt;/k&gt;(&lt;n&gt;s2&lt;/n&gt;)) { &lt;c&gt;/* same */&lt;/c&gt; } replace_all(s, from, to) s.replace(from, to) replace all occurrences of substring. use for text transformation, cleaning input. &lt;t&gt;string&lt;/t&gt; &lt;n&gt;s&lt;/n&gt; = &lt;s&gt;&quot;aababab&quot;&lt;/s&gt;;
-&lt;k&gt;replace_all&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;, &lt;s&gt;&quot;ab&quot;&lt;/s&gt;, &lt;s&gt;&quot;x&quot;&lt;/s&gt;);   &lt;c&gt;// &quot;axxx&quot;&lt;/c&gt;
-
-&lt;c&gt;// remove all spaces:&lt;/c&gt;
-&lt;k&gt;replace_all&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;, &lt;s&gt;&quot; &quot;&lt;/s&gt;, &lt;s&gt;&quot;&quot;&lt;/s&gt;); startswith / endswith s.startswith / s.endswith check string prefix/suffix. use for parsing formatted input or filtering strings by pattern. &lt;t&gt;string&lt;/t&gt; &lt;n&gt;s&lt;/n&gt; = &lt;s&gt;&quot;hello_world&quot;&lt;/s&gt;;
-&lt;k&gt;startswith&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;, &lt;s&gt;&quot;hello&quot;&lt;/s&gt;);   &lt;c&gt;// true&lt;/c&gt;
-&lt;k&gt;endswith&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;, &lt;s&gt;&quot;world&quot;&lt;/s&gt;);     &lt;c&gt;// true&lt;/c&gt;
-&lt;k&gt;startswith&lt;/k&gt;(&lt;n&gt;s&lt;/n&gt;, &lt;s&gt;&quot;world&quot;&lt;/s&gt;);   &lt;c&gt;// false&lt;/c&gt; bin_str(n) bin(n) binary string representation. use for bitmask debugging, printing binary numbers. &lt;k&gt;bin_str&lt;/k&gt;(&lt;n&gt;10&lt;/n&gt;);   &lt;c&gt;// &quot;0b1010&quot;&lt;/c&gt;
-&lt;k&gt;bin_str&lt;/k&gt;(&lt;n&gt;255&lt;/n&gt;);  &lt;c&gt;// &quot;0b11111111&quot;&lt;/c&gt;
-&lt;k&gt;bin_str&lt;/k&gt;(&lt;n&gt;0&lt;/n&gt;);    &lt;c&gt;// &quot;0b0&quot;&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff9f1c">String — Core</div>
-      <div class="card-tag">string</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="split(s, delim)">
-        <div class="cell"><span class="fn">split</span>(s, delim)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>s.split(delim)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Split string by delimiter. Use to parse space/comma-separated input, tokenize lines.</div>
-          <pre class="usage-code"><t>string</t> <n>s</n> = <s>"hello world foo"</s>;
-<t>auto</t> <n>words</n> = <k>split</k>(<n>s</n>, <s>' '</s>);
-<c>// words = ["hello", "world", "foo"]</c>
-
-<t>string</t> <n>csv</n> = <s>"1,2,3,4"</s>;
-<t>auto</t> <n>parts</n> = <k>split</k>(<n>csv</n>, <s>','</s>);
-<c>// parts = ["1","2","3","4"]</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="join(a, sep)">
-        <div class="cell"><span class="fn">join</span>(a, sep)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>sep.join(a)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Concatenate a vector of strings or numbers with a separator. Use to format output nicely.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>};
-<k>join</k>(<n>a</n>, <s>", "</s>);   <c>// "1, 2, 3"</c>
-
-<t>vec</t>&lt;<t>string</t>&gt; <n>words</n> = {<s>"hello"</s>, <s>"world"</s>};
-<k>join</k>(<n>words</n>, <s>" "</s>);   <c>// "hello world"</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="strip(s)">
-        <div class="cell"><span class="fn">strip</span>(s)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>s.strip()</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Remove leading and trailing whitespace. Use when reading lines that may have trailing spaces/newlines.</div>
-          <pre class="usage-code"><t>string</t> <n>s</n> = <s>"  hello world  "</s>;
-<k>strip</k>(<n>s</n>);   <c>// "hello world"</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="upper(s) / lower(s)">
-        <div class="cell"><span class="fn">upper</span>(s) / <span class="fn">lower</span>(s)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>s.upper() / s.lower()</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Case conversion. Use for case-insensitive comparison or normalising input.</div>
-          <pre class="usage-code"><t>string</t> <n>s</n> = <s>"Hello World"</s>;
-<k>upper</k>(<n>s</n>);   <c>// "HELLO WORLD"</c>
-<k>lower</k>(<n>s</n>);   <c>// "hello world"</c>
-
-<c>// Case-insensitive comparison:</c>
-<k>if</k> (<k>lower</k>(<n>s1</n>) == <k>lower</k>(<n>s2</n>)) { <c>/* same */</c> }</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="replace_all(s, from, to)">
-        <div class="cell"><span class="fn">replace_all</span>(s, from, to)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>s.replace(from, to)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Replace ALL occurrences of substring. Use for text transformation, cleaning input.</div>
-          <pre class="usage-code"><t>string</t> <n>s</n> = <s>"aababab"</s>;
-<k>replace_all</k>(<n>s</n>, <s>"ab"</s>, <s>"X"</s>);   <c>// "aXXX"</c>
-
-<c>// Remove all spaces:</c>
-<k>replace_all</k>(<n>s</n>, <s>" "</s>, <s>""</s>);</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="startswith / endswith">
-        <div class="cell">startswith / endswith<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>s.startswith / s.endswith</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Check string prefix/suffix. Use for parsing formatted input or filtering strings by pattern.</div>
-          <pre class="usage-code"><t>string</t> <n>s</n> = <s>"hello_world"</s>;
-<k>startswith</k>(<n>s</n>, <s>"hello"</s>);   <c>// true</c>
-<k>endswith</k>(<n>s</n>, <s>"world"</s>);     <c>// true</c>
-<k>startswith</k>(<n>s</n>, <s>"world"</s>);   <c>// false</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="bin_str(n)">
-        <div class="cell"><span class="fn">bin_str</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>bin(n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Binary string representation. Use for bitmask debugging, printing binary numbers.</div>
-          <pre class="usage-code"><k>bin_str</k>(<n>10</n>);   <c>// "0b1010"</c>
-<k>bin_str</k>(<n>255</n>);  <c>// "0b11111111"</c>
-<k>bin_str</k>(<n>0</n>);    <c>// "0b0"</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="math" data-text="math — modular arithmetic mpow(a, b, mod) pow(a, b, mod) modular exponentiation. use for any a^b mod p in number theory, combinatorics, or crypto problems. &lt;k&gt;mpow&lt;/k&gt;(&lt;n&gt;2&lt;/n&gt;, &lt;n&gt;10&lt;/n&gt;, &lt;n&gt;mod&lt;/n&gt;);     &lt;c&gt;// 1024&lt;/c&gt;
-&lt;k&gt;mpow&lt;/k&gt;(&lt;n&gt;2&lt;/n&gt;, &lt;n&gt;1000000000&lt;/n&gt;, &lt;n&gt;mod&lt;/n&gt;); &lt;c&gt;// fast — o(log b)&lt;/c&gt;
-
-&lt;c&gt;// fermat's little theorem: a^(p-1) ≡ 1 (mod p)&lt;/c&gt;
-&lt;k&gt;mpow&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;mod&lt;/n&gt;-&lt;n&gt;2&lt;/n&gt;, &lt;n&gt;mod&lt;/n&gt;);  &lt;c&gt;// = modinv(a)&lt;/c&gt; modinv(a, mod) — modular inverse modular inverse: finds x such that a*x ≡ 1 (mod p). required for modular division. mod must be prime. &lt;c&gt;// modular division: a/b mod p = a * modinv(b) mod p&lt;/c&gt;
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;ans&lt;/n&gt; = (&lt;n&gt;a&lt;/n&gt; % &lt;n&gt;mod&lt;/n&gt;) * &lt;k&gt;modinv&lt;/k&gt;(&lt;n&gt;b&lt;/n&gt;, &lt;n&gt;mod&lt;/n&gt;) % &lt;n&gt;mod&lt;/n&gt;;
-
-&lt;c&gt;// example: 10/3 mod 1e9+7&lt;/c&gt;
-&lt;k&gt;modinv&lt;/k&gt;(&lt;n&gt;3&lt;/n&gt;, &lt;n&gt;mod&lt;/n&gt;);   &lt;c&gt;// 333333336&lt;/c&gt;
-(&lt;n&gt;10&lt;/n&gt; * &lt;k&gt;modinv&lt;/k&gt;(&lt;n&gt;3&lt;/n&gt;, &lt;n&gt;mod&lt;/n&gt;)) % &lt;n&gt;mod&lt;/n&gt;;  &lt;c&gt;// works!&lt;/c&gt; ⚠ mod must be a prime number. modinv(a, mod) = mpow(a, mod-2, mod) by fermat's little theorem. gcd(a, b) / lcm(a, b) math.gcd / math.lcm gcd is iterative (no stack overflow). lcm = a/gcd*b. use for fraction reduction, cycle detection. &lt;k&gt;gcd&lt;/k&gt;(&lt;n&gt;12&lt;/n&gt;, &lt;n&gt;8&lt;/n&gt;);    &lt;c&gt;// 4&lt;/c&gt;
-&lt;k&gt;lcm&lt;/k&gt;(&lt;n&gt;4&lt;/n&gt;, &lt;n&gt;6&lt;/n&gt;);     &lt;c&gt;// 12&lt;/c&gt;
-
-&lt;c&gt;// gcd of whole array:&lt;/c&gt;
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;g&lt;/n&gt; = &lt;n&gt;a&lt;/n&gt;[&lt;n&gt;0&lt;/n&gt;];
-&lt;k&gt;each&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;, &lt;n&gt;a&lt;/n&gt;) &lt;n&gt;g&lt;/n&gt; = &lt;k&gt;gcd&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;x&lt;/n&gt;); chmin(a, b) / chmax(a, b) a = min(a,b) / a = max(a,b) update variable if smaller/larger. returns true if updated. essential for clean dp transitions. &lt;c&gt;// dp: shortest path relaxation&lt;/c&gt;
-&lt;k&gt;if&lt;/k&gt; (&lt;k&gt;chmin&lt;/k&gt;(&lt;n&gt;dist&lt;/n&gt;[&lt;n&gt;v&lt;/n&gt;], &lt;n&gt;dist&lt;/n&gt;[&lt;n&gt;u&lt;/n&gt;] + &lt;n&gt;w&lt;/n&gt;)) {
-    &lt;n&gt;pq&lt;/n&gt;.push({&lt;n&gt;dist&lt;/n&gt;[&lt;n&gt;v&lt;/n&gt;], &lt;n&gt;v&lt;/n&gt;});
-}
-
-&lt;c&gt;// track running max:&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;ans&lt;/n&gt; = &lt;n&gt;0&lt;/n&gt;;
-&lt;k&gt;each&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;, &lt;n&gt;a&lt;/n&gt;) &lt;k&gt;chmax&lt;/k&gt;(&lt;n&gt;ans&lt;/n&gt;, &lt;n&gt;x&lt;/n&gt;);  &lt;c&gt;// ans = max of array&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#c77dff">Math — Modular Arithmetic</div>
-      <div class="card-tag">math</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="mpow(a, b, mod)">
-        <div class="cell"><span class="fn">mpow</span>(a, b, mod)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>pow(a, b, mod)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Modular exponentiation. Use for any a^b mod p in number theory, combinatorics, or crypto problems.</div>
-          <pre class="usage-code"><k>mpow</k>(<n>2</n>, <n>10</n>, <n>MOD</n>);     <c>// 1024</c>
-<k>mpow</k>(<n>2</n>, <n>1000000000</n>, <n>MOD</n>); <c>// fast — O(log b)</c>
-
-<c>// Fermat's little theorem: a^(p-1) ≡ 1 (mod p)</c>
-<k>mpow</k>(<n>a</n>, <n>MOD</n>-<n>2</n>, <n>MOD</n>);  <c>// = modinv(a)</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="modinv(a, mod)">
-        <div class="cell"><span class="fn">modinv</span>(a, mod)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>— modular inverse</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Modular inverse: finds x such that a*x ≡ 1 (mod p). Required for modular division. mod must be prime.</div>
-          <pre class="usage-code"><c>// Modular division: a/b mod p = a * modinv(b) mod p</c>
-<t>ll</t> <n>ans</n> = (<n>a</n> % <n>MOD</n>) * <k>modinv</k>(<n>b</n>, <n>MOD</n>) % <n>MOD</n>;
-
-<c>// Example: 10/3 mod 1e9+7</c>
-<k>modinv</k>(<n>3</n>, <n>MOD</n>);   <c>// 333333336</c>
-(<n>10</n> * <k>modinv</k>(<n>3</n>, <n>MOD</n>)) % <n>MOD</n>;  <c>// works!</c></pre>
-          <div class="usage-note">⚠ ⚠ mod must be a prime number. modinv(a, MOD) = mpow(a, MOD-2, MOD) by Fermat's little theorem.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="gcd(a, b) / lcm(a, b)">
-        <div class="cell"><span class="fn">gcd</span>(a, b) / <span class="fn">lcm</span>(a, b)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>math.gcd / math.lcm</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> gcd is iterative (no stack overflow). lcm = a/gcd*b. Use for fraction reduction, cycle detection.</div>
-          <pre class="usage-code"><k>gcd</k>(<n>12</n>, <n>8</n>);    <c>// 4</c>
-<k>lcm</k>(<n>4</n>, <n>6</n>);     <c>// 12</c>
-
-<c>// GCD of whole array:</c>
-<t>ll</t> <n>g</n> = <n>a</n>[<n>0</n>];
-<k>each</k>(<n>x</n>, <n>a</n>) <n>g</n> = <k>gcd</k>(<n>g</n>, <n>x</n>);</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="chmin(a, b) / chmax(a, b)">
-        <div class="cell"><span class="fn">chmin</span>(a, b) / <span class="fn">chmax</span>(a, b)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>a = min(a,b) / a = max(a,b)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Update variable if smaller/larger. Returns true if updated. Essential for clean DP transitions.</div>
-          <pre class="usage-code"><c>// DP: shortest path relaxation</c>
-<k>if</k> (<k>chmin</k>(<n>dist</n>[<n>v</n>], <n>dist</n>[<n>u</n>] + <n>w</n>)) {
-    <n>pq</n>.push({<n>dist</n>[<n>v</n>], <n>v</n>});
-}
-
-<c>// Track running max:</c>
-<t>int</t> <n>ans</n> = <n>0</n>;
-<k>each</k>(<n>x</n>, <n>a</n>) <k>chmax</k>(<n>ans</n>, <n>x</n>);  <c>// ans = max of array</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="math" data-text="math — number theory is_prime(n) primality test  o(√n) trial division primality test. fast for single queries. use sieve for testing many numbers. &lt;k&gt;is_prime&lt;/k&gt;(&lt;n&gt;7&lt;/n&gt;);    &lt;c&gt;// true&lt;/c&gt;
-&lt;k&gt;is_prime&lt;/k&gt;(&lt;n&gt;100&lt;/n&gt;);  &lt;c&gt;// false&lt;/c&gt;
-&lt;k&gt;is_prime&lt;/k&gt;(&lt;n&gt;1&lt;/n&gt;);    &lt;c&gt;// false&lt;/c&gt;
-
-&lt;c&gt;// for many queries, use sieve:&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;primes&lt;/n&gt; = &lt;k&gt;sieve&lt;/k&gt;(&lt;n&gt;1000000&lt;/n&gt;);  &lt;c&gt;// all primes up to 1m&lt;/c&gt; sieve(n) primes up to n  o(n log log n) sieve of eratosthenes. use when you need all primes up to n, or need to check primality of many numbers. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;p&lt;/n&gt; = &lt;k&gt;sieve&lt;/k&gt;(&lt;n&gt;20&lt;/n&gt;);
-&lt;c&gt;// p = [2,3,5,7,11,13,17,19]&lt;/c&gt;
-
-&lt;c&gt;// check if x is prime (after sieve):&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;primes&lt;/n&gt; = &lt;k&gt;sieve&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);
-&lt;t&gt;uset&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;pset&lt;/n&gt;(&lt;n&gt;primes&lt;/n&gt;.begin(), &lt;n&gt;primes&lt;/n&gt;.end());
-&lt;k&gt;contains&lt;/k&gt;(&lt;n&gt;pset&lt;/n&gt;, &lt;n&gt;x&lt;/n&gt;);   &lt;c&gt;// o(1) lookup&lt;/c&gt; prime_factors(n) factorization  o(√n) returns {prime: exponent} map. use for divisibility problems, euler phi, number of divisors. &lt;k&gt;prime_factors&lt;/k&gt;(&lt;n&gt;12&lt;/n&gt;);   &lt;c&gt;// {2:2, 3:1}  (2²×3)&lt;/c&gt;
-&lt;k&gt;prime_factors&lt;/k&gt;(&lt;n&gt;360&lt;/n&gt;);  &lt;c&gt;// {2:3, 3:2, 5:1}&lt;/c&gt;
-
-&lt;c&gt;// number of divisors = product of (exp+1):&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;f&lt;/n&gt; = &lt;k&gt;prime_factors&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;ndiv&lt;/n&gt; = &lt;n&gt;1&lt;/n&gt;;
-&lt;k&gt;each2&lt;/k&gt;(&lt;n&gt;p&lt;/n&gt;, &lt;n&gt;e&lt;/n&gt;, &lt;n&gt;f&lt;/n&gt;) &lt;n&gt;ndiv&lt;/n&gt; *= (&lt;n&gt;e&lt;/n&gt;+&lt;n&gt;1&lt;/n&gt;); divisors(n) sorted divisors  o(√n) all divisors in sorted order. use for problems involving factors, sum of divisors, proper divisors. &lt;k&gt;divisors&lt;/k&gt;(&lt;n&gt;12&lt;/n&gt;);   &lt;c&gt;// [1,2,3,4,6,12]&lt;/c&gt;
-&lt;k&gt;divisors&lt;/k&gt;(&lt;n&gt;1&lt;/n&gt;);    &lt;c&gt;// [1]&lt;/c&gt;
-
-&lt;c&gt;// sum of proper divisors (all except n itself):&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;d&lt;/n&gt; = &lt;k&gt;divisors&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;s&lt;/n&gt; = &lt;k&gt;sum&lt;/k&gt;(&lt;t&gt;vl&lt;/t&gt;(&lt;n&gt;d&lt;/n&gt;.begin(), &lt;n&gt;d&lt;/n&gt;.end()-&lt;n&gt;1&lt;/n&gt;)); popcount(n) bin(n).count('1') count set bits (1s) in binary representation. use for bitmask dp, hamming distance, subset enumeration. &lt;k&gt;popcount&lt;/k&gt;(&lt;n&gt;7&lt;/n&gt;);    &lt;c&gt;// 3  (111 in binary)&lt;/c&gt;
-&lt;k&gt;popcount&lt;/k&gt;(&lt;n&gt;8&lt;/n&gt;);    &lt;c&gt;// 1  (1000)&lt;/c&gt;
-&lt;k&gt;bit_length&lt;/k&gt;(&lt;n&gt;8&lt;/n&gt;);  &lt;c&gt;// 4  (needs 4 bits)&lt;/c&gt;
-&lt;k&gt;is_pow2&lt;/k&gt;(&lt;n&gt;8&lt;/n&gt;);     &lt;c&gt;// true&lt;/c&gt;
-&lt;k&gt;is_pow2&lt;/k&gt;(&lt;n&gt;6&lt;/n&gt;);     &lt;c&gt;// false&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#c77dff">Math — Number Theory</div>
-      <div class="card-tag">math</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="is_prime(n)">
-        <div class="cell"><span class="fn">is_prime</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>primality test  O(√n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Trial division primality test. Fast for single queries. Use sieve for testing many numbers.</div>
-          <pre class="usage-code"><k>is_prime</k>(<n>7</n>);    <c>// true</c>
-<k>is_prime</k>(<n>100</n>);  <c>// false</c>
-<k>is_prime</k>(<n>1</n>);    <c>// false</c>
-
-<c>// For many queries, use sieve:</c>
-<t>vi</t> <n>primes</n> = <k>sieve</k>(<n>1000000</n>);  <c>// all primes up to 1M</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="sieve(n)">
-        <div class="cell"><span class="fn">sieve</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>primes up to n  O(n log log n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Sieve of Eratosthenes. Use when you need ALL primes up to n, or need to check primality of many numbers.</div>
-          <pre class="usage-code"><t>vi</t> <n>p</n> = <k>sieve</k>(<n>20</n>);
-<c>// p = [2,3,5,7,11,13,17,19]</c>
-
-<c>// Check if x is prime (after sieve):</c>
-<t>vi</t> <n>primes</n> = <k>sieve</k>(<n>N</n>);
-<t>uset</t>&lt;<t>int</t>&gt; <n>pset</n>(<n>primes</n>.begin(), <n>primes</n>.end());
-<k>contains</k>(<n>pset</n>, <n>x</n>);   <c>// O(1) lookup</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="prime_factors(n)">
-        <div class="cell"><span class="fn">prime_factors</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>factorization  O(√n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Returns {prime: exponent} map. Use for divisibility problems, Euler phi, number of divisors.</div>
-          <pre class="usage-code"><k>prime_factors</k>(<n>12</n>);   <c>// {2:2, 3:1}  (2²×3)</c>
-<k>prime_factors</k>(<n>360</n>);  <c>// {2:3, 3:2, 5:1}</c>
-
-<c>// Number of divisors = product of (exp+1):</c>
-<t>auto</t> <n>f</n> = <k>prime_factors</k>(<n>n</n>);
-<t>ll</t> <n>ndiv</n> = <n>1</n>;
-<k>each2</k>(<n>p</n>, <n>e</n>, <n>f</n>) <n>ndiv</n> *= (<n>e</n>+<n>1</n>);</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="divisors(n)">
-        <div class="cell"><span class="fn">divisors</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>sorted divisors  O(√n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> All divisors in sorted order. Use for problems involving factors, sum of divisors, proper divisors.</div>
-          <pre class="usage-code"><k>divisors</k>(<n>12</n>);   <c>// [1,2,3,4,6,12]</c>
-<k>divisors</k>(<n>1</n>);    <c>// [1]</c>
-
-<c>// Sum of proper divisors (all except n itself):</c>
-<t>auto</t> <n>d</n> = <k>divisors</k>(<n>n</n>);
-<t>ll</t> <n>s</n> = <k>sum</k>(<t>vl</t>(<n>d</n>.begin(), <n>d</n>.end()-<n>1</n>));</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="popcount(n)">
-        <div class="cell"><span class="fn">popcount</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>bin(n).count('1')</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Count set bits (1s) in binary representation. Use for bitmask DP, hamming distance, subset enumeration.</div>
-          <pre class="usage-code"><k>popcount</k>(<n>7</n>);    <c>// 3  (111 in binary)</c>
-<k>popcount</k>(<n>8</n>);    <c>// 1  (1000)</c>
-<k>bit_length</k>(<n>8</n>);  <c>// 4  (needs 4 bits)</c>
-<k>is_pow2</k>(<n>8</n>);     <c>// true</c>
-<k>is_pow2</k>(<n>6</n>);     <c>// false</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="math" data-text="combinatorics — c(n,r) and p(n,r) init_comb() precompute factorials call once at start of main. precomputes factorials and inverse factorials up to 2e6. required before using c() or p(). &lt;t&gt;int&lt;/t&gt; &lt;k&gt;main&lt;/k&gt;() {
-    &lt;k&gt;fastio&lt;/k&gt;
-    &lt;k&gt;init_comb&lt;/k&gt;();    &lt;c&gt;// call once, o(n) setup&lt;/c&gt;
-    &lt;t&gt;int&lt;/t&gt; &lt;n&gt;t&lt;/n&gt;; cin &gt;&gt; &lt;n&gt;t&lt;/n&gt;;
-    &lt;k&gt;while&lt;/k&gt;(&lt;n&gt;t&lt;/n&gt;--) &lt;k&gt;solve&lt;/k&gt;();
-} comb::c(n, r) math.comb(n, r) mod p binomial coefficient n choose r, modulo mod. o(1) after init. use for counting paths, subsets, combinations. &lt;k&gt;init_comb&lt;/k&gt;();
-
-&lt;k&gt;comb&lt;/k&gt;::&lt;k&gt;c&lt;/k&gt;(&lt;n&gt;5&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);     &lt;c&gt;// 10  (5 choose 2)&lt;/c&gt;
-&lt;k&gt;comb&lt;/k&gt;::&lt;k&gt;c&lt;/k&gt;(&lt;n&gt;10&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);    &lt;c&gt;// 120&lt;/c&gt;
-&lt;k&gt;comb&lt;/k&gt;::&lt;k&gt;c&lt;/k&gt;(&lt;n&gt;100&lt;/n&gt;, &lt;n&gt;50&lt;/n&gt;);  &lt;c&gt;// huge number mod 1e9+7&lt;/c&gt;
-&lt;k&gt;comb&lt;/k&gt;::&lt;k&gt;c&lt;/k&gt;(&lt;n&gt;5&lt;/n&gt;, &lt;n&gt;6&lt;/n&gt;);     &lt;c&gt;// 0  (r &gt; n)&lt;/c&gt;
-
-&lt;c&gt;// count grid paths (n+m choose n):&lt;/c&gt;
-&lt;k&gt;comb&lt;/k&gt;::&lt;k&gt;c&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;+&lt;n&gt;m&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;); comb::p(n, r) permutations(n, r) permutations npr = n!/(n-r)!, mod p. o(1) after init. use for ordered arrangements. &lt;k&gt;comb&lt;/k&gt;::&lt;k&gt;p&lt;/k&gt;(&lt;n&gt;5&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);   &lt;c&gt;// 20  (5×4)&lt;/c&gt;
-&lt;k&gt;comb&lt;/k&gt;::&lt;k&gt;p&lt;/k&gt;(&lt;n&gt;10&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);  &lt;c&gt;// 720  (10×9×8)&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#c77dff">Combinatorics — C(n,r) and P(n,r)</div>
-      <div class="card-tag">math</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="init_comb()">
-        <div class="cell"><span class="fn">init_comb</span>()<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>precompute factorials</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Call ONCE at start of main. Precomputes factorials and inverse factorials up to 2e6. Required before using C() or P().</div>
-          <pre class="usage-code"><t>int</t> <k>main</k>() {
-    <k>FASTIO</k>
-    <k>init_comb</k>();    <c>// call once, O(n) setup</c>
-    <t>int</t> <n>t</n>; cin &gt;&gt; <n>t</n>;
-    <k>while</k>(<n>t</n>--) <k>solve</k>();
-}</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="Comb::C(n, r)">
-        <div class="cell">Comb::C(n, r)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>math.comb(n, r) mod p</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Binomial coefficient n choose r, modulo MOD. O(1) after init. Use for counting paths, subsets, combinations.</div>
-          <pre class="usage-code"><k>init_comb</k>();
-
-<k>Comb</k>::<k>C</k>(<n>5</n>, <n>2</n>);     <c>// 10  (5 choose 2)</c>
-<k>Comb</k>::<k>C</k>(<n>10</n>, <n>3</n>);    <c>// 120</c>
-<k>Comb</k>::<k>C</k>(<n>100</n>, <n>50</n>);  <c>// huge number mod 1e9+7</c>
-<k>Comb</k>::<k>C</k>(<n>5</n>, <n>6</n>);     <c>// 0  (r &gt; n)</c>
-
-<c>// Count grid paths (n+m choose n):</c>
-<k>Comb</k>::<k>C</k>(<n>n</n>+<n>m</n>, <n>n</n>);</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="Comb::P(n, r)">
-        <div class="cell">Comb::P(n, r)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>permutations(n, r)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Permutations nPr = n!/(n-r)!, mod p. O(1) after init. Use for ordered arrangements.</div>
-          <pre class="usage-code"><k>Comb</k>::<k>P</k>(<n>5</n>, <n>2</n>);   <c>// 20  (5×4)</c>
-<k>Comb</k>::<k>P</k>(<n>10</n>, <n>3</n>);  <c>// 720  (10×9×8)</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="ds" data-text="prefix sum prefix_sum(a) running cumulative sum build prefix sum array in o(n), then answer range sum queries in o(1). the most common cp trick. &lt;t&gt;vl&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;ps&lt;/n&gt; = &lt;k&gt;prefix_sum&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);
-&lt;c&gt;// ps = [0,1,3,6,10,15]&lt;/c&gt;
-
-&lt;k&gt;range_sum&lt;/k&gt;(&lt;n&gt;ps&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);  &lt;c&gt;// 2+3+4 = 9  — o(1)!&lt;/c&gt;
-&lt;k&gt;range_sum&lt;/k&gt;(&lt;n&gt;ps&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;4&lt;/n&gt;);  &lt;c&gt;// 1+2+3+4+5 = 15&lt;/c&gt; build once in o(n), then each range_sum query is o(1). use when you have many range sum queries. prefix_sum2d(a) 2d prefix sum same idea for 2d grids. build in o(n*m), query any rectangle in o(1). use for grid range sum problems. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;vl&lt;/t&gt;&gt; &lt;n&gt;grid&lt;/n&gt; = {{&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;},{&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;6&lt;/n&gt;},{&lt;n&gt;7&lt;/n&gt;,&lt;n&gt;8&lt;/n&gt;,&lt;n&gt;9&lt;/n&gt;}};
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;ps&lt;/n&gt; = &lt;k&gt;prefix_sum2d&lt;/k&gt;(&lt;n&gt;grid&lt;/n&gt;);
-
-&lt;c&gt;// sum of entire grid:&lt;/c&gt;
-&lt;k&gt;range_sum2d&lt;/k&gt;(&lt;n&gt;ps&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;,&lt;n&gt;0&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;);  &lt;c&gt;// 45&lt;/c&gt;
-
-&lt;c&gt;// sum of top-left 2×2:&lt;/c&gt;
-&lt;k&gt;range_sum2d&lt;/k&gt;(&lt;n&gt;ps&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;,&lt;n&gt;0&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;);  &lt;c&gt;// 12&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b6b">Prefix Sum</div>
-      <div class="card-tag">ds</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="prefix_sum(a)">
-        <div class="cell"><span class="fn">prefix_sum</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>running cumulative sum</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Build prefix sum array in O(n), then answer range sum queries in O(1). The most common CP trick.</div>
-          <pre class="usage-code"><t>vl</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>,<n>4</n>,<n>5</n>};
-<t>auto</t> <n>ps</n> = <k>prefix_sum</k>(<n>a</n>);
-<c>// ps = [0,1,3,6,10,15]</c>
-
-<k>range_sum</k>(<n>ps</n>, <n>1</n>, <n>3</n>);  <c>// 2+3+4 = 9  — O(1)!</c>
-<k>range_sum</k>(<n>ps</n>, <n>0</n>, <n>4</n>);  <c>// 1+2+3+4+5 = 15</c></pre>
-          <div class="usage-note">⚠ Build once in O(n), then each range_sum query is O(1). Use when you have many range sum queries.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="prefix_sum2d(a)">
-        <div class="cell"><span class="fn">prefix_sum2d</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>2D prefix sum</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Same idea for 2D grids. Build in O(n*m), query any rectangle in O(1). Use for grid range sum problems.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>vl</t>&gt; <n>grid</n> = {{<n>1</n>,<n>2</n>,<n>3</n>},{<n>4</n>,<n>5</n>,<n>6</n>},{<n>7</n>,<n>8</n>,<n>9</n>}};
-<t>auto</t> <n>ps</n> = <k>prefix_sum2d</k>(<n>grid</n>);
-
-<c>// Sum of entire grid:</c>
-<k>range_sum2d</k>(<n>ps</n>, <n>0</n>,<n>0</n>, <n>2</n>,<n>2</n>);  <c>// 45</c>
-
-<c>// Sum of top-left 2×2:</c>
-<k>range_sum2d</k>(<n>ps</n>, <n>0</n>,<n>0</n>, <n>1</n>,<n>1</n>);  <c>// 12</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="ds" data-text="dsu / union-find dsu dsu(n) n disjoint components initialise n nodes each in their own component. o(α n) per operation. use for connected components, kruskal. &lt;t&gt;dsu&lt;/t&gt; &lt;n&gt;dsu&lt;/n&gt;(&lt;n&gt;5&lt;/n&gt;);   &lt;c&gt;// 5 nodes: 0,1,2,3,4&lt;/c&gt;
-
-&lt;n&gt;dsu&lt;/n&gt;.unite(&lt;n&gt;0&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;);   &lt;c&gt;// merge 0 and 1&lt;/c&gt;
-&lt;n&gt;dsu&lt;/n&gt;.unite(&lt;n&gt;1&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);   &lt;c&gt;// merge 1 and 2 → {0,1,2},{3},{4}&lt;/c&gt;
-&lt;n&gt;dsu&lt;/n&gt;.same(&lt;n&gt;0&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);    &lt;c&gt;// true&lt;/c&gt;
-&lt;n&gt;dsu&lt;/n&gt;.same(&lt;n&gt;0&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);    &lt;c&gt;// false&lt;/c&gt;
-&lt;n&gt;dsu&lt;/n&gt;.size(&lt;n&gt;0&lt;/n&gt;);             &lt;c&gt;// 3&lt;/c&gt;
-&lt;n&gt;dsu&lt;/n&gt;.components();              &lt;c&gt;// 3&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b6b">DSU / Union-Find</div>
-      <div class="card-tag">ds</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="DSU dsu(n)">
-        <div class="cell"><span class="tp">DSU</span> <span class="fn">dsu</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>n disjoint components</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Initialise n nodes each in their own component. O(α n) per operation. Use for connected components, Kruskal.</div>
-          <pre class="usage-code"><t>DSU</t> <n>dsu</n>(<n>5</n>);   <c>// 5 nodes: 0,1,2,3,4</c>
-
-<n>dsu</n>.unite(<n>0</n>, <n>1</n>);   <c>// merge 0 and 1</c>
-<n>dsu</n>.unite(<n>1</n>, <n>2</n>);   <c>// merge 1 and 2 → {0,1,2},{3},{4}</c>
-<n>dsu</n>.same(<n>0</n>, <n>2</n>);    <c>// true</c>
-<n>dsu</n>.same(<n>0</n>, <n>3</n>);    <c>// false</c>
-<n>dsu</n>.size(<n>0</n>);             <c>// 3</c>
-<n>dsu</n>.components();              <c>// 3</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="ds" data-text="fenwick tree (bit) fenwick bit(n) point update, range sum fastest structure for point update + prefix sum queries. o(log n) both. use for inversion count, range sums. &lt;t&gt;fenwick&lt;/t&gt; &lt;n&gt;bit&lt;/n&gt;(&lt;n&gt;n&lt;/n&gt;);
-
-&lt;n&gt;bit&lt;/n&gt;.update(&lt;n&gt;2&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;);   &lt;c&gt;// add 5 at index 2&lt;/c&gt;
-&lt;n&gt;bit&lt;/n&gt;.update(&lt;n&gt;4&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);   &lt;c&gt;// add 3 at index 4&lt;/c&gt;
-
-&lt;n&gt;bit&lt;/n&gt;.query(&lt;n&gt;0&lt;/n&gt;, &lt;n&gt;4&lt;/n&gt;);    &lt;c&gt;// sum of [0..4] = 8&lt;/c&gt;
-&lt;n&gt;bit&lt;/n&gt;.prefix(&lt;n&gt;2&lt;/n&gt;);   &lt;c&gt;// prefix sum [0..2] = 5&lt;/c&gt;
-
-&lt;c&gt;// count inversions pattern:&lt;/c&gt;
-&lt;k&gt;repd&lt;/k&gt;(&lt;n&gt;i&lt;/n&gt;, &lt;n&gt;n&lt;/n&gt;) {
-    &lt;n&gt;ans&lt;/n&gt; += &lt;n&gt;bit&lt;/n&gt;.prefix(&lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;]-&lt;n&gt;1&lt;/n&gt;);
-    &lt;n&gt;bit&lt;/n&gt;.update(&lt;n&gt;a&lt;/n&gt;[&lt;n&gt;i&lt;/n&gt;], &lt;n&gt;1&lt;/n&gt;);
-}">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b6b">Fenwick Tree (BIT)</div>
-      <div class="card-tag">ds</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="Fenwick bit(n)">
-        <div class="cell"><span class="tp">Fenwick</span> <span class="fn">bit</span>(n)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>point update, range sum</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Fastest structure for point update + prefix sum queries. O(log n) both. Use for inversion count, range sums.</div>
-          <pre class="usage-code"><t>Fenwick</t> <n>bit</n>(<n>n</n>);
-
-<n>bit</n>.update(<n>2</n>, <n>5</n>);   <c>// add 5 at index 2</c>
-<n>bit</n>.update(<n>4</n>, <n>3</n>);   <c>// add 3 at index 4</c>
-
-<n>bit</n>.query(<n>0</n>, <n>4</n>);    <c>// sum of [0..4] = 8</c>
-<n>bit</n>.prefix(<n>2</n>);   <c>// prefix sum [0..2] = 5</c>
-
-<c>// Count inversions pattern:</c>
-<k>repd</k>(<n>i</n>, <n>n</n>) {
-    <n>ans</n> += <n>bit</n>.prefix(<n>a</n>[<n>i</n>]-<n>1</n>);
-    <n>bit</n>.update(<n>a</n>[<n>i</n>], <n>1</n>);
-}</pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="ds" data-text="segment tree segtree seg(a) range sum, point update more flexible than fenwick — can support any associative operation. o(log n) update and range query. &lt;t&gt;vl&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;7&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;};
-&lt;t&gt;segtree&lt;/t&gt; &lt;n&gt;seg&lt;/n&gt;(&lt;n&gt;a&lt;/n&gt;);    &lt;c&gt;// build from array&lt;/c&gt;
-
-&lt;n&gt;seg&lt;/n&gt;.query(&lt;n&gt;1&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);   &lt;c&gt;// sum [1..3] = 3+2+7 = 12&lt;/c&gt;
-&lt;n&gt;seg&lt;/n&gt;.update(&lt;n&gt;2&lt;/n&gt;, &lt;n&gt;10&lt;/n&gt;); &lt;c&gt;// set a[2] = 10&lt;/c&gt;
-&lt;n&gt;seg&lt;/n&gt;.query(&lt;n&gt;1&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);   &lt;c&gt;// now = 3+10+7 = 20&lt;/c&gt; unlike fenwick, segtree supports both update and arbitrary range queries. modify qry() for min/max instead of sum.">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b6b">Segment Tree</div>
-      <div class="card-tag">ds</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="SegTree seg(a)">
-        <div class="cell"><span class="tp">SegTree</span> <span class="fn">seg</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>range sum, point update</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> More flexible than Fenwick — can support any associative operation. O(log n) update and range query.</div>
-          <pre class="usage-code"><t>vl</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>2</n>,<n>7</n>,<n>5</n>};
-<t>SegTree</t> <n>seg</n>(<n>a</n>);    <c>// build from array</c>
-
-<n>seg</n>.query(<n>1</n>, <n>3</n>);   <c>// sum [1..3] = 3+2+7 = 12</c>
-<n>seg</n>.update(<n>2</n>, <n>10</n>); <c>// set a[2] = 10</c>
-<n>seg</n>.query(<n>1</n>, <n>3</n>);   <c>// now = 3+10+7 = 20</c></pre>
-          <div class="usage-note">⚠ Unlike Fenwick, SegTree supports both update and arbitrary range queries. Modify qry() for min/max instead of sum.</div>
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="ds" data-text="sparse table sparsetable sp(a) static range min/max  o(1) o(1) range min/max queries after o(n log n) build. use for static arrays with many range queries. &lt;t&gt;vl&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;4&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;6&lt;/n&gt;,&lt;n&gt;7&lt;/n&gt;,&lt;n&gt;8&lt;/n&gt;,&lt;n&gt;9&lt;/n&gt;};
-&lt;t&gt;sparsetable&lt;/t&gt; &lt;n&gt;sp&lt;/n&gt;(&lt;n&gt;a&lt;/n&gt;);   &lt;c&gt;// o(n log n) build&lt;/c&gt;
-
-&lt;n&gt;sp&lt;/n&gt;.qmin(&lt;n&gt;1&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;);   &lt;c&gt;// min of a[1..5] = 1  — o(1)!&lt;/c&gt;
-&lt;n&gt;sp&lt;/n&gt;.qmax(&lt;n&gt;2&lt;/n&gt;, &lt;n&gt;6&lt;/n&gt;);   &lt;c&gt;// max of a[2..6] = 8  — o(1)!&lt;/c&gt; ⚠ static only — cannot update. perfect for rmq problems where array never changes.">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b6b">Sparse Table</div>
-      <div class="card-tag">ds</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="SparseTable sp(a)">
-        <div class="cell"><span class="tp">SparseTable</span> <span class="fn">sp</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>static range min/max  O(1)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> O(1) range min/max queries after O(n log n) build. Use for static arrays with MANY range queries.</div>
-          <pre class="usage-code"><t>vl</t> <n>a</n> = {<n>2</n>,<n>4</n>,<n>3</n>,<n>1</n>,<n>6</n>,<n>7</n>,<n>8</n>,<n>9</n>};
-<t>SparseTable</t> <n>sp</n>(<n>a</n>);   <c>// O(n log n) build</c>
-
-<n>sp</n>.qmin(<n>1</n>, <n>5</n>);   <c>// min of a[1..5] = 1  — O(1)!</c>
-<n>sp</n>.qmax(<n>2</n>, <n>6</n>);   <c>// max of a[2..6] = 8  — O(1)!</c></pre>
-          <div class="usage-note">⚠ ⚠ Static only — cannot update. Perfect for RMQ problems where array never changes.</div>
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="ds" data-text="coordinate compression compress&lt;int&gt; comp(a) map large values → small indices map large/sparse values to indices 0,1,...,k-1. use when values are huge but count is small (e.g. coordinates in segment tree). &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1000000&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;, &lt;n&gt;999&lt;/n&gt;, &lt;n&gt;5&lt;/n&gt;, &lt;n&gt;1000000&lt;/n&gt;};
-&lt;t&gt;compress&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;comp&lt;/n&gt;(&lt;n&gt;a&lt;/n&gt;);
-
-&lt;n&gt;comp&lt;/n&gt;.encode(&lt;n&gt;5&lt;/n&gt;);        &lt;c&gt;// 0  (smallest unique)&lt;/c&gt;
-&lt;n&gt;comp&lt;/n&gt;.encode(&lt;n&gt;999&lt;/n&gt;);      &lt;c&gt;// 1&lt;/c&gt;
-&lt;n&gt;comp&lt;/n&gt;.encode(&lt;n&gt;1000000&lt;/n&gt;);  &lt;c&gt;// 2&lt;/c&gt;
-&lt;n&gt;comp&lt;/n&gt;.size();           &lt;c&gt;// 3  (3 unique values)&lt;/c&gt;
-&lt;n&gt;comp&lt;/n&gt;.decode(&lt;n&gt;1&lt;/n&gt;);        &lt;c&gt;// 999&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b6b">Coordinate Compression</div>
-      <div class="card-tag">ds</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="Compress&lt;int&gt; comp(a)">
-        <div class="cell"><span class="tp">Compress</span><span class="kw">&lt;</span><span class="kw">int</span><span class="kw">&gt;</span> <span class="fn">comp</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>map large values → small indices</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Map large/sparse values to indices 0,1,...,k-1. Use when values are huge but count is small (e.g. coordinates in segment tree).</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1000000</n>, <n>5</n>, <n>999</n>, <n>5</n>, <n>1000000</n>};
-<t>Compress</t>&lt;<t>int</t>&gt; <n>comp</n>(<n>a</n>);
-
-<n>comp</n>.encode(<n>5</n>);        <c>// 0  (smallest unique)</c>
-<n>comp</n>.encode(<n>999</n>);      <c>// 1</c>
-<n>comp</n>.encode(<n>1000000</n>);  <c>// 2</c>
-<n>comp</n>.size();           <c>// 3  (3 unique values)</c>
-<n>comp</n>.decode(<n>1</n>);        <c>// 999</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="ds" data-text="priority queues pq&lt;t&gt; / pqmin&lt;t&gt; max-heap / min-heap pq is max-heap (largest first), pqmin is min-heap (smallest first). use for greedy algorithms, dijkstra. &lt;t&gt;pqmin&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;minq&lt;/n&gt;;
-&lt;n&gt;minq&lt;/n&gt;.push(&lt;n&gt;5&lt;/n&gt;); &lt;n&gt;minq&lt;/n&gt;.push(&lt;n&gt;1&lt;/n&gt;); &lt;n&gt;minq&lt;/n&gt;.push(&lt;n&gt;3&lt;/n&gt;);
-&lt;n&gt;minq&lt;/n&gt;.top();   &lt;c&gt;// 1  — always smallest&lt;/c&gt;
-&lt;n&gt;minq&lt;/n&gt;.pop();   &lt;c&gt;// removes 1&lt;/c&gt;
-
-&lt;c&gt;// dijkstra uses pqmin&lt;pair&lt;ll,int&gt;&gt;&lt;/c&gt;
-&lt;c&gt;// task scheduling: pqmin for earliest deadline&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ff6b6b">Priority Queues</div>
-      <div class="card-tag">ds</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="pq&lt;T&gt; / pqmin&lt;T&gt;">
-        <div class="cell"><span class="tp">pq</span><span class="kw">&lt;</span>T<span class="kw">&gt;</span> / <span class="tp">pqmin</span><span class="kw">&lt;</span>T<span class="kw">&gt;</span><span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>max-heap / min-heap</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> pq is max-heap (largest first), pqmin is min-heap (smallest first). Use for greedy algorithms, Dijkstra.</div>
-          <pre class="usage-code"><t>pqmin</t>&lt;<t>int</t>&gt; <n>minq</n>;
-<n>minq</n>.push(<n>5</n>); <n>minq</n>.push(<n>1</n>); <n>minq</n>.push(<n>3</n>);
-<n>minq</n>.top();   <c>// 1  — always smallest</c>
-<n>minq</n>.pop();   <c>// removes 1</c>
-
-<c>// Dijkstra uses pqmin<pair<ll,int>&gt;</pair<ll,int></c>
-<c>// Task scheduling: pqmin for earliest deadline</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="graph" data-text="graph setup new_graph(n) / add_edge g = adjacency list create adjacency list graph and add edges. use for bfs, dfs, all graph algorithms. &lt;t&gt;auto&lt;/t&gt; &lt;n&gt;g&lt;/n&gt; = &lt;k&gt;new_graph&lt;/k&gt;(&lt;n&gt;5&lt;/n&gt;);   &lt;c&gt;// 5 nodes: 0..4&lt;/c&gt;
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;);       &lt;c&gt;// undirected&lt;/c&gt;
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;k&gt;true&lt;/k&gt;); &lt;c&gt;// directed 0→2&lt;/c&gt;
-
-&lt;c&gt;// weighted graph:&lt;/c&gt;
-&lt;t&gt;auto&lt;/t&gt; &lt;n&gt;wg&lt;/n&gt; = &lt;k&gt;new_wgraph&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;wg&lt;/n&gt;, &lt;n&gt;u&lt;/n&gt;, &lt;n&gt;v&lt;/n&gt;, &lt;n&gt;weight&lt;/n&gt;);">
-    <div class="card-header">
-      <div class="card-title" style="color:#4ecdc4">Graph Setup</div>
-      <div class="card-tag">graph</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="new_graph(n) / add_edge">
-        <div class="cell"><span class="fn">new_graph</span>(n) / add_edge<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>G = adjacency list</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Create adjacency list graph and add edges. Use for BFS, DFS, all graph algorithms.</div>
-          <pre class="usage-code"><t>auto</t> <n>g</n> = <k>new_graph</k>(<n>5</n>);   <c>// 5 nodes: 0..4</c>
-<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>1</n>);       <c>// undirected</c>
-<k>add_edge</k>(<n>g</n>, <n>1</n>, <n>2</n>);
-<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>2</n>, <k>true</k>); <c>// directed 0→2</c>
-
-<c>// Weighted graph:</c>
-<t>auto</t> <n>wg</n> = <k>new_wgraph</k>(<n>n</n>);
-<k>add_edge</k>(<n>wg</n>, <n>u</n>, <n>v</n>, <n>weight</n>);</pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="graph" data-text="graph algorithms bfs(g, src) bfs — shortest hops  o(v+e) unweighted shortest paths from src. dist[v] = -1 if unreachable. use for minimum steps problems. &lt;t&gt;auto&lt;/t&gt; &lt;n&gt;g&lt;/n&gt; = &lt;k&gt;new_graph&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);
-&lt;c&gt;// ... add edges ...&lt;/c&gt;
-&lt;t&gt;vl&lt;/t&gt; &lt;n&gt;dist&lt;/n&gt; = &lt;k&gt;bfs&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;);
-&lt;c&gt;// dist[v] = shortest path 0→v in hops&lt;/c&gt;
-&lt;c&gt;// dist[v] = -1 if unreachable&lt;/c&gt; dijkstra(wg, src) dijkstra  o((v+e) log v) weighted shortest paths. only for non-negative weights. returns inf for unreachable nodes. &lt;t&gt;auto&lt;/t&gt; &lt;n&gt;wg&lt;/n&gt; = &lt;k&gt;new_wgraph&lt;/k&gt;(&lt;n&gt;n&lt;/n&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;wg&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;4&lt;/n&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;wg&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;wg&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;);
-
-&lt;t&gt;vl&lt;/t&gt; &lt;n&gt;dist&lt;/n&gt; = &lt;k&gt;dijkstra&lt;/k&gt;(&lt;n&gt;wg&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;);
-&lt;c&gt;// dist[1] = 3  (0→2→1)&lt;/c&gt;
-&lt;c&gt;// dist[2] = 1&lt;/c&gt; ⚠ does not work with negative edge weights. use bellman-ford for negative weights. topo_sort(g) topological sort  o(v+e) order nodes so all edges go forward. use for dependency resolution, course prerequisites, build systems. &lt;t&gt;auto&lt;/t&gt; &lt;n&gt;g&lt;/n&gt; = &lt;k&gt;new_graph&lt;/k&gt;(&lt;n&gt;4&lt;/n&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;k&gt;true&lt;/k&gt;);   &lt;c&gt;// directed!&lt;/c&gt;
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;0&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;k&gt;true&lt;/k&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;, &lt;k&gt;true&lt;/k&gt;);
-&lt;k&gt;add_edge&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;, &lt;n&gt;2&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;, &lt;k&gt;true&lt;/k&gt;);
-
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;order&lt;/n&gt; = &lt;k&gt;topo_sort&lt;/k&gt;(&lt;n&gt;g&lt;/n&gt;);
-&lt;c&gt;// [0, 1, 2, 3]  or [0, 2, 1, 3]&lt;/c&gt;
-&lt;c&gt;// len(order) &lt; n  →  cycle exists!&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#4ecdc4">Graph Algorithms</div>
-      <div class="card-tag">graph</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="bfs(g, src)">
-        <div class="cell"><span class="fn">bfs</span>(g, src)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>BFS — shortest hops  O(V+E)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Unweighted shortest paths from src. dist[v] = -1 if unreachable. Use for minimum steps problems.</div>
-          <pre class="usage-code"><t>auto</t> <n>g</n> = <k>new_graph</k>(<n>n</n>);
-<c>// ... add edges ...</c>
-<t>vl</t> <n>dist</n> = <k>bfs</k>(<n>g</n>, <n>0</n>);
-<c>// dist[v] = shortest path 0→v in hops</c>
-<c>// dist[v] = -1 if unreachable</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="dijkstra(wg, src)">
-        <div class="cell"><span class="fn">dijkstra</span>(wg, src)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>Dijkstra  O((V+E) log V)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Weighted shortest paths. Only for NON-NEGATIVE weights. Returns INF for unreachable nodes.</div>
-          <pre class="usage-code"><t>auto</t> <n>wg</n> = <k>new_wgraph</k>(<n>n</n>);
-<k>add_edge</k>(<n>wg</n>, <n>0</n>, <n>1</n>, <n>4</n>);
-<k>add_edge</k>(<n>wg</n>, <n>0</n>, <n>2</n>, <n>1</n>);
-<k>add_edge</k>(<n>wg</n>, <n>2</n>, <n>1</n>, <n>2</n>);
-
-<t>vl</t> <n>dist</n> = <k>dijkstra</k>(<n>wg</n>, <n>0</n>);
-<c>// dist[1] = 3  (0→2→1)</c>
-<c>// dist[2] = 1</c></pre>
-          <div class="usage-note">⚠ ⚠ Does NOT work with negative edge weights. Use Bellman-Ford for negative weights.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="topo_sort(g)">
-        <div class="cell"><span class="fn">topo_sort</span>(g)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>topological sort  O(V+E)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Order nodes so all edges go forward. Use for dependency resolution, course prerequisites, build systems.</div>
-          <pre class="usage-code"><t>auto</t> <n>g</n> = <k>new_graph</k>(<n>4</n>);
-<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>1</n>, <k>true</k>);   <c>// directed!</c>
-<k>add_edge</k>(<n>g</n>, <n>0</n>, <n>2</n>, <k>true</k>);
-<k>add_edge</k>(<n>g</n>, <n>1</n>, <n>3</n>, <k>true</k>);
-<k>add_edge</k>(<n>g</n>, <n>2</n>, <n>3</n>, <k>true</k>);
-
-<t>vi</t> <n>order</n> = <k>topo_sort</k>(<n>g</n>);
-<c>// [0, 1, 2, 3]  or [0, 2, 1, 3]</c>
-<c>// len(order) &lt; n  →  cycle exists!</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="algo" data-text="fast lookups (sorted arrays) bisect_left(a, x) bisect.bisect_left  o(log n) index of first element &gt;= x in a sorted array. use to find insertion point or count elements &lt; x. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;,&lt;n&gt;5&lt;/n&gt;,&lt;n&gt;7&lt;/n&gt;};
-&lt;k&gt;bisect_left&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);    &lt;c&gt;// 1  (first 3)&lt;/c&gt;
-&lt;k&gt;bisect_right&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;3&lt;/n&gt;);   &lt;c&gt;// 3  (after last 3)&lt;/c&gt;
-
-&lt;c&gt;// count elements equal to x:&lt;/c&gt;
-&lt;k&gt;bisect_right&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;,&lt;n&gt;x&lt;/n&gt;) - &lt;k&gt;bisect_left&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;,&lt;n&gt;x&lt;/n&gt;);
-
-&lt;c&gt;// count elements &lt; x:&lt;/c&gt;
-&lt;k&gt;bisect_left&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;, &lt;n&gt;x&lt;/n&gt;); bs_first(lo, hi, cond) binary search on answer find smallest x in [lo,hi] where cond(x) is true. the classic &quot;binary search on answer&quot; pattern. &lt;c&gt;// is it possible to split array into k groups with max sum &lt;= mid?&lt;/c&gt;
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;ans&lt;/n&gt; = &lt;k&gt;bs_first&lt;/k&gt;(&lt;n&gt;0&lt;/n&gt;, &lt;n&gt;1e18&lt;/n&gt;, [&amp;](&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;mid&lt;/n&gt;) {
-    &lt;t&gt;int&lt;/t&gt; &lt;n&gt;groups&lt;/n&gt; = &lt;n&gt;1&lt;/n&gt;, &lt;n&gt;cur&lt;/n&gt; = &lt;n&gt;0&lt;/n&gt;;
-    &lt;k&gt;each&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;, &lt;n&gt;a&lt;/n&gt;) {
-        &lt;k&gt;if&lt;/k&gt; (&lt;n&gt;cur&lt;/n&gt; + &lt;n&gt;x&lt;/n&gt; &gt; &lt;n&gt;mid&lt;/n&gt;) { &lt;n&gt;groups&lt;/n&gt;++; &lt;n&gt;cur&lt;/n&gt; = &lt;n&gt;0&lt;/n&gt;; }
-        &lt;n&gt;cur&lt;/n&gt; += &lt;n&gt;x&lt;/n&gt;;
-    }
-    &lt;k&gt;return&lt;/k&gt; &lt;n&gt;groups&lt;/n&gt; &lt;= &lt;n&gt;k&lt;/n&gt;;
-}); the condition function must be monotone: false...false...true...true (never true then false again).">
-    <div class="card-header">
-      <div class="card-title" style="color:#ffe66d">Fast Lookups (sorted arrays)</div>
-      <div class="card-tag">algo</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="bisect_left(a, x)">
-        <div class="cell"><span class="fn">bisect_left</span>(a, x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>bisect.bisect_left  O(log n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Index of first element &gt;= x in a sorted array. Use to find insertion point or count elements &lt; x.</div>
-          <pre class="usage-code"><t>vi</t> <n>a</n> = {<n>1</n>,<n>3</n>,<n>3</n>,<n>5</n>,<n>7</n>};
-<k>bisect_left</k>(<n>a</n>, <n>3</n>);    <c>// 1  (first 3)</c>
-<k>bisect_right</k>(<n>a</n>, <n>3</n>);   <c>// 3  (after last 3)</c>
-
-<c>// Count elements equal to x:</c>
-<k>bisect_right</k>(<n>a</n>,<n>x</n>) - <k>bisect_left</k>(<n>a</n>,<n>x</n>);
-
-<c>// Count elements &lt; x:</c>
-<k>bisect_left</k>(<n>a</n>, <n>x</n>);</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="bs_first(lo, hi, cond)">
-        <div class="cell"><span class="fn">bs_first</span>(lo, hi, cond)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>binary search on answer</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Find SMALLEST x in [lo,hi] where cond(x) is true. The classic "binary search on answer" pattern.</div>
-          <pre class="usage-code"><c>// Is it possible to split array into k groups with max sum &lt;= mid?</c>
-<t>ll</t> <n>ans</n> = <k>bs_first</k>(<n>0</n>, <n>1e18</n>, [&amp;](<t>ll</t> <n>mid</n>) {
-    <t>int</t> <n>groups</n> = <n>1</n>, <n>cur</n> = <n>0</n>;
-    <k>each</k>(<n>x</n>, <n>a</n>) {
-        <k>if</k> (<n>cur</n> + <n>x</n> &gt; <n>mid</n>) { <n>groups</n>++; <n>cur</n> = <n>0</n>; }
-        <n>cur</n> += <n>x</n>;
-    }
-    <k>return</k> <n>groups</n> &lt;= <n>k</n>;
-});</pre>
-          <div class="usage-note">⚠ The condition function must be monotone: false...false...true...true (never true then false again).</div>
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="algo" data-text="string algorithms kmp_search(text, pat) all occurrences  o(n+m) find all positions where pat appears in text. o(n+m) — far better than o(n*m) naive search. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;pos&lt;/n&gt; = &lt;k&gt;kmp_search&lt;/k&gt;(&lt;s&gt;&quot;abcabcabc&quot;&lt;/s&gt;, &lt;s&gt;&quot;abc&quot;&lt;/s&gt;);
-&lt;c&gt;// pos = [0, 3, 6]  — all start indices&lt;/c&gt;
-
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;pos2&lt;/n&gt; = &lt;k&gt;kmp_search&lt;/k&gt;(&lt;s&gt;&quot;aaaa&quot;&lt;/s&gt;, &lt;s&gt;&quot;aa&quot;&lt;/s&gt;);
-&lt;c&gt;// pos2 = [0, 1, 2]&lt;/c&gt; z_function(s) z-array  o(n) z[i] = length of longest substring starting at i that matches prefix of s. use for pattern matching, period finding. &lt;t&gt;vi&lt;/t&gt; &lt;n&gt;z&lt;/n&gt; = &lt;k&gt;z_function&lt;/k&gt;(&lt;s&gt;&quot;aabxaa&quot;&lt;/s&gt;);
-&lt;c&gt;// z = [6,1,0,0,2,1]&lt;/c&gt;
-&lt;c&gt;// z[4]=2: s[4..5]=&quot;aa&quot; matches prefix s[0..1]=&quot;aa&quot;&lt;/c&gt;
-
-&lt;c&gt;// pattern matching using z:&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;z2&lt;/n&gt; = &lt;k&gt;z_function&lt;/k&gt;(&lt;n&gt;pat&lt;/n&gt; + &lt;s&gt;&quot;#&quot;&lt;/s&gt; + &lt;n&gt;text&lt;/n&gt;);
-&lt;c&gt;// positions where z2[i] == len(pat) are matches&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#ffe66d">String Algorithms</div>
-      <div class="card-tag">algo</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="kmp_search(text, pat)">
-        <div class="cell"><span class="fn">kmp_search</span>(text, pat)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>all occurrences  O(n+m)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Find ALL positions where pat appears in text. O(n+m) — far better than O(n*m) naive search.</div>
-          <pre class="usage-code"><t>vi</t> <n>pos</n> = <k>kmp_search</k>(<s>"abcabcabc"</s>, <s>"abc"</s>);
-<c>// pos = [0, 3, 6]  — all start indices</c>
-
-<t>vi</t> <n>pos2</n> = <k>kmp_search</k>(<s>"aaaa"</s>, <s>"aa"</s>);
-<c>// pos2 = [0, 1, 2]</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="z_function(s)">
-        <div class="cell"><span class="fn">z_function</span>(s)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>Z-array  O(n)</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> z[i] = length of longest substring starting at i that matches prefix of s. Use for pattern matching, period finding.</div>
-          <pre class="usage-code"><t>vi</t> <n>z</n> = <k>z_function</k>(<s>"aabxaa"</s>);
-<c>// z = [6,1,0,0,2,1]</c>
-<c>// z[4]=2: s[4..5]="aa" matches prefix s[0..1]="aa"</c>
-
-<c>// Pattern matching using Z:</c>
-<t>vi</t> <n>z2</n> = <k>z_function</k>(<n>pat</n> + <s>"#"</s> + <n>text</n>);
-<c>// positions where z2[i] == len(pat) are matches</c></pre>
-          
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="macro" data-text="shorthand macros all(x) / rall(x) (x).begin(),(x).end() pass entire container to stl algorithms. all() = forward, rall() = reverse order. &lt;k&gt;sort&lt;/k&gt;(&lt;k&gt;all&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;));                     &lt;c&gt;// sort ascending&lt;/c&gt;
-&lt;k&gt;sort&lt;/k&gt;(&lt;k&gt;all&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;), &lt;k&gt;greater&lt;/k&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt;());  &lt;c&gt;// sort descending&lt;/c&gt;
-&lt;k&gt;reverse&lt;/k&gt;(&lt;k&gt;all&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;));                  &lt;c&gt;// reverse in place&lt;/c&gt;
-&lt;k&gt;sort&lt;/k&gt;(&lt;k&gt;rall&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;));                    &lt;c&gt;// sort descending (alt)&lt;/c&gt; yes / no print(&quot;yes&quot;) / print(&quot;no&quot;) print yes or no and newline. many cf problems require exactly this output format. &lt;k&gt;if&lt;/k&gt; (&lt;n&gt;possible&lt;/n&gt;) &lt;k&gt;yes&lt;/k&gt;;
-&lt;k&gt;else&lt;/k&gt; &lt;k&gt;no&lt;/k&gt;;
-
-&lt;c&gt;// ternary:&lt;/c&gt;
-&lt;n&gt;condition&lt;/n&gt; ? &lt;k&gt;yes&lt;/k&gt; : &lt;k&gt;no&lt;/k&gt;; inf / inf32 / mod float(&quot;inf&quot;) / 1e9+7 use inf for ll distance initialisation, inf32 for int, mod for modular arithmetic. &lt;t&gt;vl&lt;/t&gt; &lt;n&gt;dist&lt;/n&gt;(&lt;n&gt;n&lt;/n&gt;, &lt;n&gt;inf&lt;/n&gt;);    &lt;c&gt;// unreachable initialisation&lt;/c&gt;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;dp&lt;/n&gt;(&lt;n&gt;n&lt;/n&gt;, &lt;n&gt;inf32&lt;/n&gt;);   &lt;c&gt;// for int dp&lt;/c&gt;
-&lt;t&gt;dp&lt;/t&gt;[&lt;n&gt;0&lt;/n&gt;] = &lt;n&gt;0&lt;/n&gt;;
-
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;ans&lt;/n&gt; = (&lt;n&gt;a&lt;/n&gt; % &lt;n&gt;mod&lt;/n&gt; + &lt;n&gt;b&lt;/n&gt; % &lt;n&gt;mod&lt;/n&gt;) % &lt;n&gt;mod&lt;/n&gt;; fastio speed up cin/cout put at very start of main(). makes cin/cout as fast as scanf/printf. required in almost every cf solution. &lt;t&gt;int&lt;/t&gt; &lt;k&gt;main&lt;/k&gt;() {
-    &lt;k&gt;fastio&lt;/k&gt;            &lt;c&gt;// always first line&lt;/c&gt;
-    &lt;t&gt;int&lt;/t&gt; &lt;n&gt;t&lt;/n&gt;; cin &gt;&gt; &lt;n&gt;t&lt;/n&gt;;
-    &lt;k&gt;while&lt;/k&gt;(&lt;n&gt;t&lt;/n&gt;--) &lt;k&gt;solve&lt;/k&gt;();
-} ⚠ after fastio, never use printf/scanf/puts/getchar — mixing them causes ub. stick to cin/cout only. dbg(x) / dbgv(a) print(f&quot;{x=}&quot;) debug print that is completely silent on codeforces. only prints when compiled with -dlocal. &lt;c&gt;// locally: g++ -dlocal solution.cpp&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;x&lt;/n&gt; = &lt;n&gt;42&lt;/n&gt;;
-&lt;t&gt;vi&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = {&lt;n&gt;1&lt;/n&gt;,&lt;n&gt;2&lt;/n&gt;,&lt;n&gt;3&lt;/n&gt;};
-&lt;k&gt;dbg&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;);     &lt;c&gt;// x = 42&lt;/c&gt;
-&lt;k&gt;dbgv&lt;/k&gt;(&lt;n&gt;a&lt;/n&gt;);    &lt;c&gt;// a = [1, 2, 3]&lt;/c&gt;
-&lt;k&gt;dbg2&lt;/k&gt;(&lt;n&gt;x&lt;/n&gt;,&lt;n&gt;n&lt;/n&gt;); &lt;c&gt;// x=42, n=5&lt;/c&gt;
-
-&lt;c&gt;// on codeforces: all above lines do nothing ✅&lt;/c&gt; safe to leave debug prints in your submission — they vanish automatically when local is not defined.">
-    <div class="card-header">
-      <div class="card-title" style="color:#a29bfe">Shorthand Macros</div>
-      <div class="card-tag">macro</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="all(x) / rall(x)">
-        <div class="cell"><span class="fn">all</span>(x) / <span class="fn">rall</span>(x)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>(x).begin(),(x).end()</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Pass entire container to STL algorithms. all() = forward, rall() = reverse order.</div>
-          <pre class="usage-code"><k>sort</k>(<k>all</k>(<n>a</n>));                     <c>// sort ascending</c>
-<k>sort</k>(<k>all</k>(<n>a</n>), <k>greater</k>&lt;<t>int</t>&gt;());  <c>// sort descending</c>
-<k>reverse</k>(<k>all</k>(<n>a</n>));                  <c>// reverse in place</c>
-<k>sort</k>(<k>rall</k>(<n>a</n>));                    <c>// sort descending (alt)</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="yes / no">
-        <div class="cell">yes / no<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>print("YES") / print("NO")</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Print YES or NO and newline. Many CF problems require exactly this output format.</div>
-          <pre class="usage-code"><k>if</k> (<n>possible</n>) <k>yes</k>;
-<k>else</k> <k>no</k>;
-
-<c>// Ternary:</c>
-<n>condition</n> ? <k>yes</k> : <k>no</k>;</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="INF / INF32 / MOD">
-        <div class="cell">INF / INF32 / MOD<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>float("inf") / 1e9+7</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Use INF for ll distance initialisation, INF32 for int, MOD for modular arithmetic.</div>
-          <pre class="usage-code"><t>vl</t> <n>dist</n>(<n>n</n>, <n>INF</n>);    <c>// unreachable initialisation</c>
-<t>vi</t> <n>dp</n>(<n>n</n>, <n>INF32</n>);   <c>// for int DP</c>
-<t>dp</t>[<n>0</n>] = <n>0</n>;
-
-<t>ll</t> <n>ans</n> = (<n>a</n> % <n>MOD</n> + <n>b</n> % <n>MOD</n>) % <n>MOD</n>;</pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="FASTIO">
-        <div class="cell">FASTIO<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>speed up cin/cout</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Put at very start of main(). Makes cin/cout as fast as scanf/printf. Required in almost every CF solution.</div>
-          <pre class="usage-code"><t>int</t> <k>main</k>() {
-    <k>FASTIO</k>            <c>// always first line</c>
-    <t>int</t> <n>t</n>; cin &gt;&gt; <n>t</n>;
-    <k>while</k>(<n>t</n>--) <k>solve</k>();
-}</pre>
-          <div class="usage-note">⚠ ⚠ After FASTIO, never use printf/scanf/puts/getchar — mixing them causes UB. Stick to cin/cout only.</div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="dbg(x) / dbgv(a)">
-        <div class="cell"><span class="fn">dbg</span>(x) / <span class="fn">dbgv</span>(a)<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>print(f"{x=}")</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Debug print that is COMPLETELY SILENT on Codeforces. Only prints when compiled with -DLOCAL.</div>
-          <pre class="usage-code"><c>// Locally: g++ -DLOCAL solution.cpp</c>
-<t>int</t> <n>x</n> = <n>42</n>;
-<t>vi</t> <n>a</n> = {<n>1</n>,<n>2</n>,<n>3</n>};
-<k>dbg</k>(<n>x</n>);     <c>// x = 42</c>
-<k>dbgv</k>(<n>a</n>);    <c>// a = [1, 2, 3]</c>
-<k>dbg2</k>(<n>x</n>,<n>n</n>); <c>// x=42, n=5</c>
-
-<c>// On Codeforces: all above lines do nothing ✅</c></pre>
-          <div class="usage-note">⚠ Safe to leave debug prints in your submission — they vanish automatically when LOCAL is not defined.</div>
-        </div>
-      </div>
-    </div></div><div class="card" data-cat="macro" data-text="type aliases ll / ld / ull long long / long double / unsigned always use ll instead of int for competitive programming — avoids overflow on large inputs. &lt;c&gt;// common mistake — overflow with int:&lt;/c&gt;
-&lt;t&gt;int&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = &lt;n&gt;1e9&lt;/n&gt;, &lt;n&gt;b&lt;/n&gt; = &lt;n&gt;1e9&lt;/n&gt;;
-&lt;n&gt;a&lt;/n&gt; * &lt;n&gt;b&lt;/n&gt;;   &lt;c&gt;// overflow — int max is ~2.1e9&lt;/c&gt;
-
-&lt;c&gt;// correct:&lt;/c&gt;
-&lt;t&gt;ll&lt;/t&gt; &lt;n&gt;a&lt;/n&gt; = &lt;n&gt;1e9&lt;/n&gt;, &lt;n&gt;b&lt;/n&gt; = &lt;n&gt;1e9&lt;/n&gt;;
-&lt;n&gt;a&lt;/n&gt; * &lt;n&gt;b&lt;/n&gt;;   &lt;c&gt;// 1e18 — fits in ll&lt;/c&gt; vec&lt;t&gt; / umap&lt;k,v&gt; / uset&lt;t&gt; list / dict / set generic container aliases. vec&lt;t&gt; = vector&lt;t&gt;, umap = unordered_map, uset = unordered_set. &lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;&gt;  &lt;n&gt;a&lt;/n&gt;;          &lt;c&gt;// vector&lt;int&gt;&lt;/c&gt;
-&lt;t&gt;vec&lt;/t&gt;&lt;&lt;t&gt;string&lt;/t&gt;&gt; &lt;n&gt;words&lt;/n&gt;;     &lt;c&gt;// vector&lt;string&gt;&lt;/c&gt;
-&lt;t&gt;umap&lt;/t&gt;&lt;&lt;t&gt;int&lt;/t&gt;,&lt;t&gt;int&lt;/t&gt;&gt; &lt;n&gt;freq&lt;/n&gt;;   &lt;c&gt;// hash map&lt;/c&gt;
-&lt;t&gt;uset&lt;/t&gt;&lt;&lt;t&gt;ll&lt;/t&gt;&gt;  &lt;n&gt;seen&lt;/n&gt;;        &lt;c&gt;// hash set&lt;/c&gt;
-&lt;t&gt;pqmin&lt;/t&gt;&lt;&lt;t&gt;ll&lt;/t&gt;&gt; &lt;n&gt;minheap&lt;/n&gt;;     &lt;c&gt;// min-heap&lt;/c&gt;">
-    <div class="card-header">
-      <div class="card-title" style="color:#a29bfe">Type Aliases</div>
-      <div class="card-tag">macro</div>
-    </div>
-    
-    <div class="row">
-      <div class="row-main" data-cpp="ll / ld / ull">
-        <div class="cell"><span class="kw">ll</span> / ld / ull<span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>long long / long double / unsigned</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Always use ll instead of int for competitive programming — avoids overflow on large inputs.</div>
-          <pre class="usage-code"><c>// Common mistake — overflow with int:</c>
-<t>int</t> <n>a</n> = <n>1e9</n>, <n>b</n> = <n>1e9</n>;
-<n>a</n> * <n>b</n>;   <c>// OVERFLOW — int max is ~2.1e9</c>
-
-<c>// Correct:</c>
-<t>ll</t> <n>a</n> = <n>1e9</n>, <n>b</n> = <n>1e9</n>;
-<n>a</n> * <n>b</n>;   <c>// 1e18 — fits in ll</c></pre>
-          
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-main" data-cpp="vec&lt;T&gt; / umap&lt;K,V&gt; / uset&lt;T&gt;">
-        <div class="cell"><span class="tp">vec</span><span class="kw">&lt;</span>T<span class="kw">&gt;</span> / <span class="tp">umap</span><span class="kw">&lt;</span>K,V<span class="kw">&gt;</span> / <span class="tp">uset</span><span class="kw">&lt;</span>T<span class="kw">&gt;</span><span class="copy-hint">copy</span></div>
-        <div class="cell">
-          <span>list / dict / set</span>
-          <span class="expand-arrow">▼</span>
-        </div>
-      </div>
-      
-      <div class="usage-panel">
-        <div class="usage-inner">
-          <div class="usage-when"><strong>When/How:</strong> Generic container aliases. vec&lt;T&gt; = vector&lt;T&gt;, umap = unordered_map, uset = unordered_set.</div>
-          <pre class="usage-code"><t>vec</t>&lt;<t>int</t>&gt;  <n>a</n>;          <c>// vector<int></int></c>
-<t>vec</t>&lt;<t>string</t>&gt; <n>words</n>;     <c>// vector<string></string></c>
-<t>umap</t>&lt;<t>int</t>,<t>int</t>&gt; <n>freq</n>;   <c>// hash map</c>
-<t>uset</t>&lt;<t>ll</t>&gt;  <n>seen</n>;        <c>// hash set</c>
-<t>pqmin</t>&lt;<t>ll</t>&gt; <n>minheap</n>;     <c>// min-heap</c></pre>
-          
-        </div>
-      </div>
-    </div></div></main>
+<main id="grid"></main>
 <div id="no-results">No results found. Try a different search term.</div>
-<div id="toast" class="">Copied!</div>
+<div id="toast">Copied!</div>
 
 <script>
 // ── DATA  [cpp, python, when_to_use, code_example, optional_note] ────────────
@@ -3297,6 +983,237 @@ const grid   = document.getElementById('grid');
 const noRes  = document.getElementById('no-results');
 const allCards = [];
 
+// ── Copy full template to clipboard ──────────────────────────────────────────
+const TEMPLATE_CODE = `/**
+ * ╔══════════════════════════════════════════════════════════════╗
+ * ║      CODEFORCES C++ TEMPLATE  —  PYTHON-STYLE POWER         ║
+ * ╚══════════════════════════════════════════════════════════════╝
+ * By LATALIA
+ */
+#include <bits/stdc++.h>
+using namespace std;
+
+// ── Types ──────────────────────────────────────────────────────
+using ll=long long; using ld=long double; using ull=unsigned long long;
+using ii=pair<int,int>; using ll2=pair<ll,ll>;
+using vi=vector<int>; using vl=vector<ll>; using vvi=vector<vi>; using vvl=vector<vl>;
+template<class T>         using vec   = vector<T>;
+template<class T>         using uset  = unordered_set<T>;
+template<class K,class V> using umap  = unordered_map<K,V>;
+template<class T>         using pq    = priority_queue<T>;
+template<class T>         using pqmin = priority_queue<T,vec<T>,greater<T>>;
+template<class T>         using stk   = stack<T>;
+template<class T>         using que   = queue<T>;
+template<class T>         using deq   = deque<T>;
+
+// ── Constants ──────────────────────────────────────────────────
+const ll INF=2e18, MOD=1e9+7, MOD2=998244353;
+const int INF32=2e9;
+const ld PI=acos((ld)-1);
+const int dx4[]={0,0,1,-1}, dy4[]={1,-1,0,0};
+const int dx8[]={0,0,1,-1,1,1,-1,-1}, dy8[]={1,-1,0,0,1,-1,1,-1};
+
+// ── Fast I/O ───────────────────────────────────────────────────
+#define FASTIO ios_base::sync_with_stdio(false);cin.tie(NULL);
+
+// ── Loops ──────────────────────────────────────────────────────
+#define rep(i,n)         for(ll i=0;i<(ll)(n);i++)
+#define repe(i,s,e)      for(ll i=(ll)(s);i<(ll)(e);i++)
+#define repd(i,n)        for(ll i=(ll)(n)-1;i>=0;i--)
+#define repde(i,s,e)     for(ll i=(ll)(e)-1;i>=(ll)(s);i--)
+#define repstep(i,s,e,k) for(ll i=(ll)(s);i<(ll)(e);i+=(k))
+#define each(x,a)        for(auto&x:(a))
+#define each2(k,v,m)     for(auto&_p:(m))for(bool _b=true;_b;_b=false)for(auto&k=_p.first;_b;_b=false)for(auto&v=_p.second;_b;_b=false)
+
+template<class T,class F> void enumerate(const vec<T>&a,F f){for(int i=0;i<(int)a.size();i++)f(i,a[i]);}
+template<class A,class B,class F> void zip(const vec<A>&a,const vec<B>&b,F f){int n=min(a.size(),b.size());for(int i=0;i<n;i++)f(a[i],b[i]);}
+
+// ── List / Vector ──────────────────────────────────────────────
+template<class T> ll   len(const T&a){return(ll)a.size();}
+template<class T> void append(vec<T>&a,T x){a.push_back(x);}
+template<class T> void extend(vec<T>&a,const vec<T>&b){a.insert(a.end(),b.begin(),b.end());}
+template<class T> void insert(vec<T>&a,int i,T x){a.insert(a.begin()+i,x);}
+template<class T> T    pop(vec<T>&a,int i=-1){if(i==-1){T v=a.back();a.pop_back();return v;}T v=a[i];a.erase(a.begin()+i);return v;}
+template<class T> bool remove_val(vec<T>&a,T x){auto it=find(a.begin(),a.end(),x);if(it==a.end())return false;a.erase(it);return true;}
+template<class T> ll   count(const vec<T>&a,T x){return(ll)std::count(a.begin(),a.end(),x);}
+template<class T> int  index(const vec<T>&a,T x){auto it=find(a.begin(),a.end(),x);return it==a.end()?-1:(int)(it-a.begin());}
+template<class T,class V> bool contains(const vec<T>&a,V x){return find(a.begin(),a.end(),x)!=a.end();}
+template<class T,class V> bool contains(const set<T>&a,V x){return a.count(x);}
+template<class T,class V> bool contains(const uset<T>&a,V x){return a.count(x);}
+template<class K,class V,class Q> bool contains(const map<K,V>&a,Q x){return a.count(x);}
+template<class K,class V,class Q> bool contains(const umap<K,V>&a,Q x){return a.count(x);}
+template<class T> T   sum(const vec<T>&a){return accumulate(a.begin(),a.end(),T(0));}
+template<class T> T   product(const vec<T>&a){return accumulate(a.begin(),a.end(),T(1),multiplies<T>());}
+template<class T> T   vmin(const vec<T>&a){return*min_element(a.begin(),a.end());}
+template<class T> T   vmax(const vec<T>&a){return*max_element(a.begin(),a.end());}
+template<class T> int argmin(const vec<T>&a){return(int)(min_element(a.begin(),a.end())-a.begin());}
+template<class T> int argmax(const vec<T>&a){return(int)(max_element(a.begin(),a.end())-a.begin());}
+template<class T>         vec<T> sorted(vec<T>a){sort(a.begin(),a.end());return a;}
+template<class T,class C> vec<T> sorted(vec<T>a,C c){sort(a.begin(),a.end(),c);return a;}
+template<class T>         vec<T> reversed(vec<T>a){reverse(a.begin(),a.end());return a;}
+template<class T>         vec<T> slice(const vec<T>&a,int s,int e=-1){if(e<0)e=(int)a.size()+e+1;return vec<T>(a.begin()+s,a.begin()+e);}
+template<class T>         vec<T> flatten(const vec<vec<T>>&vv){size_t tot=0;for(auto&v:vv)tot+=v.size();vec<T>r;r.reserve(tot);for(auto&v:vv)r.insert(r.end(),v.begin(),v.end());return r;}
+template<class T,class F> auto   transform_to(const vec<T>&a,F f)->vec<decltype(f(a[0]))>{using R=decltype(f(a[0]));vec<R>r(a.size());transform(a.begin(),a.end(),r.begin(),f);return r;}
+template<class T,class F> vec<T> filter_to(const vec<T>&a,F f){vec<T>r;copy_if(a.begin(),a.end(),back_inserter(r),f);return r;}
+template<class T>         vec<T> unique_vals(vec<T>a){sort(a.begin(),a.end());a.erase(unique(a.begin(),a.end()),a.end());return a;}
+vi zeros(int n){return vi(n,0);} vi ones(int n){return vi(n,1);}
+vl lzeros(int n){return vl(n,0LL);}
+vi iota_vec(int n){vi a(n);iota(a.begin(),a.end(),0);return a;}
+template<class T> void rotate_left (vec<T>&a,int k){k%=(int)a.size();rotate(a.begin(),a.begin()+k,a.end());}
+template<class T> void rotate_right(vec<T>&a,int k){k%=(int)a.size();rotate(a.begin(),a.begin()+(int)a.size()-k,a.end());}
+template<class T,class F> bool all (const vec<T>&a,F f){return all_of (a.begin(),a.end(),f);}
+template<class T,class F> bool any (const vec<T>&a,F f){return any_of (a.begin(),a.end(),f);}
+template<class T,class F> bool none(const vec<T>&a,F f){return none_of(a.begin(),a.end(),f);}
+template<class T> bool contains_sorted(const vec<T>&a,T x){auto it=lower_bound(a.begin(),a.end(),x);return it!=a.end()&&*it==x;}
+template<class T> int  index_sorted(const vec<T>&a,T x){auto it=lower_bound(a.begin(),a.end(),x);return(it!=a.end()&&*it==x)?(int)(it-a.begin()):-1;}
+void radix_sort(vi&a){if(a.empty())return;int mx=*max_element(a.begin(),a.end());vi buf(a.size());for(int exp=1;(ll)mx/exp>0;exp*=16){int cnt[16]={};for(int x:a)cnt[(x/exp)&15]++;for(int i=1;i<16;i++)cnt[i]+=cnt[i-1];for(int i=(int)a.size()-1;i>=0;i--)buf[--cnt[(a[i]/exp)&15]]=a[i];a=buf;}}
+void radix_sort(vl&a){if(a.empty())return;ll mx=*max_element(a.begin(),a.end());vl buf(a.size());for(ll exp=1;mx/exp>0;exp*=16){int cnt[16]={};for(ll x:a)cnt[(x/exp)&15]++;for(int i=1;i<16;i++)cnt[i]+=cnt[i-1];for(int i=(int)a.size()-1;i>=0;i--)buf[--cnt[(a[i]/exp)&15]]=a[i];a=buf;}}
+
+// ── Dict / Map ─────────────────────────────────────────────────
+template<class K,class V> V get(const map<K,V>&d,const K&k,V def=V()){auto it=d.find(k);return it==d.end()?def:it->second;}
+template<class K,class V> V get(const umap<K,V>&d,const K&k,V def=V()){auto it=d.find(k);return it==d.end()?def:it->second;}
+template<class K,class V> vec<K> keys(const map<K,V>&d){vec<K>r;for(auto&p:d)r.push_back(p.first);return r;}
+template<class K,class V> vec<V> values(const map<K,V>&d){vec<V>r;for(auto&p:d)r.push_back(p.second);return r;}
+template<class T> map<T,int>  counter (const vec<T>&a){map<T,int>c;for(auto&x:a)c[x]++;return c;}
+template<class T> umap<T,int> ucounter(const vec<T>&a){umap<T,int>c;for(auto&x:a)c[x]++;return c;}
+template<class T> pair<T,int> most_common(const vec<T>&a){auto c=ucounter(a);return*max_element(c.begin(),c.end(),[](const pair<T,int>&x,const pair<T,int>&y){return x.second<y.second;});}
+template<class T> set<T> union_set(const set<T>&a,const set<T>&b){set<T>r=a;r.insert(b.begin(),b.end());return r;}
+template<class T> set<T> intersection(const set<T>&a,const set<T>&b){set<T>r;set_intersection(a.begin(),a.end(),b.begin(),b.end(),inserter(r,r.end()));return r;}
+template<class T> set<T> difference(const set<T>&a,const set<T>&b){set<T>r;set_difference(a.begin(),a.end(),b.begin(),b.end(),inserter(r,r.end()));return r;}
+template<class T> set<T> to_set(const vec<T>&a){return set<T>(a.begin(),a.end());}
+template<class T> vec<T> to_vec(const set<T>&s){return vec<T>(s.begin(),s.end());}
+
+// ── Strings ────────────────────────────────────────────────────
+vec<string> split(const string&s,char d=' '){vec<string>r;stringstream ss(s);string t;while(getline(ss,t,d))if(!t.empty())r.push_back(t);return r;}
+string join(const vec<string>&a,const string&s=" "){string r;for(int i=0;i<(int)a.size();i++){if(i)r+=s;r+=a[i];}return r;}
+template<class T> string join(const vec<T>&a,const string&s=" "){string r;for(int i=0;i<(int)a.size();i++){if(i)r+=s;r+=to_string(a[i]);}return r;}
+string strip(string s){while(!s.empty()&&isspace((unsigned char)s.front()))s.erase(s.begin());while(!s.empty()&&isspace((unsigned char)s.back()))s.pop_back();return s;}
+string upper(string s){for(char&c:s)c=toupper(c);return s;}
+string lower(string s){for(char&c:s)c=tolower(c);return s;}
+bool startswith(const string&s,const string&p){return s.rfind(p,0)==0;}
+bool endswith(const string&s,const string&p){return s.size()>=p.size()&&s.compare(s.size()-p.size(),p.size(),p)==0;}
+string replace_all(string s,const string&f,const string&t){size_t p=0;while((p=s.find(f,p))!=string::npos){s.replace(p,f.size(),t);p+=t.size();}return s;}
+int str_find(const string&s,const string&p){size_t p2=s.find(p);return p2==string::npos?-1:(int)p2;}
+string repeat(const string&s,int n){string r;while(n--)r+=s;return r;}
+string bin_str(ll n){if(!n)return"0b0";string s="0b";int b=63-__builtin_clzll(n);for(int i=b;i>=0;i--)s+=(char)('0'+((n>>i)&1));return s;}
+bool is_digit(const string&s){return!s.empty()&&all_of(s.begin(),s.end(),::isdigit);}
+bool is_alpha(const string&s){return!s.empty()&&all_of(s.begin(),s.end(),::isalpha);}
+
+// ── Bisect ─────────────────────────────────────────────────────
+template<class T> int bisect_left (const vec<T>&a,T x){return(int)(lower_bound(a.begin(),a.end(),x)-a.begin());}
+template<class T> int bisect_right(const vec<T>&a,T x){return(int)(upper_bound(a.begin(),a.end(),x)-a.begin());}
+template<class T> void insort(vec<T>&a,T x){a.insert(a.begin()+bisect_left(a,x),x);}
+template<class F> ll bs_first(ll lo,ll hi,F c){while(lo<hi){ll m=(lo+hi)/2;if(c(m))hi=m;else lo=m+1;}return c(lo)?lo:-1;}
+template<class F> ll bs_last (ll lo,ll hi,F c){while(lo<hi){ll m=(lo+hi+1)/2;if(c(m))lo=m;else hi=m-1;}return c(lo)?lo:-1;}
+
+// ── Math ───────────────────────────────────────────────────────
+ll pw(ll a,ll b){ll r=1;while(b>0){if(b&1)r*=a;a*=a;b>>=1;}return r;}
+ll mpow(ll a,ll b,ll mod=MOD){ll r=1;a%=mod;while(b>0){if(b&1)r=r*a%mod;a=a*a%mod;b>>=1;}return r;}
+ll modinv(ll a,ll mod=MOD){return mpow(a,mod-2,mod);}
+ll gcd(ll a,ll b){while(b){a%=b;swap(a,b);}return a;}
+ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
+pair<ll,ll> divmod(ll a,ll b){return{a/b,a%b};}
+template<class T> int  sign(T x){return(x>0)-(x<0);}
+template<class T> T    clamp(T x,T lo,T hi){return max(lo,min(hi,x));}
+template<class T> bool chmin(T&a,T b){if(b<a){a=b;return true;}return false;}
+template<class T> bool chmax(T&a,T b){if(b>a){a=b;return true;}return false;}
+bool is_prime(ll n){if(n<2)return false;if(n==2||n==3)return true;if(n%2==0||n%3==0)return false;for(ll i=5;i*i<=n;i+=6)if(n%i==0||n%(i+2)==0)return false;return true;}
+vi sieve(int n){vector<bool>p(n+1,true);p[0]=p[1]=false;for(int i=2;i*i<=n;i++)if(p[i])for(int j=i*i;j<=n;j+=i)p[j]=false;vi r;for(int i=2;i<=n;i++)if(p[i])r.push_back(i);return r;}
+map<ll,int> prime_factors(ll n){map<ll,int>f;for(ll i=2;i*i<=n;i++)while(n%i==0){f[i]++;n/=i;}if(n>1)f[n]++;return f;}
+vi divisors(int n){vi d;for(int i=1;(ll)i*i<=n;i++)if(n%i==0){d.push_back(i);if(i!=n/i)d.push_back(n/i);}sort(d.begin(),d.end());return d;}
+int popcount(ll n){return __builtin_popcountll(n);}
+int bit_length(ll n){return n==0?0:64-__builtin_clzll(n);}
+bool is_pow2(ll n){return n>0&&!(n&(n-1));}
+namespace Comb{const int MX=2000005;vl fact(MX),inv_fact(MX);bool ok=false;void init(ll mod=MOD){ok=true;fact[0]=1;for(int i=1;i<MX;i++)fact[i]=fact[i-1]*i%mod;inv_fact[MX-1]=mpow(fact[MX-1],mod-2,mod);for(int i=MX-2;i>=0;i--)inv_fact[i]=inv_fact[i+1]*(i+1)%mod;}ll C(ll n,ll r,ll mod=MOD){if(!ok)init(mod);if(r<0||r>n)return 0;return fact[n]%mod*inv_fact[r]%mod*inv_fact[n-r]%mod;}ll P(ll n,ll r,ll mod=MOD){if(!ok)init(mod);if(r<0||r>n)return 0;return fact[n]%mod*inv_fact[n-r]%mod;}}
+void init_comb(){Comb::init();}
+vl prefix_sum(const vl&a){vl ps(a.size()+1,0);for(int i=0;i<(int)a.size();i++)ps[i+1]=ps[i]+a[i];return ps;}
+ll range_sum(const vl&ps,int l,int r){return ps[r+1]-ps[l];}
+vec<vl> prefix_sum2d(const vec<vl>&a){int n=a.size(),m=a[0].size();vec<vl>ps(n+1,vl(m+1,0));for(int i=0;i<n;i++)for(int j=0;j<m;j++)ps[i+1][j+1]=a[i][j]+ps[i][j+1]+ps[i+1][j]-ps[i][j];return ps;}
+ll range_sum2d(const vec<vl>&ps,int r1,int c1,int r2,int c2){return ps[r2+1][c2+1]-ps[r1][c2+1]-ps[r2+1][c1]+ps[r1][c1];}
+template<class T> struct Compress{vec<T>vals;Compress(vec<T>a):vals(unique_vals(a)){}int encode(T x){return(int)(lower_bound(vals.begin(),vals.end(),x)-vals.begin());}T decode(int i){return vals[i];}int size(){return(int)vals.size();}};
+
+// ── DSU ────────────────────────────────────────────────────────
+struct DSU{vi par,rnk,sz;DSU(int n):par(n),rnk(n,0),sz(n,1){iota(par.begin(),par.end(),0);}int find(int x){int r=x;while(par[r]!=r)r=par[r];while(par[x]!=r){int nx=par[x];par[x]=r;x=nx;}return r;}bool unite(int x,int y){x=find(x);y=find(y);if(x==y)return false;if(rnk[x]<rnk[y])swap(x,y);par[y]=x;sz[x]+=sz[y];if(rnk[x]==rnk[y])rnk[x]++;return true;}bool same(int x,int y){return find(x)==find(y);}int size(int x){return sz[find(x)];}int components(){int c=0;for(int i=0;i<(int)par.size();i++)if(find(i)==i)c++;return c;}};
+
+// ── Fenwick Tree ───────────────────────────────────────────────
+struct Fenwick{int n;vl t;Fenwick(int n):n(n),t(n+1,0){}void update(int i,ll d){for(i++;i<=n;i+=i&-i)t[i]+=d;}ll prefix(int i){ll s=0;for(i++;i>0;i-=i&-i)s+=t[i];return s;}ll query(int l,int r){return prefix(r)-(l?prefix(l-1):0);}};
+
+// ── Segment Tree ───────────────────────────────────────────────
+struct SegTree{int n;vl t;SegTree(int n):n(n),t(4*n,0){}SegTree(const vl&a):n(a.size()),t(4*a.size(),0){build(a,1,0,n-1);}void build(const vl&a,int nd,int s,int e){if(s==e){t[nd]=a[s];return;}int m=(s+e)/2;build(a,2*nd,s,m);build(a,2*nd+1,m+1,e);t[nd]=t[2*nd]+t[2*nd+1];}void upd(int i,ll v,int nd,int s,int e){if(s==e){t[nd]=v;return;}int m=(s+e)/2;if(i<=m)upd(i,v,2*nd,s,m);else upd(i,v,2*nd+1,m+1,e);t[nd]=t[2*nd]+t[2*nd+1];}ll qry(int l,int r,int nd,int s,int e){if(r<s||e<l)return 0;if(l<=s&&e<=r)return t[nd];int m=(s+e)/2;return qry(l,r,2*nd,s,m)+qry(l,r,2*nd+1,m+1,e);}void update(int i,ll v){upd(i,v,1,0,n-1);}ll query(int l,int r){return qry(l,r,1,0,n-1);}};
+
+// ── Sparse Table ───────────────────────────────────────────────
+struct SparseTable{int n;vi lg;vvl tb;SparseTable(const vl&a):n(a.size()),lg(a.size()+1){lg[1]=0;for(int i=2;i<=n;i++)lg[i]=lg[i/2]+1;int k=lg[n]+1;tb.assign(k,vl(n));tb[0]=a;for(int j=1;j<k;j++)for(int i=0;i+(1<<j)<=n;i++)tb[j][i]=min(tb[j-1][i],tb[j-1][i+(1<<(j-1))]);}ll qmin(int l,int r){int k=lg[r-l+1];return min(tb[k][l],tb[k][r-(1<<k)+1]);}ll qmax(int l,int r){int k=lg[r-l+1];return max(tb[k][l],tb[k][r-(1<<k)+1]);}};
+
+// ── Graph ──────────────────────────────────────────────────────
+using Graph=vec<vi>; using WGraph=vec<vec<pair<int,ll>>>;
+Graph  new_graph (int n){return Graph(n);}
+WGraph new_wgraph(int n){return WGraph(n);}
+void add_edge(Graph&g,int u,int v,bool d=false){g[u].push_back(v);if(!d)g[v].push_back(u);}
+void add_edge(WGraph&g,int u,int v,ll w,bool d=false){g[u].push_back({v,w});if(!d)g[v].push_back({u,w});}
+vl bfs(const Graph&g,int src){int n=g.size();vl dist(n,-1);que<int>q;dist[src]=0;q.push(src);while(!q.empty()){int u=q.front();q.pop();for(int v:g[u])if(dist[v]==-1){dist[v]=dist[u]+1;q.push(v);}}return dist;}
+vl dijkstra(const WGraph&g,int src){int n=g.size();vl dist(n,INF);pqmin<pair<ll,int>>pq;dist[src]=0;pq.push({0,src});while(!pq.empty()){ll d=pq.top().first;int u=pq.top().second;pq.pop();if(d>dist[u])continue;for(int i=0;i<(int)g[u].size();i++){int v=g[u][i].first;ll w=g[u][i].second;if(dist[u]+w<dist[v]){dist[v]=dist[u]+w;pq.push({dist[v],v});}}}return dist;}
+vi dfs_order(const Graph&g,int src){int n=g.size();vi vis(n,0),order;stk<int>st;st.push(src);while(!st.empty()){int u=st.top();st.pop();if(vis[u])continue;vis[u]=1;order.push_back(u);for(int v:g[u])if(!vis[v])st.push(v);}return order;}
+vi topo_sort(const Graph&g){int n=g.size();vi indeg(n,0);for(int u=0;u<n;u++)for(int v:g[u])indeg[v]++;que<int>q;for(int i=0;i<n;i++)if(!indeg[i])q.push(i);vi order;while(!q.empty()){int u=q.front();q.pop();order.push_back(u);for(int v:g[u])if(--indeg[v]==0)q.push(v);}return order;}
+vi kmp_search(const string&text,const string&pat){string s=pat+"#"+text;int n=s.size(),m=pat.size();vi fail(n,0);for(int i=1;i<n;i++){int j=fail[i-1];while(j&&s[i]!=s[j])j=fail[j-1];fail[i]=j+(s[i]==s[j]);}vi res;for(int i=m+1;i<n;i++)if(fail[i]==(int)m)res.push_back(i-2*m);return res;}
+vi z_function(const string&s){int n=s.size();vi z(n,0);z[0]=n;for(int i=1,l=0,r=0;i<n;i++){if(i<r)z[i]=min(r-i,z[i-l]);while(i+z[i]<n&&s[z[i]]==s[i+z[i]])z[i]++;if(i+z[i]>r){l=i;r=i+z[i];}}return z;}
+
+// ── Debug ──────────────────────────────────────────────────────
+#ifdef LOCAL
+    template<class T> void _dbg(const char*n,T v){cerr<<n<<" = "<<v<<"\\n";}
+    template<class T> void _dbgv(const char*n,const vec<T>&v){cerr<<n<<" = [";for(int i=0;i<(int)v.size();i++){if(i)cerr<<", ";cerr<<v[i];}cerr<<"]\\n";}
+    #define dbg(x)      _dbg(#x,x)
+    #define dbgv(a)     _dbgv(#a,a)
+    #define dbg2(x,y)   cerr<<#x"="<<(x)<<", "#y"="<<(y)<<"\\n"
+    struct Timer{chrono::time_point<chrono::high_resolution_clock>s;Timer(){s=chrono::high_resolution_clock::now();}double elapsed(){return chrono::duration<double>(chrono::high_resolution_clock::now()-s).count();}};
+    #define TIMER Timer __t;
+    #define TIME  cerr<<"Time: "<<__t.elapsed()<<"s\\n";
+#else
+    #define dbg(x)
+    #define dbgv(a)
+    #define dbg2(x,y)
+    #define TIMER
+    #define TIME
+#endif
+
+// ── Macros ─────────────────────────────────────────────────────
+#define all(x)   (x).begin(),(x).end()
+#define rall(x)  (x).rbegin(),(x).rend()
+#define sz(x)    (int)(x).size()
+#define fi       first
+#define se       second
+#define pb       push_back
+#define mp       make_pair
+#define yes      cout<<"YES\\n"
+#define no       cout<<"NO\\n"
+#define endl     "\\n"
+
+// ══════════════════════════════════════════════════════════════
+void solve(){
+    // write your solution here
+}
+
+int main(){
+    FASTIO
+    TIMER
+    int t=1;
+    // cin>>t;
+    while(t--) solve();
+    TIME
+    return 0;
+}`;
+
+function copyTemplate() {
+  navigator.clipboard.writeText(TEMPLATE_CODE).then(() => {
+    showToast('Template copied!');
+    const btn = document.querySelector('.dl-secondary');
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px"><path d="M6 10.5l-3-3 1-1 2 2 5-5 1 1z"/></svg> Copied!`;
+    btn.style.color = 'var(--accent3)';
+    btn.style.borderColor = 'var(--accent3)';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function hlCpp(s){
@@ -3353,8 +1270,9 @@ DATA.forEach(section => {
 const toast = document.getElementById('toast');
 let toastTimer;
 
-function showToast(){
+function showToast(msg){
   clearTimeout(toastTimer);
+  toast.textContent = msg || 'Copied!';
   toast.classList.add('show');
   toastTimer = setTimeout(()=>toast.classList.remove('show'), 1800);
 }
@@ -3418,6 +1336,5 @@ document.addEventListener('keydown', e => {
   if(e.key==='Escape') search.blur();
 });
 </script>
-
-
-</body></html>
+</body>
+</html>
