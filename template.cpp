@@ -175,6 +175,26 @@ bool startswith(const string&s,const string&p){return s.rfind(p,0)==0;}
 bool endswith(const string&s,const string&p){return s.size()>=p.size()&&s.compare(s.size()-p.size(),p.size(),p)==0;}
 string replace_all(string s,const string&f,const string&t){size_t p=0;while((p=s.find(f,p))!=string::npos){s.replace(p,f.size(),t);p+=t.size();}return s;}
 int str_find(const string&s,const string&p){size_t p2=s.find(p);return p2==string::npos?-1:(int)p2;}
+int str_find(const string&s,char c){size_t p2=s.find(c);return p2==string::npos?-1:(int)p2;}  // s.index(c)
+int str_rfind(const string&s,const string&p){size_t p2=s.rfind(p);return p2==string::npos?-1:(int)p2;} // last occurrence
+
+// str_contains(s, sub/char)  →  sub in s  — O(n)
+bool str_contains(const string&s,const string&sub){return s.find(sub)!=string::npos;}
+bool str_contains(const string&s,char c){return s.find(c)!=string::npos;}
+
+// str_slice(s, i, j)  →  s[i:j]  — supports negative indices like Python
+// str_slice(s, 1, 4)  → s[1:4]
+// str_slice(s, -3)    → s[-3:]   (last 3 chars)
+// str_slice(s, 0, -1) → s[:-1]   (all but last)
+string str_slice(const string&s,int i,int j=INT_MAX){
+    int n=(int)s.size();
+    if(i<0)i=max(0,n+i);
+    if(j==INT_MAX)j=n;
+    else if(j<0)j=max(0,n+j);
+    i=min(i,n);j=min(j,n);
+    if(i>=j)return "";
+    return s.substr(i,j-i);
+}
 string repeat(const string&s,int n){string r;while(n--)r+=s;return r;}
 string bin_str(ll n){if(!n)return"0b0";string s="0b";int b=63-__builtin_clzll(n);for(int i=b;i>=0;i--)s+=(char)('0'+((n>>i)&1));return s;}
 bool is_digit(const string&s){return!s.empty()&&all_of(s.begin(),s.end(),::isdigit);}
@@ -324,9 +344,6 @@ vi z_function(const string&s){int n=s.size();vi z(n,0);z[0]=n;for(int i=1,l=0,r=
 // ══════════════════════════════════════════════════════════════
 void solve(){
 
-
-
-    
 }
 
 int main(){
