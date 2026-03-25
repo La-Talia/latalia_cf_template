@@ -593,6 +593,38 @@ cout << <s>"Mode: "</s> << <n>val</n> << <s>" (appears "</s> << <n>cnt</n> << <s
 <k>endswith</k>(<n>s</n>, <s>"world"</s>);     <c>// true</c>
 <k>startswith</k>(<n>s</n>, <s>"world"</s>);   <c>// false</c>`],
 
+  ['str_contains(s, sub/char)', 'sub in s  — O(n)',
+   'Check if a substring OR single character is anywhere inside s. Works for both string and char arguments.',
+   `<t>string</t> <n>s</n> = <s>"hello world"</s>;
+<k>str_contains</k>(<n>s</n>, <s>"world"</s>);  <c>// true  — substring</c>
+<k>str_contains</k>(<n>s</n>, <s>"xyz"</s>);    <c>// false</c>
+<k>str_contains</k>(<n>s</n>, <s>'o'</s>);      <c>// true  — single char</c>
+<k>str_contains</k>(<n>s</n>, <s>'z'</s>);      <c>// false</c>`],
+
+  ['str_find(s, sub/char)', 's.find(sub)  — index or -1',
+   'Find FIRST occurrence of a substring or single char. Returns -1 if not found. Works for both string and char. Use str_rfind() for the LAST occurrence.',
+   `<t>string</t> <n>s</n> = <s>"hello world"</s>;
+<k>str_find</k>(<n>s</n>, <s>"world"</s>);   <c>// 6   — first index of "world"</c>
+<k>str_find</k>(<n>s</n>, <s>"xyz"</s>);     <c>// -1  — not found</c>
+<k>str_find</k>(<n>s</n>, <s>'o'</s>);       <c>// 4   — first 'o' (in "hello")</c>
+<k>str_find</k>(<n>s</n>, <s>'z'</s>);       <c>// -1  — not found</c>
+
+<k>str_rfind</k>(<n>s</n>, <s>'o'</s>);      <c>// 7   — LAST 'o' (in "world")</c>
+<k>str_rfind</k>(<n>s</n>, <s>"o"</s>);      <c>// 7   — last occurrence of substring</c>`],
+
+  ['str_slice(s, i, j)', 's[i:j]  — Python slice',
+   'Slice a string exactly like Python s[i:j]. Supports negative indices. j defaults to end of string.',
+   `<t>string</t> <n>s</n> = <s>"hello"</s>;
+<k>str_slice</k>(<n>s</n>, <n>1</n>, <n>4</n>);   <c>// "ell"    → s[1:4]</c>
+<k>str_slice</k>(<n>s</n>, <n>2</n>);      <c>// "llo"    → s[2:]</c>
+<k>str_slice</k>(<n>s</n>, -<n>3</n>);     <c>// "llo"    → s[-3:]  last 3</c>
+<k>str_slice</k>(<n>s</n>, <n>0</n>, -<n>1</n>);  <c>// "hell"   → s[:-1]</c>
+<k>str_slice</k>(<n>s</n>, -<n>3</n>, -<n>1</n>); <c>// "ll"     → s[-3:-1]</c>
+
+<c>// CF use: extract token between positions</c>
+<t>string</t> <n>mid</n> = <k>str_slice</k>(<n>s</n>, <n>l</n>, <n>r</n>+<n>1</n>);  <c>// s[l..r] inclusive</c>`,
+   'str_slice(s, i) with one arg = s[i:] to end. Both i and j support negative Python-style indexing.'],
+
   ['bin_str(n)', 'bin(n)',
    'Binary string representation. Use for bitmask debugging, printing binary numbers.',
    `<k>bin_str</k>(<n>10</n>);   <c>// "0b1010"</c>
@@ -1094,6 +1126,11 @@ bool startswith(const string&s,const string&p){return s.rfind(p,0)==0;}
 bool endswith(const string&s,const string&p){return s.size()>=p.size()&&s.compare(s.size()-p.size(),p.size(),p)==0;}
 string replace_all(string s,const string&f,const string&t){size_t p=0;while((p=s.find(f,p))!=string::npos){s.replace(p,f.size(),t);p+=t.size();}return s;}
 int str_find(const string&s,const string&p){size_t p2=s.find(p);return p2==string::npos?-1:(int)p2;}
+int str_find(const string&s,char c){size_t p2=s.find(c);return p2==string::npos?-1:(int)p2;}
+int str_rfind(const string&s,const string&p){size_t p2=s.rfind(p);return p2==string::npos?-1:(int)p2;}
+bool str_contains(const string&s,const string&sub){return s.find(sub)!=string::npos;}
+bool str_contains(const string&s,char c){return s.find(c)!=string::npos;}
+string str_slice(const string&s,int i,int j=INT_MAX){int n=(int)s.size();if(i<0)i=max(0,n+i);if(j==INT_MAX)j=n;else if(j<0)j=max(0,n+j);i=min(i,n);j=min(j,n);if(i>=j)return"";return s.substr(i,j-i);}
 string repeat(const string&s,int n){string r;while(n--)r+=s;return r;}
 string bin_str(ll n){if(!n)return"0b0";string s="0b";int b=63-__builtin_clzll(n);for(int i=b;i>=0;i--)s+=(char)('0'+((n>>i)&1));return s;}
 bool is_digit(const string&s){return!s.empty()&&all_of(s.begin(),s.end(),::isdigit);}
